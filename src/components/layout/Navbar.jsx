@@ -14,15 +14,17 @@ import {
   Drawer,
 } from "@mui/material";
 
+import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
+import LightModeOutlinedIcon from '@mui/icons-material/LightModeOutlined';
 import MenuIcon from "@mui/icons-material/Menu";
 import logo from "../../assets/images/logo.png";
 
 import { Link as RouterLink } from "react-router-dom";
 
 import SearchIcon from "@mui/icons-material/Search";
-import PersonIcon from "@mui/icons-material/Person";
+import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined';
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
-import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
 
 import { useState } from "react";
 import useMediaQuery from "@mui/material/useMediaQuery";
@@ -98,13 +100,20 @@ export default function Navbar() {
           }}
         >
           <IconButton sx={{ color: "black", "&:hover": { color: "#bea555" } }}>
+            <LightModeOutlinedIcon />
+            
+            {/* <DarkModeOutlinedIcon /> */}
+          </IconButton>
+
+          <IconButton sx={{ color: "black", "&:hover": { color: "#bea555" } }}>
             <SearchIcon />
           </IconButton>
 
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Login/Register">
               <IconButton onClick={handleOpenUserMenu}>
-                <PersonIcon
+                <PersonOutlineOutlinedIcon
+                
                   sx={{
                     color: "black",
                     "&:hover": { color: "#bea555" },
@@ -148,7 +157,7 @@ export default function Navbar() {
 
           <IconButton sx={{ color: "black", "&:hover": { color: "#bea555" } }}>
             <Badge badgeContent={1} color="primary">
-              <ShoppingCartIcon />
+              <ShoppingCartOutlinedIcon />
             </Badge>
           </IconButton>
         </Box>
