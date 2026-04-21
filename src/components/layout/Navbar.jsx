@@ -82,7 +82,7 @@ export default function Navbar() {
                     sx={{
                       color: "black",
                       fontWeight: "bold",
-                      "&:hover": { color: "#bea555" },
+                      "&:hover": { color: "#1A6B3A" },
                       textAlign: "center",
                     }}
                   />
