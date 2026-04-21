@@ -20,6 +20,7 @@ import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 import LightModeOutlinedIcon from "@mui/icons-material/LightModeOutlined";
+import DarkModeOutlinedIcon from '@mui/icons-material/DarkModeOutlined';
 
 import { Link as RouterLink } from "react-router-dom";
 import { useState } from "react";
@@ -27,8 +28,10 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
 
 import logo from "../../assets/images/logo.png";
+import { useData } from "../../context/AuthContext";
 
 export default function Navbar() {
+  const { mode, toggleTheme } = useData();
   const links = [
     { label: "Home", path: "/" },
     { label: "Products", path: "/products" },
@@ -60,17 +63,17 @@ export default function Navbar() {
           <img src={logo} alt="Logo" style={{ height: 45 }} />
         </Box>
 
-         {!isMobile && (
+        {!isMobile && (
           <Box sx={{ display: "flex", gap: 1 }}>
             {links.map((item) => (
               <List key={item.label}>
                 <ListItemButton component={RouterLink} to={item.path}>
                   <ListItemText
                     primary={item.label}
-                    sx={{  
+                    sx={{
                       textAlign: "center",
                       color: "text.primary",
-                      fontWeight: "bold", 
+                      fontWeight: "bold",
                       "&:hover": { color: "primary.main" },
                     }}
                   />
@@ -82,9 +85,14 @@ export default function Navbar() {
 
         <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
           <IconButton
+            onClick={toggleTheme}
             sx={{ color: "text.primary", "&:hover": { color: "primary.main" } }}
           >
-            <LightModeOutlinedIcon />
+            {mode === "dark" ? (
+              <LightModeOutlinedIcon />
+            ) : (
+              <DarkModeOutlinedIcon />
+            )}
           </IconButton>
 
           <IconButton

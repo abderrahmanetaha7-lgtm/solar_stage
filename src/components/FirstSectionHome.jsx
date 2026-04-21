@@ -1,7 +1,7 @@
 import React from "react";
 import imgHome from "../assets/images/imgHome.png";
 import { Box, Container, Typography, Button } from "@mui/material";
-
+import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 export default function FirstSectionHome() {
   return (
     <Box
@@ -28,7 +28,7 @@ export default function FirstSectionHome() {
           backgroundSize: "contain",
           backgroundRepeat: "no-repeat",
           backgroundPosition: "right center",
-          opacity: { xs: 0.8, md: 0.9 }, 
+          opacity: { xs: 0.8, md: 0.9 },
         }}
       />
 
@@ -47,7 +47,7 @@ export default function FirstSectionHome() {
         <Box
           sx={{
             maxWidth: "600px",
-            
+
             textAlign: { xs: "center", md: "left" },
             mx: { xs: "auto", md: 0 },
 
@@ -68,13 +68,13 @@ export default function FirstSectionHome() {
                 lg: "3.5rem",
               },
               fontWeight: 700,
-              color: "text.primary",
+              color: "text.secondary",
               mb: 3,
             }}
           >
             Power Your Future with Clean Solar Energy
           </Typography>
-          
+
           <Typography
             sx={{
               fontSize: { xs: "1rem", md: "1.15rem" },
@@ -86,11 +86,11 @@ export default function FirstSectionHome() {
             Premium solar panels, batteries, and smart energy solutions designed
             for a sustainable tomorrow.
           </Typography>
-          
+
           <Box
             sx={{
               display: "flex",
-              gap: 2, 
+              gap: 2,
               justifyContent: { xs: "center", md: "flex-start" },
               width: "100%",
             }}
@@ -109,13 +109,14 @@ export default function FirstSectionHome() {
               }}
             >
               Shop Now
+              <KeyboardArrowRightIcon sx={{ ml: 1 }} />
             </Button>
 
             <Button
               variant="outlined"
               sx={{
-                borderColor: "text.primary",
-                color: "text.primary",
+                borderColor: "primary",
+                color: "primary",
                 px: 3,
                 py: 1.2,
                 "&:hover": {

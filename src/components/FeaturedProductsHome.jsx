@@ -251,12 +251,13 @@ const FeaturedProducts = () => {
                   startIcon={<ShoppingCartIcon />}
                   onClick={() => handleAddToCart(product.id)}
                   sx={{
+                    color:"text.primary",
                     borderRadius: 2,
                     textTransform: "none",
                     px: 3,
-                    bgcolor: "#1976d2",
+                    bgcolor: "primary",
                     "&:hover": {
-                      bgcolor: "#1565c0",
+                      bgcolor: "secondary",
                     },
                   }}
                 >

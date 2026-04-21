@@ -50,7 +50,7 @@ const features = [
 
 export default function WhyChooseUs() {
   return (
-    <Box sx={{ py: 1 }}>
+    <Box sx={{ py: 6 }}>
       <Container>
         <Typography variant="h4" align="center" fontWeight="bold" gutterBottom>
           Why Choose Us
