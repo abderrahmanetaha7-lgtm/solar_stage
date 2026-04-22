@@ -51,10 +51,16 @@ export default function CustomersOpinionHome() {
         color: "text.primary",
       }}
     >
-      <Typography variant="h5" fontWeight="bold" mb={4}>
-        What Our Customers Say
-      </Typography>
-
+ <Typography
+          variant="h3"
+          component="h2"
+          fontWeight="bold"
+          sx={{
+            fontSize: { xs: "1.75rem", sm: "2rem", md: "2.5rem" },
+            mb: 1,
+            marginBottom : "30px"
+          }}
+        >What Our Customers Say</Typography>
       <Card
         sx={{
           maxWidth: 600,
