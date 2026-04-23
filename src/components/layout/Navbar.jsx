@@ -15,9 +15,9 @@ import {
 } from "@mui/material";
 
 import MenuIcon from "@mui/icons-material/Menu";
-// import SearchIcon from "@mui/icons-material/Search";
+ import SearchIcon from "@mui/icons-material/Search";
 import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
-import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+//import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 import LightModeOutlinedIcon from "@mui/icons-material/LightModeOutlined";
 import DarkModeOutlinedIcon from '@mui/icons-material/DarkModeOutlined';
@@ -95,11 +95,11 @@ export default function Navbar() {
             )}
           </IconButton>
 
-          {/* <IconButton
+          <IconButton
             sx={{ color: "text.primary", "&:hover": { color: "primary.main" } }}
           >
             <SearchIcon />
-          </IconButton> */}
+          </IconButton> 
 
           <Tooltip title="Login/Register">
             <IconButton
@@ -129,7 +129,7 @@ export default function Navbar() {
               </Typography>
             </MenuItem>
           </Menu>
-
+{/* 
           <IconButton
             sx={{ color: "text.primary", "&:hover": { color: "primary.main" } }}
           >
@@ -137,7 +137,7 @@ export default function Navbar() {
               <FavoriteBorderIcon />
             </Badge>
           </IconButton>
-
+*/}
           <IconButton
             sx={{ color: "text.primary", "&:hover": { color: "primary.main" } }}
           >
