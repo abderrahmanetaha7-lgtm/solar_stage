@@ -16,30 +16,31 @@ import BoltIcon from "@mui/icons-material/BoltOutlined";
 
 const Footer = () => {
   const theme = useTheme();
-  const isDark = theme.palette.mode === "dark";
+  const isDark = theme.palette.mode === "dark"; // Check if dark mode is active
 
   return (
     <Box
       component="footer"
       sx={{
-        backgroundColor: isDark ? "#0A0F1C" : "#FFFFFF",
-        color: isDark ? "#94A3B8" : "#64748B",
-        pt: 10,
-        pb: 4
+        backgroundColor: isDark ? "#0A0F1C" : "#FFFFFF", // Dynamic background based on theme
+        color: isDark ? "#94A3B8" : "#64748B", // Dynamic text color based on theme
+        pt: 10, // Top padding
+        pb: 4  // Bottom padding
       }}
     >
       <Container maxWidth="lg">
         <Grid
           container
           sx={{
-            justifyContent: "space-between",
-            alignItems: "flex-start",
-            rowGap: 4
+            justifyContent: "space-between", // Distribute items evenly
+            alignItems: "flex-start", // Align items to the top
+            rowGap: 4 // Gap between rows
           }}
         >
-          {/* 🔹 Logo */}
+          {/* Logo Section */}
           <Grid item xs={12} md="auto">
             <Stack direction="row" spacing={1.5} alignItems="center" mb={2}>
+              {/* Icon container with gradient background */}
               <Box
                 sx={{
                   width: 42,
@@ -55,6 +56,7 @@ const Footer = () => {
                 <BoltIcon sx={{ color: "#fff", fontSize: 22 }} />
               </Box>
 
+              {/* Brand name */}
               <Typography
                 variant="h6"
                 fontWeight={600}
@@ -67,17 +69,18 @@ const Footer = () => {
               </Typography>
             </Stack>
 
+            {/* Company description */}
             <Typography sx={{ maxWidth: 280, lineHeight: 1.7 }}>
               Powering a sustainable future with cutting-edge solar technology
               and premium renewable energy solutions.
             </Typography>
           </Grid>
 
-          {/* 🔹 Products */}
+          {/* Products Section */}
           <Grid item xs={6} md="auto">
             <Typography
               sx={{
-                mb: 2,
+                mb: 2, // Bottom margin
                 fontWeight: 600,
                 color: isDark ? "#E2E8F0" : "#0F172A"
               }}
@@ -85,6 +88,7 @@ const Footer = () => {
               Products
             </Typography>
 
+            {/* Product links */}
             <Stack spacing={1.5}>
               <Link href="#" underline="none" sx={{ color: "#3B82F6" }}>
                 Solar Panels
@@ -101,11 +105,11 @@ const Footer = () => {
             </Stack>
           </Grid>
 
-          {/* 🔹 Company */}
+          {/* Company Section */}
           <Grid item xs={6} md="auto">
             <Typography
               sx={{
-                mb: 2,
+                mb: 2, // Bottom margin
                 fontWeight: 600,
                 color: isDark ? "#E2E8F0" : "#0F172A"
               }}
@@ -113,6 +117,7 @@ const Footer = () => {
               Company
             </Typography>
 
+            {/* Company links */}
             <Stack spacing={1.5}>
               <Link href="#" underline="none" color="inherit">
                 About Us
@@ -126,11 +131,11 @@ const Footer = () => {
             </Stack>
           </Grid>
 
-          {/* 🔹 Contact */}
+          {/* Contact Section */}
           <Grid item xs={12} md="auto" sx={{ textAlign: { md: "right" } }}>
             <Typography
               sx={{
-                mb: 2,
+                mb: 2, // Bottom margin
                 fontWeight: 600,
                 color: isDark ? "#E2E8F0" : "#0F172A"
               }}
@@ -138,7 +143,9 @@ const Footer = () => {
               Contact
             </Typography>
 
+            {/* Contact information items */}
             <Stack spacing={2} alignItems={{ md: "flex-end" }}>
+              {/* Email contact */}
               <Stack direction="row" spacing={1.5} alignItems="center">
                 <MailOutlineIcon sx={{ fontSize: 18 }} />
                 <Typography variant="body2">
@@ -146,6 +153,7 @@ const Footer = () => {
                 </Typography>
               </Stack>
 
+              {/* Phone contact */}
               <Stack direction="row" spacing={1.5} alignItems="center">
                 <PhoneIcon sx={{ fontSize: 18 }} />
                 <Typography variant="body2">
@@ -153,6 +161,7 @@ const Footer = () => {
                 </Typography>
               </Stack>
 
+              {/* Address contact */}
               <Stack direction="row" spacing={1.5} alignItems="center">
                 <LocationOnIcon sx={{ fontSize: 18 }} />
                 <Typography variant="body2">
@@ -163,19 +172,20 @@ const Footer = () => {
           </Grid>
         </Grid>
 
-        {/* 🔻 Bottom */}
+        {/* Bottom Footer Section */}
         <Box
           sx={{
             borderTop: `1px solid ${
               isDark
                 ? "rgba(255,255,255,0.08)"
                 : "rgba(0,0,0,0.08)"
-            }`,
-            mt: 6,
-            pt: 3,
-            textAlign: "center"
+            }`, // Dynamic border color
+            mt: 6, // Top margin
+            pt: 3, // Top padding
+            textAlign: "center" // Center align text
           }}
         >
+          {/* Copyright notice */}
           <Typography variant="body2">
             © 2026 SolarNova. All rights reserved. Built for a brighter future.
           </Typography>

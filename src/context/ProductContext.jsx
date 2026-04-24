@@ -1,23 +1,31 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
-import sol1  from "../assets/images/sol1.webp";
-import sol2  from "../assets/images/sol2.webp";
-import sol3  from "../assets/images/sol3.webp";
-import sol4  from "../assets/images/sol4.webp";
-// إنشاء الكونتكست
+import sol1 from "../assets/images/sol1.webp";
+import sol2 from "../assets/images/sol2.webp";
+import sol3 from "../assets/images/sol3.webp";
+import sol4 from "../assets/images/sol4.webp";
+
+// Create the Product Context
 const ProductContext = createContext();
 
-// Provider
+// Product Provider Component - Wraps app to provide product state management
 export const ProductProvider = ({ children }) => {
+  // State for storing products array
   const [products, setProducts] = useState([]);
+  // State for loading status
   const [loading, setLoading] = useState(true);
+  // State for error handling
   const [error, setError] = useState(null);
 
+  // Fetch products when component mounts
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        setLoading(true); 
+        setLoading(true); // Set loading to true before fetching
+        
+        // Simulate API delay (500ms)
         await new Promise(resolve => setTimeout(resolve, 500));
         
+        // Initial product data (would normally come from an API)
         const initialProducts = [
           {
             id: 1,
@@ -33,7 +41,7 @@ export const ProductProvider = ({ children }) => {
             id: 2,
             name: "EcoPanel Ultra 350W",
             price: 749,
-            image: sol2 ,
+            image: sol2,
             category: "batteries",
             efficiency: "21.3%",
             description: "High-efficiency panel with eco-friendly manufacturing process and enhanced durability in harsh weather conditions.",
@@ -69,57 +77,119 @@ export const ProductProvider = ({ children }) => {
             description: "Smart hybrid inverter with WiFi monitoring and battery-ready design. Maximize your solar investment.",
             createdAt: "2026-04-16T10:00:00Z",
           },
+          {
+            id: 6,
+            name: "Solar Inverter Pro",
+            price: 1299,
+            image: "https://images.unsplash.com/photo-1572984984010-6c6e6a08b9b3?w=500&h=300&fit=crop",
+            category: "INVERTERS",
+            efficiency: "98%",
+            description: "Smart hybrid inverter with WiFi monitoring and battery-ready design. Maximize your solar investment.",
+            createdAt: "2026-04-16T10:00:00Z",
+          },
+          {
+            id: 7,
+            name: "Solar Inverter Pro",
+            price: 1299,
+            image: "https://images.unsplash.com/photo-1572984984010-6c6e6a08b9b3?w=500&h=300&fit=crop",
+            category: "INVERTERS",
+            efficiency: "98%",
+            description: "Smart hybrid inverter with WiFi monitoring and battery-ready design. Maximize your solar investment.",
+            createdAt: "2026-04-16T10:00:00Z",
+          },
+          {
+            id: 8,
+            name: "Solar Inverter Pro",
+            price: 1299,
+            image: "https://images.unsplash.com/photo-1572984984010-6c6e6a08b9b3?w=500&h=300&fit=crop",
+            category: "INVERTERS",
+            efficiency: "98%",
+            description: "Smart hybrid inverter with WiFi monitoring and battery-ready design. Maximize your solar investment.",
+            createdAt: "2026-04-16T10:00:00Z",
+          },
+          {
+            id: 9,
+            name: "Solar Inverter Pro",
+            price: 1299,
+            image: "https://images.unsplash.com/photo-1572984984010-6c6e6a08b9b3?w=500&h=300&fit=crop",
+            category: "INVERTERS",
+            efficiency: "98%",
+            description: "Smart hybrid inverter with WiFi monitoring and battery-ready design. Maximize your solar investment.",
+            createdAt: "2026-04-16T10:00:00Z",
+          },
+          {
+            id: 10,
+            name: "Solar Inverter Pro",
+            price: 1299,
+            image: "https://images.unsplash.com/photo-1572984984010-6c6e6a08b9b3?w=500&h=300&fit=crop",
+            category: "INVERTERS",
+            efficiency: "98%",
+            description: "Smart hybrid inverter with WiFi monitoring and battery-ready design. Maximize your solar investment.",
+            createdAt: "2026-04-16T10:00:00Z",
+          },
+          {
+            id: 11,
+            name: "Solar Inverter Pro",
+            price: 1299,
+            image: "https://images.unsplash.com/photo-1572984984010-6c6e6a08b9b3?w=500&h=300&fit=crop",
+            category: "INVERTERS",
+            efficiency: "98%",
+            description: "Smart hybrid inverter with WiFi monitoring and battery-ready design. Maximize your solar investment.",
+            createdAt: "2026-04-16T10:00:00Z",
+          },
         ];
         
-        setProducts(initialProducts);
-        setError(null);
+        setProducts(initialProducts); // Set products to state
+        setError(null); // Clear any previous errors
       } catch (err) {
-        setError("Failed to load products");
-        console.error(err);
+        setError("Failed to load products"); // Set error message
+        console.error(err); // Log error to console
       } finally {
-        setLoading(false);
+        setLoading(false); // Always set loading to false when done
       }
     };
 
-    fetchProducts();
-  }, []);
+    fetchProducts(); // Call the fetch function
+  }, []); // Empty dependency array - runs only once on mount
 
-  // Add product function
+  // Add new product
   const addProduct = (newProduct) => {
+    // Calculate new ID (max existing ID + 1)
     const maxId = products.length > 0 ? Math.max(...products.map(p => p.id)) : 0;
     setProducts((prev) => [
-      ...prev, 
+      ...prev, // Spread existing products
       { 
-        ...newProduct, 
-        id: maxId + 1, 
-        createdAt: new Date().toISOString() 
+        ...newProduct, // Spread new product data
+        id: maxId + 1, // Assign new ID
+        createdAt: new Date().toISOString() // Add current timestamp
       }
     ]);
   };
 
-  // Update product function
+  // Update existing product by ID
   const updateProduct = (id, updatedProduct) => {
     setProducts((prev) =>
       prev.map((product) =>
-        product.id === id ? { ...product, ...updatedProduct } : product
+        product.id === id ? { ...product, ...updatedProduct } : product // Replace matching product, keep others
       )
     );
   };
 
-  // Delete product function
+  // Delete product by ID
   const deleteProduct = (id) => {
-    setProducts((prev) => prev.filter((product) => product.id !== id));
+    setProducts((prev) => prev.filter((product) => product.id !== id)); // Keep all products except the one with matching ID
   };
 
+  // Provide context value to children components
   return (
     <ProductContext.Provider
       value={{
-        products,
-        loading,
-        error,
-        addProduct,
-        updateProduct,
-        deleteProduct,
+        products,      // Array of products
+        loading,       // Loading state
+        error,         // Error state
+        addProduct,    // Function to add product
+        updateProduct, // Function to update product
+        deleteProduct, // Function to delete product
       }}
     >
       {children}
@@ -127,12 +197,12 @@ export const ProductProvider = ({ children }) => {
   );
 };
 
-// Custom Hook
+// Custom Hook for using products context
 // eslint-disable-next-line react-refresh/only-export-components
 export const useProducts = () => {
-  const context = useContext(ProductContext);
+  const context = useContext(ProductContext); // Get context value
   if (!context) {
-    throw new Error("useProducts must be used within a ProductProvider");
+    throw new Error("useProducts must be used within a ProductProvider"); // Error if used outside provider
   }
-  return context;
+  return context; // Return context value
 };

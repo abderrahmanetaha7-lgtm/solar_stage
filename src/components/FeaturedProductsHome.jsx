@@ -13,36 +13,40 @@ import ProductCard from "../components/ProductCard";
 import { useProducts } from "../context/ProductContext";
 
 const FeaturedProducts = () => {
-  const navigate = useNavigate();
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-  const isTablet = useMediaQuery(theme.breakpoints.between("sm", "md"));
+  const navigate = useNavigate(); // Hook for programmatic navigation
+  const theme = useTheme(); // Access theme object
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm")); // Check if screen is mobile size
+  const isTablet = useMediaQuery(theme.breakpoints.between("sm", "md")); // Check if screen is tablet size
 
-  const { products, loading } = useProducts();
+  const { products, loading } = useProducts(); // Get products data and loading state from context
 
+  // Determine number of grid columns based on screen size
   const getGridColumns = () => {
-    if (isMobile) return 1;
-    if (isTablet) return 2;
-    return 4;
+    if (isMobile) return 1; // 1 column on mobile
+    if (isTablet) return 2; // 2 columns on tablet
+    return 4; // 4 columns on desktop
   };
 
+  // Handle adding product to cart
   const handleAddToCart = (productId) => { 
-    console.log(`Product ${productId} added to cart`); 
+    console.log(`Product ${productId} added to cart`); // Log action (replace with actual cart logic)
   };
 
-  
+  // Get the 4 most recently added products
   const latestProducts = [...products]
-    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-    .slice(0, 4);
+    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)) // Sort by creation date (newest first)
+    .slice(0, 4); // Take only first 4 products
 
-    
+  // Show loading skeletons while products are being fetched
   if (loading) {
     return (
       <Container maxWidth="xl" sx={{ py: 6 }}>
+        {/* Header skeletons */}
         <Box sx={{ textAlign: "center", mb: 5 }}>
           <Skeleton variant="text" width={300} height={60} sx={{ mx: "auto" }} />
           <Skeleton variant="text" width={200} height={30} sx={{ mx: "auto" }} />
         </Box>
+        {/* Products grid skeletons */}
         <Box
           sx={{
             display: "grid",
@@ -117,7 +121,7 @@ const FeaturedProducts = () => {
       {/* View All Button */}
       <Box sx={{ textAlign: "center", mt: 6 }}>
         <Button
-          onClick={() => navigate("/products")}
+          onClick={() => navigate("/products")} // Navigate to products page
           variant="outlined"
           size="large"
           sx={{
@@ -130,7 +134,7 @@ const FeaturedProducts = () => {
             borderWidth: 2,
             "&:hover": {
               borderWidth: 2,
-              transform: "translateY(-2px)",
+              transform: "translateY(-2px)", // Slight lift effect on hover
             },
           }}
         >
