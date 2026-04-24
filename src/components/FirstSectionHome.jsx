@@ -2,6 +2,7 @@ import React from "react";
 import imgHome from "../assets/images/imgHome.png";
 import { Box, Container, Typography, Button } from "@mui/material";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
+import { Link as RouterLink } from "react-router-dom";
 export default function FirstSectionHome() {
   return (
     <Box
@@ -98,6 +99,8 @@ export default function FirstSectionHome() {
             <Button
               variant="contained"
               color="primary"
+              component={RouterLink}
+              to="/products"
               sx={{
                 fontWeight: 600,
                 px: 3,
@@ -114,6 +117,8 @@ export default function FirstSectionHome() {
 
             <Button
               variant="outlined"
+              component={RouterLink}
+              to="/about"
               sx={{
                 borderColor: "primary",
                 color: "primary",
