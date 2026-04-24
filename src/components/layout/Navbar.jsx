@@ -12,15 +12,18 @@ import {
   Tooltip,
   Drawer,
   Typography,
+  FormControl,
+  InputLabel,
+  Select,
 } from "@mui/material";
 
 import MenuIcon from "@mui/icons-material/Menu";
- import SearchIcon from "@mui/icons-material/Search";
+// import SearchIcon from "@mui/icons-material/Search";
 import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
-//import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 import LightModeOutlinedIcon from "@mui/icons-material/LightModeOutlined";
-import DarkModeOutlinedIcon from '@mui/icons-material/DarkModeOutlined';
+import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
 
 import { Link as RouterLink } from "react-router-dom";
 import { useState } from "react";
@@ -41,6 +44,15 @@ export default function Navbar() {
   ];
 
   const theme = useTheme();
+  const LanguageSwitcher = ({ value, onChange }) => (
+    <FormControl size="small">
+      <Select value={value} onChange={onChange} sx={{ minWidth: 80 }}>
+        <MenuItem value="FR">FR</MenuItem>
+        <MenuItem value="AR">AR</MenuItem>
+      </Select>
+    </FormControl>
+  );
+  const [switchLang, setSwitchLang] = useState("FR");
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
   const [anchorElUser, setAnchorElUser] = useState(null);
@@ -84,6 +96,12 @@ export default function Navbar() {
         )}
 
         <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+          {!isMobile && (
+            <LanguageSwitcher
+              value={switchLang}
+              onChange={(e) => setSwitchLang(e.target.value)}
+            />
+          )}
           <IconButton
             onClick={toggleTheme}
             sx={{ color: "text.primary", "&:hover": { color: "primary.main" } }}
@@ -94,13 +112,11 @@ export default function Navbar() {
               <DarkModeOutlinedIcon />
             )}
           </IconButton>
-
-          <IconButton
+          {/* <IconButton
             sx={{ color: "text.primary", "&:hover": { color: "primary.main" } }}
           >
-            <SearchIcon />
-          </IconButton> 
-
+            <SearchIcon />    
+          </IconButton>  */}
           <Tooltip title="Login/Register">
             <IconButton
               onClick={(e) => setAnchorElUser(e.currentTarget)}
@@ -112,7 +128,6 @@ export default function Navbar() {
               <PersonOutlineOutlinedIcon />
             </IconButton>
           </Tooltip>
-
           <Menu
             anchorEl={anchorElUser}
             open={Boolean(anchorElUser)}
@@ -129,7 +144,6 @@ export default function Navbar() {
               </Typography>
             </MenuItem>
           </Menu>
-{/* 
           <IconButton
             sx={{ color: "text.primary", "&:hover": { color: "primary.main" } }}
           >
@@ -137,7 +151,6 @@ export default function Navbar() {
               <FavoriteBorderIcon />
             </Badge>
           </IconButton>
-*/}
           <IconButton
             sx={{ color: "text.primary", "&:hover": { color: "primary.main" } }}
           >
@@ -177,6 +190,20 @@ export default function Navbar() {
             </List>
           ))}
         </Box>
+        <List sx={{ mt: 2 }}>
+          <ListItemButton
+            sx={{
+              borderRadius: 2,
+              mx: 1,
+            }}
+          >
+            <ListItemText primary="Language" sx={{ color: "text.primary" }} />
+            <LanguageSwitcher
+              value={switchLang}
+              onChange={(e) => setSwitchLang(e.target.value)}
+            />
+          </ListItemButton>
+        </List>
       </Drawer>
     </AppBar>
   );
