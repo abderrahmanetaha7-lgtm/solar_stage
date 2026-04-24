@@ -3,6 +3,10 @@ import sol1 from "../assets/images/sol1.webp";
 import sol2 from "../assets/images/sol2.webp";
 import sol3 from "../assets/images/sol3.webp";
 import sol4 from "../assets/images/sol4.webp";
+import sol5 from "../assets/images/sol5.webp";
+import sol6 from "../assets/images/sol6.webp";
+import sol7 from "../assets/images/sol7.webp";
+import sol8 from "../assets/images/sol8.jpg";
 
 // Create the Product Context
 const ProductContext = createContext();
@@ -71,7 +75,7 @@ export const ProductProvider = ({ children }) => {
             id: 5,
             name: "Solar Inverter Pro",
             price: 1299,
-            image: "https://images.unsplash.com/photo-1572984984010-6c6e6a08b9b3?w=500&h=300&fit=crop",
+            image: sol5,
             category: "INVERTERS",
             efficiency: "98%",
             description: "Smart hybrid inverter with WiFi monitoring and battery-ready design. Maximize your solar investment.",
@@ -81,7 +85,7 @@ export const ProductProvider = ({ children }) => {
             id: 6,
             name: "Solar Inverter Pro",
             price: 1299,
-            image: "https://images.unsplash.com/photo-1572984984010-6c6e6a08b9b3?w=500&h=300&fit=crop",
+            image: sol6,
             category: "INVERTERS",
             efficiency: "98%",
             description: "Smart hybrid inverter with WiFi monitoring and battery-ready design. Maximize your solar investment.",
@@ -91,7 +95,7 @@ export const ProductProvider = ({ children }) => {
             id: 7,
             name: "Solar Inverter Pro",
             price: 1299,
-            image: "https://images.unsplash.com/photo-1572984984010-6c6e6a08b9b3?w=500&h=300&fit=crop",
+            image: sol7,
             category: "INVERTERS",
             efficiency: "98%",
             description: "Smart hybrid inverter with WiFi monitoring and battery-ready design. Maximize your solar investment.",
@@ -101,42 +105,14 @@ export const ProductProvider = ({ children }) => {
             id: 8,
             name: "Solar Inverter Pro",
             price: 1299,
-            image: "https://images.unsplash.com/photo-1572984984010-6c6e6a08b9b3?w=500&h=300&fit=crop",
+            image: sol8,
             category: "INVERTERS",
             efficiency: "98%",
             description: "Smart hybrid inverter with WiFi monitoring and battery-ready design. Maximize your solar investment.",
             createdAt: "2026-04-16T10:00:00Z",
           },
-          {
-            id: 9,
-            name: "Solar Inverter Pro",
-            price: 1299,
-            image: "https://images.unsplash.com/photo-1572984984010-6c6e6a08b9b3?w=500&h=300&fit=crop",
-            category: "INVERTERS",
-            efficiency: "98%",
-            description: "Smart hybrid inverter with WiFi monitoring and battery-ready design. Maximize your solar investment.",
-            createdAt: "2026-04-16T10:00:00Z",
-          },
-          {
-            id: 10,
-            name: "Solar Inverter Pro",
-            price: 1299,
-            image: "https://images.unsplash.com/photo-1572984984010-6c6e6a08b9b3?w=500&h=300&fit=crop",
-            category: "INVERTERS",
-            efficiency: "98%",
-            description: "Smart hybrid inverter with WiFi monitoring and battery-ready design. Maximize your solar investment.",
-            createdAt: "2026-04-16T10:00:00Z",
-          },
-          {
-            id: 11,
-            name: "Solar Inverter Pro",
-            price: 1299,
-            image: "https://images.unsplash.com/photo-1572984984010-6c6e6a08b9b3?w=500&h=300&fit=crop",
-            category: "INVERTERS",
-            efficiency: "98%",
-            description: "Smart hybrid inverter with WiFi monitoring and battery-ready design. Maximize your solar investment.",
-            createdAt: "2026-04-16T10:00:00Z",
-          },
+          
+
         ];
         
         setProducts(initialProducts); // Set products to state
