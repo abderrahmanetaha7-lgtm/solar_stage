@@ -26,18 +26,16 @@ const FeaturedProducts = () => {
     return 4;
   };
 
-  const handleAddToCart = (productId) => {
-    // يمكنك إضافة منطق الإضافة إلى السلة هنا
-    console.log(`Product ${productId} added to cart`);
-    // مثال: showToast(`تمت إضافة المنتج إلى السلة`);
+  const handleAddToCart = (productId) => { 
+    console.log(`Product ${productId} added to cart`); 
   };
 
-  // جلب أحدث 4 منتجات
+  
   const latestProducts = [...products]
     .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
     .slice(0, 4);
 
-  // عرض شاشة تحميل
+    
   if (loading) {
     return (
       <Container maxWidth="xl" sx={{ py: 6 }}>

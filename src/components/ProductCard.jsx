@@ -32,7 +32,7 @@ const ProductCard = ({ product, onAddToCart }) => {
     description = "No description available",
   } = product;
 
-  // مصدر الصورة الاحتياطي
+  
   const fallbackImage = "https://via.placeholder.com/500x300?text=Image+Not+Found";
   const imageSrc = imageError ? fallbackImage : image;
 
@@ -40,31 +40,31 @@ const ProductCard = ({ product, onAddToCart }) => {
     setIsFavorite(!isFavorite);
   };
 
-  // تنسيق السعر
+  
   const formattedPrice = typeof price === 'number' 
     ? price.toLocaleString() 
     : price;
 
-  // تحديد لون خلفية زر المفضلة حسب الوضع
+    
   const getFavoriteButtonBgColor = () => {
     if (isDarkMode) {
-      return "rgba(30, 30, 30, 0.95)"; // خلفية داكنة للدارك مود
+      return "rgba(30, 30, 30, 0.95)"; 
     }
-    return "rgba(255, 255, 255, 0.95)"; // خلفية بيضاء لللايت مود
+    return "rgba(255, 255, 255, 0.95)"; 
   };
 
-  // تحديد لون إطار/ظل زر المفضلة حسب الوضع
+  
   const getFavoriteButtonBorder = () => {
     if (isDarkMode) {
-      return "1px solid rgba(255, 255, 255, 0.2)"; // حد فاتح للدارك مود
+      return "1px solid rgba(255, 255, 255, 0.2)"; 
     }
-    return "1px solid rgba(0, 0, 0, 0.08)"; // حد خفيف لللايت مود
+    return "1px solid rgba(0, 0, 0, 0.08)"; 
   };
 
-  // تحديد لون الأيقونة عندما غير مفضلة حسب الوضع
+  
   const getFavoriteIconColor = () => {
     if (isDarkMode) {
-      return "#e0e0e0"; // رمادي فاتح للدارك مود
+      return "#e0e0e0";  
     }
     return "#666666"; // رمادي غامق لللايت مود
   };
@@ -141,7 +141,7 @@ const ProductCard = ({ product, onAddToCart }) => {
           }}
         />
 
-        {/* زر المفضلة - يدعم الثيم (Light/Dark Mode) */}
+
         <IconButton
           onClick={handleFavoriteClick}
           sx={{
@@ -170,9 +170,8 @@ const ProductCard = ({ product, onAddToCart }) => {
         </IconButton>
       </Box>
 
-      {/* المحتوى */}
-      <CardContent sx={{ flexGrow: 1, p: 3 }}>
-        {/* الفئة */}
+
+      <CardContent sx={{ flexGrow: 1, p: 3 }}> 
         <Typography
           variant="caption"
           sx={{

@@ -12,64 +12,25 @@ import {
   InputLabel,
   FormControl,
   Chip,
+  useMediaQuery,
 } from "@mui/material";
 import { Search, Tune } from "@mui/icons-material";
+import { useProducts } from "../context/ProductContext";
+import ProductCard from "../components/ProductCard";
+import { useTheme } from "@mui/material/styles";
 
-export default function Products() {
-  const products = [
-    {
-      id: 1,
-      name: "SolarMax Pro 400W",
-      price: 899,
-      image:
-        "https://images.unsplash.com/photo-1617788138017-80ad40651399?w=500&h=300&fit=crop",
-      discount: "22.8%",
-      category: "PANELS",
-      efficiency: "22.8%",
-      description:
-        "Premium monocrystalline solar panel with industry-leading efficiency and...",
-      createdAt: "2026-04-20",
-    },
-    {
-      id: 2,
-      name: "EcoPanel Ultra 350W",
-      price: 749,
-      image:
-        "https://images.unsplash.com/photo-1509391366360-2e959784a276?w=500&h=300&fit=crop",
-      discount: "21.3%",
-      category: "PANELS",
-      efficiency: "21.3%",
-      description:
-        "High-efficiency panel with advanced anti-reflective coating for maximum...",
-      createdAt: "2026-04-19",
-    },
-    {
-      id: 3,
-      name: "SunForce 500W Commercial",
-      price: 1299,
-      image:
-        "https://images.unsplash.com/photo-1509391366360-2e959784a276?w=500&h=300&fit=crop",
-      discount: "23.5%",
-      category: "PANELS",
-      efficiency: "23.5%",
-      description:
-        "Commercial-grade panel for large installations with unmatched durability.",
-      createdAt: "2026-04-18",
-    },
-    {
-      id: 4,
-      name: "PowerVault 10kWh",
-      price: 4999,
-      image:
-        "https://images.unsplash.com/photo-1581094288338-2314dddb7ece?w=500&h=300&fit=crop",
-      discount: "96%",
-      category: "BATTERIES",
-      efficiency: "96%",
-      description:
-        "Home battery system with intelligent energy management and seamless...",
-      createdAt: "2026-04-17",
-    },
-  ];
+export default function Products({ handleAddToCart }) {
+  const { products } = useProducts();
+
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const isTablet = useMediaQuery(theme.breakpoints.between("sm", "md"));
+
+  const getGridColumns = () => {
+    if (isMobile) return 1;
+    if (isTablet) return 2;
+    return 4;
+  };
 
   const categories = ["all", "panels", "batteries", "inverters"];
   const [search, setSearch] = useState("");
@@ -112,7 +73,7 @@ export default function Products() {
         {/* Header */}
         <Box sx={{ mb: 4, textAlign: "center" }}>
           <Typography
-            sx={{ mb: 0,fontSize:{ xs: "35px", sm: "40px", md: "50px" } }}
+            sx={{ mb: 0, fontSize: { xs: "35px", sm: "40px", md: "50px" } }}
             variant="h3"
             fontWeight="bold"
             gutterBottom
@@ -120,7 +81,11 @@ export default function Products() {
             Our Products
           </Typography>
 
-          <Typography color="text.secondary" variant="h6" sx={{ fontSize:{ xs: "15px", sm: "17px", md: "20px" } }}>
+          <Typography
+            color="text.secondary"
+            variant="h6"
+            sx={{ fontSize: { xs: "15px", sm: "17px", md: "20px" } }}
+          >
             Premium solar energy solutions for every need
           </Typography>
         </Box>
@@ -258,6 +223,23 @@ export default function Products() {
               label={c === "all" ? "All Products" : c}
               color={category === c ? "primary" : "default"}
               onClick={() => setCategory(c)}
+            />
+          ))}
+        </Box>
+
+        <Box
+          sx={{
+            mt:4,
+            display: "grid",
+            gridTemplateColumns: `repeat(${getGridColumns()}, 1fr)`,
+            gap: { xs: 2, sm: 3, md: 4 },
+          }}
+        >
+          {filtered.map((product) => (
+            <ProductCard
+              key={product.id}
+              product={product}
+              onAddToCart={handleAddToCart}
             />
           ))}
         </Box>

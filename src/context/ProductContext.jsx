@@ -12,12 +12,10 @@ export const ProductProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // جلب المنتجات الافتراضية (يمكن استبدالها بـ API حقيقي)
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        setLoading(true);
-        // محاكاة تحميل البيانات من API
+        setLoading(true); 
         await new Promise(resolve => setTimeout(resolve, 500));
         
         const initialProducts = [
@@ -26,7 +24,7 @@ export const ProductProvider = ({ children }) => {
             name: "SolarMax Pro 400W",
             price: 899,
             image: sol1,
-            category: "PANELS",
+            category: "panels",
             efficiency: "22.8%",
             description: "Premium monocrystalline solar panel with advanced cell technology for maximum energy output. Perfect for residential and commercial use.",
             createdAt: "2026-04-20T10:00:00Z",
@@ -36,7 +34,7 @@ export const ProductProvider = ({ children }) => {
             name: "EcoPanel Ultra 350W",
             price: 749,
             image: sol2 ,
-            category: "PANELS",
+            category: "batteries",
             efficiency: "21.3%",
             description: "High-efficiency panel with eco-friendly manufacturing process and enhanced durability in harsh weather conditions.",
             createdAt: "2026-04-19T10:00:00Z",
@@ -46,7 +44,7 @@ export const ProductProvider = ({ children }) => {
             name: "SunPower Elite 500W",
             price: 1099,
             image: sol3,
-            category: "PANELS",
+            category: "inverters",
             efficiency: "23.5%",
             description: "Ultra-high efficiency solar panel for maximum power generation. Features advanced cell technology and 25-year warranty.",
             createdAt: "2026-04-18T10:00:00Z",
