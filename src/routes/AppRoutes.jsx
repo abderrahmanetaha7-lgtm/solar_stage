@@ -1,6 +1,5 @@
 import Navbar from "../components/layout/Navbar";  
-/* import Footer from "../components/layout/Footer";  */ 
-// import FeaturedProductsHome from "../components/layout/FeaturedProductsHome";
+import Footer from "../components/layout/Footer";  
 import { Route, Routes } from "react-router-dom";
 import Home from "../pages/Home";
 import Products from "../pages/Products";
@@ -13,6 +12,8 @@ export default function AppRoutes() {
         <Route path="/" element={<Home />} />   
         <Route path="/products" element={<Products />} />   
       </Routes>
+      <Footer />
+
     </>
   );
 }
