@@ -30,10 +30,15 @@ import { useState } from "react";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
 
+import { useLocation } from "react-router-dom";
+
 import logo from "../../assets/images/logo.png";
 import { useData } from "../../context/AuthContext";
 
 export default function Navbar() {
+  const Location = useLocation();
+
+  const isActive = (path) => Location.pathname === path;
   const { mode, toggleTheme } = useData();
   const links = [
     { label: "Home", path: "/" },
@@ -84,7 +89,12 @@ export default function Navbar() {
                     primary={item.label}
                     sx={{
                       textAlign: "center",
-                      color: "text.primary",
+                      color: isActive(item.path)
+                        ? "primary.main"
+                        : "text.primary",
+                      borderBottom: isActive(item.path)
+                        ? "2px solid"
+                        : "2px solid transparent",
                       fontWeight: "bold",
                       "&:hover": { color: "primary.main" },
                     }}
@@ -162,14 +172,15 @@ export default function Navbar() {
       </Toolbar>
 
       <Drawer anchor="left" open={openDrawer} onClose={toggleDrawer(false)}>
-        <Box sx={{ width: 200, mt: 6 }}>
+        <Box sx={{ width: 220, mt: 8 }}>
           {links.map((item) => (
             <List key={item.label}>
               <ListItemButton
                 component={RouterLink}
                 to={item.path}
                 onClick={toggleDrawer(false)}
-                sx={{
+                sx={{ 
+                  bgcolor: isActive(item.path) ? "primary.main" : "transparent",
                   "&:hover": {
                     bgcolor: "primary.main",
                     "& .MuiListItemText-primary": {
