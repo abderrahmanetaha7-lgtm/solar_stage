@@ -5,6 +5,7 @@ import { Route, Routes } from "react-router-dom";
 import Home from "../pages/Home";
 import Products from "../pages/Products";
 import { Box } from "@mui/material";
+import Contact from "../pages/Contact";
 
 export default function AppRoutes() {
   return (
@@ -20,6 +21,7 @@ export default function AppRoutes() {
         <Routes>
           <Route path="/" element={<Home />} />   
           <Route path="/products" element={<Products />} />   
+          <Route path="/contact" element={<Contact />} />   
         </Routes>
       </Box>
       <Footer />

@@ -273,6 +273,7 @@ export default function Products({ handleAddToCart }) {
             No products match your filters.
           </Typography>
         )}
+        
       </Container>
     </Box>
   );
