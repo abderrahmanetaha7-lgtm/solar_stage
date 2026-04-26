@@ -2,15 +2,15 @@ import React from "react";
 import { Box, Container, Typography, useTheme } from "@mui/material";
 
 // 🔥 Replace images with your own paths
-import img1 from "../assets/images/sol1.webp";
-import img2 from "../assets/images/sol2.webp";
-import img3 from "../assets/images/sol3.webp";
+import Installation from "../assets/images/Installation.jpg";
+import Maintenance from "../assets/images/Maintenance.png";
+import experts from "../assets/images/experts.jpg";
 
 const services = [
   {
     title: "Solar Installation",
     desc: "Professional installation by certified technicians with precision engineering and optimal panel placement.",
-    image: img1,
+    image: Installation,
     items: [
       "Site assessment",
       "Custom system design",
@@ -22,7 +22,7 @@ const services = [
   {
     title: "Maintenance Plans",
     desc: "Keep your system at peak performance with regular maintenance and monitoring.",
-    image: img2,
+    image: Maintenance,
     items: [
       "Quarterly inspections",
       "Panel cleaning",
@@ -34,7 +34,7 @@ const services = [
   {
     title: "Energy Consultation",
     desc: "Expert advice on optimizing your energy consumption and maximizing solar ROI.",
-    image: img3,
+    image: experts,
     items: [
       "Usage analysis",
       "System sizing",
@@ -52,17 +52,28 @@ export default function Services() {
   return (
     <Box
       sx={{
-        py: 8,
+        py: 10,
         background: isDark ? "#020617" : "#f8fafc",
       }}
     >
       <Container maxWidth="lg">
         {/* Header Section */}
-        <Box sx={{ textAlign: "center", mb: 6 }}>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            textAlign: "center",
+            mb: 5,
+          }}
+        >
           <Typography
-            variant="h3"
-            fontWeight="bold"
-            sx={{ mb: 1, color: isDark ? "#fff" : "#111" , marginTop:"25px" }}
+            sx={{
+              fontSize: { xs: "28px", md: "40px" },
+              fontWeight: 600,
+              letterSpacing: "-0.5px",
+              color: isDark ? "#fff" : "#111",
+            }}
           >
             Our Services
           </Typography>
@@ -74,8 +85,8 @@ export default function Services() {
               mx: "auto",
             }}
           >
-            Comprehensive solar energy solutions from consultation to installation
-            and beyond.
+            Comprehensive solar energy solutions from consultation to
+            installation and beyond.
           </Typography>
         </Box>
 
@@ -116,7 +127,7 @@ export default function Services() {
                 <Typography
                   variant="h5"
                   fontWeight="bold"
-                  sx={{ mb: 1, color: isDark ? "#fff" : "#111" }}
+                  sx={{ mb: 1, color: "primary.main" }}
                 >
                   {service.title}
                 </Typography>
@@ -136,6 +147,7 @@ export default function Services() {
                     <Typography
                       key={i}
                       sx={{
+                        marginLeft:"20px",
                         fontSize: "0.95rem",
                         color: isDark ? "#cbd5f5" : "#333",
                       }}

@@ -30,20 +30,20 @@ export default function Products({ handleAddToCart }) {
 
   // Determine number of grid columns based on screen size
   const getGridColumns = () => {
-    if (isMobile) return 1;     // 1 column on mobile
-    if (isTablet) return 2;     // 2 columns on tablet
-    return 4;                   // 4 columns on desktop
+    if (isMobile) return 1; // 1 column on mobile
+    if (isTablet) return 2; // 2 columns on tablet
+    return 4; // 4 columns on desktop
   };
 
   // Available product categories
   const categories = ["all", "panels", "batteries", "inverters"];
-  
+
   // State management for filters
-  const [search, setSearch] = useState("");           // Search query
-  const [category, setCategory] = useState("all");    // Selected category
+  const [search, setSearch] = useState(""); // Search query
+  const [category, setCategory] = useState("all"); // Selected category
   const [priceRange, setPriceRange] = useState([0, 10000]); // Price range [min, max]
-  const [minEfficiency, setMinEfficiency] = useState(0);    // Minimum efficiency filter
-  const [showFilters, setShowFilters] = useState(false);    // Toggle filters visibility
+  const [minEfficiency, setMinEfficiency] = useState(0); // Minimum efficiency filter
+  const [showFilters, setShowFilters] = useState(false); // Toggle filters visibility
 
   // Memoized filtered products to optimize performance
   const filtered = useMemo(
@@ -51,17 +51,17 @@ export default function Products({ handleAddToCart }) {
       products.filter((p) => {
         // Filter by category (skip if "all" is selected)
         if (category !== "all" && p.category !== category) return false;
-        
+
         // Filter by search query (case-insensitive)
         if (search && !p.name.toLowerCase().includes(search.toLowerCase()))
           return false;
-        
+
         // Filter by price range
         if (p.price < priceRange[0] || p.price > priceRange[1]) return false;
-        
+
         // Filter by minimum efficiency
         if (p.efficiency < minEfficiency) return false;
-        
+
         return true;
       }),
     [search, category, priceRange, minEfficiency, products], // Dependencies
@@ -70,11 +70,7 @@ export default function Products({ handleAddToCart }) {
   return (
     <Box
       sx={{
-        display: "flex",
-        justifyContent: "center",
-        py: { xs: 6, sm: 8, md: 12 },
-        flex: 1, // Allows content to expand
-        minHeight: "100vh", // Ensures full height coverage
+        py: 10,
       }}
     >
       <Container
@@ -83,24 +79,35 @@ export default function Products({ handleAddToCart }) {
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          py: 3,
+          mb: 5,
         }}
       >
         {/* Header Section */}
-        <Box sx={{ mb: 4, textAlign: "center" }}>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            textAlign: "center",
+            mb: 5,
+          }}
+        >
           <Typography
-            sx={{ mb: 0, fontSize: { xs: "35px", sm: "40px", md: "50px" } }}
-            variant="h3"
-            fontWeight="bold"
-            gutterBottom
+            sx={{
+              fontSize: { xs: "28px", md: "40px" },
+              fontWeight: 600,
+              letterSpacing: "-0.5px",
+            }}
           >
             Our Products
           </Typography>
 
           <Typography
-            color="text.secondary"
-            variant="h6"
-            sx={{ fontSize: { xs: "15px", sm: "17px", md: "20px" } }}
+            sx={{
+              maxWidth: "500px",
+              mx: "auto",
+              // fontSize: { xs: "15px", sm: "17px", md: "20px" },
+            }}
           >
             Premium solar energy solutions for every need
           </Typography>
@@ -273,7 +280,6 @@ export default function Products({ handleAddToCart }) {
             No products match your filters.
           </Typography>
         )}
-        
       </Container>
     </Box>
   );

@@ -132,7 +132,7 @@ const Footer = () => {
           </Grid>
 
           {/* Contact Section */}
-          <Grid item xs={12} md="auto" sx={{ textAlign: { md: "right" } }}>
+          <Grid item xs={12} md="auto" sx={{ textAlign: { md: "left" } }}>
             <Typography
               sx={{
                 mb: 2, // Bottom margin

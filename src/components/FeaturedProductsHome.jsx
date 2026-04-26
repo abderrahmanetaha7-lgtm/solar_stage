@@ -14,7 +14,7 @@ import { useProducts } from "../context/ProductContext";
 
 const FeaturedProducts = () => {
   const navigate = useNavigate(); // Hook for programmatic navigation
-  const theme = useTheme(); // Access theme object
+  const theme = useTheme(); 
   const isMobile = useMediaQuery(theme.breakpoints.down("sm")); // Check if screen is mobile size
   const isTablet = useMediaQuery(theme.breakpoints.between("sm", "md")); // Check if screen is tablet size
 
