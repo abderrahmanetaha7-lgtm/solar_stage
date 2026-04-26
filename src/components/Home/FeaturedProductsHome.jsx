@@ -8,9 +8,9 @@ import {
   Container,
   Skeleton,
 } from "@mui/material";
-import { useNavigate } from "react-router-dom";
-import ProductCard from "../components/ProductCard";
-import { useProducts } from "../context/ProductContext";
+import { useNavigate } from "react-router-dom"; 
+import { useProducts } from "../../context/ProductContext";
+import ProductCard from "../Products/ProductCard";
 
 const FeaturedProducts = () => {
   const navigate = useNavigate(); // Hook for programmatic navigation

@@ -1,5 +1,5 @@
 import React from "react";
-import imgHome from "../assets/images/imgHome.png";
+import imgHome from "../../assets/images/imgHome.png";
 import { Box, Container, Typography, Button } from "@mui/material";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import { Link as RouterLink } from "react-router-dom";

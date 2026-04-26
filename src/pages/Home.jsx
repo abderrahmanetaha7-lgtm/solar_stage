@@ -1,8 +1,8 @@
-import FeaturedProducts from "../components/FeaturedProductsHome";
-import FirstSectionHome from "../components/FirstSectionHome";
-import WhyChooseUs from "../components/SecondeSectionHome";
-import CustomersOpinionHome from "../components/CustomersOpinionHome";
-import GoContactHome from "../components/GoContactHome";
+import FeaturedProducts from "./../components/Home/FeaturedProductsHome";
+import FirstSectionHome from "./../components/Home/FirstSectionHome";
+import WhyChooseUs from "./../components/Home/SecondeSectionHome";
+import CustomersOpinionHome from "./../components/Home/CustomersOpinionHome";
+import GoContactHome from "./../components/Home/GoContactHome";
 export default function Home() {
   return (
     <>

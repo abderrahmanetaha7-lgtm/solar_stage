@@ -35,6 +35,16 @@ import { useLocation } from "react-router-dom";
 import logo from "../../assets/images/logo.png";
 import { useData } from "../../context/AuthContext";
 
+
+const LanguageSwitcher  = ({ value, onChange }) => (
+    <FormControl size="small">
+      <Select value={value} onChange={onChange} sx={{ minWidth: 80 }}>
+        <MenuItem value="FR">FR</MenuItem>
+        <MenuItem value="AR">AR</MenuItem>
+      </Select>
+    </FormControl>
+  );
+
 export default function Navbar() {
   const Location = useLocation();
 
@@ -49,14 +59,7 @@ export default function Navbar() {
   ];
 
   const theme = useTheme();
-  const LanguageSwitcher = ({ value, onChange }) => (
-    <FormControl size="small">
-      <Select value={value} onChange={onChange} sx={{ minWidth: 80 }}>
-        <MenuItem value="FR">FR</MenuItem>
-        <MenuItem value="AR">AR</MenuItem>
-      </Select>
-    </FormControl>
-  );
+  
   const [switchLang, setSwitchLang] = useState("FR");
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
@@ -107,7 +110,7 @@ export default function Navbar() {
 
         <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
           {!isMobile && (
-            <LanguageSwitcher
+            <LanguageSwitcher 
               value={switchLang}
               onChange={(e) => setSwitchLang(e.target.value)}
             />
@@ -209,7 +212,7 @@ export default function Navbar() {
             }}
           >
             <ListItemText primary="Language" sx={{ color: "text.primary" }} />
-            <LanguageSwitcher
+            <LanguageSwitcher  
               value={switchLang}
               onChange={(e) => setSwitchLang(e.target.value)}
             />
