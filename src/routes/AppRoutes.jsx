@@ -8,16 +8,18 @@ import { Box } from "@mui/material";
 import Contact from "../pages/Contact";
 import Services from "../pages/Services";
 import About from "../pages/About";
-
+import ScrollToTop from "../components/ScrollToTop";
+import ScrollTopButton from "../components/ScrollTopButton";
 export default function AppRoutes() {
   return (
     <Box
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        minHeight: "100vh",
-      }}
+    sx={{
+      display: "flex",
+      flexDirection: "column",
+      minHeight: "100vh",
+    }}
     >
+  <ScrollToTop />
       <Navbar />
       <Box component="main" sx={{ flex: 1 }}>
         <Routes>
@@ -29,6 +31,7 @@ export default function AppRoutes() {
         </Routes>
       </Box>
       <Footer />
+      <ScrollTopButton />
     </Box>
   );
 }
