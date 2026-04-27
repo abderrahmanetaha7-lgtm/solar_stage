@@ -7,8 +7,8 @@ import Home from "../pages/Home";
 import Products from "../pages/Products";
 import Contact from "../pages/Contact";
 import Services from "../pages/Services";
-/* import SignUp from "../pages/SignUp";
-import Login from "../pages/Login"; */
+/* import SignUp from "../pages/SignUp";*/
+import Login from "../pages/Login"; 
 import About from "../pages/About";
 
 import ScrollToTop from "../components/ScrollToTop";
@@ -30,8 +30,8 @@ export default function AppRoutes() {
 
         {/* ❌ Authentication pages without Navbar and Footer */}
         <Route element={<AuthLayout />}>
-          {/* <Route path="/register" element={<SignUp />} />
-          <Route path="/login" element={<Login />} /> */}
+          {/* <Route path="/register" element={<SignUp />} />*/}
+          <Route path="/login" element={<Login />} /> 
         </Route>
       </Routes>
     </>
