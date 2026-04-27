@@ -8,39 +8,39 @@ import experts from "../assets/images/experts.jpg";
 
 const services = [
   {
-    title: "Solar Installation",
-    desc: "Professional installation by certified technicians with precision engineering and optimal panel placement.",
+    title: "Installation solaire",
+    desc: "Installation professionnelle par des techniciens certifiés. Travail précis et bon placement des panneaux.",
     image: Installation,
     items: [
-      "Site assessment",
-      "Custom system design",
-      "Professional mounting",
-      "Grid connection",
-      "System testing",
+      "Étude du site",
+      "Conception du système",
+      "Installation des panneaux",
+      "Connexion au réseau",
+      "Test du système",
     ],
   },
   {
-    title: "Maintenance Plans",
-    desc: "Keep your system at peak performance with regular maintenance and monitoring.",
+    title: "Plan de maintenance",
+    desc: "Gardez votre système en bon état avec un entretien régulier.",
     image: Maintenance,
     items: [
-      "Quarterly inspections",
-      "Panel cleaning",
-      "Performance reports",
-      "Priority support",
-      "Component replacement",
+      "Contrôles trimestriels",
+      "Nettoyage des panneaux",
+      "Rapports de performance",
+      "Support rapide",
+      "Remplacement des pièces",
     ],
   },
   {
-    title: "Energy Consultation",
-    desc: "Expert advice on optimizing your energy consumption and maximizing solar ROI.",
+    title: "Conseil en énergie",
+    desc: "Conseils pour mieux utiliser votre énergie et augmenter le retour sur investissement solaire.",
     image: experts,
     items: [
-      "Usage analysis",
-      "System sizing",
-      "ROI projection",
-      "Financing options",
-      "Incentive guidance",
+      "Analyse de la consommation",
+      "Dimension du système",
+      "Estimation du retour sur investissement",
+      "Options de financement",
+      "Aide et conseils",
     ],
   },
 ];
@@ -75,7 +75,7 @@ export default function Services() {
               color: isDark ? "#fff" : "#111",
             }}
           >
-            Our Services
+            Nos services
           </Typography>
 
           <Typography
@@ -85,8 +85,8 @@ export default function Services() {
               mx: "auto",
             }}
           >
-            Comprehensive solar energy solutions from consultation to
-            installation and beyond.
+            Des solutions complètes d’énergie solaire, de la consultation à
+            l’installation et au-delà.
           </Typography>
         </Box>
 
@@ -147,7 +147,7 @@ export default function Services() {
                     <Typography
                       key={i}
                       sx={{
-                        marginLeft:"20px",
+                        marginLeft: "20px",
                         fontSize: "0.95rem",
                         color: isDark ? "#cbd5f5" : "#333",
                       }}

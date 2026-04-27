@@ -1,29 +1,23 @@
 import React, { useState } from "react";
-import {
-  Box,
-  Card,
-  Typography,
-  IconButton,
-  Rating,
-} from "@mui/material";
+import { Box, Card, Typography, IconButton, Rating } from "@mui/material";
 import { ArrowBack, ArrowForward } from "@mui/icons-material";
 
 // Array of customer testimonials data
 const testimonials = [
   {
-    text: "SolarNova transformed our energy bills. We now produce more energy than we consume!",
+    text: "SolarNova a transformé nos factures d’électricité. Nous produisons maintenant plus d’énergie que nous en consommons !",
     name: "Jennifer W.",
-    role: "Homeowner",
+    role: "Propriétaire",
     rating: 5,
   },
   {
-    text: "Amazing service and installation. Highly recommended!",
+    text: "Service et installation incroyables. Je recommande fortement !",
     name: "David K.",
     role: "Entrepreneur",
     rating: 4,
   },
   {
-    text: "خفضت الفاتورة بشكل كبير! تجربة رائعة.",
+    text: "J’ai beaucoup réduit ma facture ! Une très bonne expérience.",
     name: "Ahmed B.",
     role: "Client",
     rating: 5,
@@ -65,10 +59,10 @@ export default function CustomersOpinionHome() {
         sx={{
           fontSize: { xs: "1.75rem", sm: "2rem", md: "2.5rem" }, // Responsive font sizes
           mb: 1,
-          marginBottom: "30px" // Additional bottom margin
+          marginBottom: "30px", // Additional bottom margin
         }}
       >
-        What Our Customers Say
+        Ce que disent nos clients
       </Typography>
 
       {/* Testimonial card */}

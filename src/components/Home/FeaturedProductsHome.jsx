@@ -8,13 +8,15 @@ import {
   Container,
   Skeleton,
 } from "@mui/material";
-import { useNavigate } from "react-router-dom"; 
+import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
+
+import { useNavigate } from "react-router-dom";
 import { useProducts } from "../../context/ProductContext";
 import ProductCard from "../Products/ProductCard";
 
 const FeaturedProducts = () => {
   const navigate = useNavigate(); // Hook for programmatic navigation
-  const theme = useTheme(); 
+  const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm")); // Check if screen is mobile size
   const isTablet = useMediaQuery(theme.breakpoints.between("sm", "md")); // Check if screen is tablet size
 
@@ -28,7 +30,7 @@ const FeaturedProducts = () => {
   };
 
   // Handle adding product to cart
-  const handleAddToCart = (productId) => { 
+  const handleAddToCart = (productId) => {
     console.log(`Product ${productId} added to cart`); // Log action (replace with actual cart logic)
   };
 
@@ -43,8 +45,18 @@ const FeaturedProducts = () => {
       <Container maxWidth="xl" sx={{ py: 6 }}>
         {/* Header skeletons */}
         <Box sx={{ textAlign: "center", mb: 5 }}>
-          <Skeleton variant="text" width={300} height={60} sx={{ mx: "auto" }} />
-          <Skeleton variant="text" width={200} height={30} sx={{ mx: "auto" }} />
+          <Skeleton
+            variant="text"
+            width={300}
+            height={60}
+            sx={{ mx: "auto" }}
+          />
+          <Skeleton
+            variant="text"
+            width={200}
+            height={30}
+            sx={{ mx: "auto" }}
+          />
         </Box>
         {/* Products grid skeletons */}
         <Box
@@ -79,7 +91,7 @@ const FeaturedProducts = () => {
             letterSpacing: 2,
           }}
         >
-          Our Collection
+          Notre collection
         </Typography>
         <Typography
           variant="h3"
@@ -89,15 +101,15 @@ const FeaturedProducts = () => {
             mb: 1,
           }}
         >
-          Featured Products
+          Produits en vedette
         </Typography>
         <Typography
           variant="body1"
           color="text.secondary"
           sx={{ maxWidth: 600, mx: "auto" }}
         >
-          Explore our latest solar energy solutions designed for maximum efficiency
-          and sustainability
+          Découvrez nos dernières solutions d’énergie solaire conçues pour une
+          efficacité maximale et une durabilité optimale and sustainability
         </Typography>
       </Box>
 
@@ -138,7 +150,8 @@ const FeaturedProducts = () => {
             },
           }}
         >
-          View All Products →
+          Voir tous les produits 
+          <KeyboardArrowRightIcon sx={{ ml: 1 }} />
         </Button>
       </Box>
     </Container>

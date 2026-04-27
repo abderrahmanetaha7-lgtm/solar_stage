@@ -1,34 +1,34 @@
-import { Box, Container } from "@mui/material"; 
+import { Box, Container } from "@mui/material";
 import TimelineItem from "./TimelineItem";
 
 export default function Timeline() {
   const data = [
-  {
-    year: "2010",
-    description:
-      "Solar energy was still expensive and mainly used in large industrial projects and government initiatives.",
-  },
-  {
-    year: "2015",
-    description:
-      "Significant drop in solar panel prices made residential solar systems more accessible to households.",
-  },
-  {
-    year: "2018",
-    description:
-      "Mass adoption began as efficiency improved and governments introduced renewable energy incentives.",
-  },
-  {
-    year: "2022",
-    description:
-      "Integration of smart solar systems with batteries allowed energy storage and 24/7 power usage.",
-  },
-  {
-    year: "2024",
-    description:
-      "Solar energy became one of the cheapest electricity sources globally, leading to rapid worldwide expansion.",
-  },
-];
+    {
+      year: "2010",
+      description:
+        "L’énergie solaire était encore chère et utilisée surtout dans les grands projets industriels et les initiatives gouvernementales.",
+    },
+    {
+      year: "2015",
+      description:
+        "La forte baisse du prix des panneaux solaires a rendu les systèmes solaires résidentiels plus accessibles aux foyers.",
+    },
+    {
+      year: "2018",
+      description:
+        "L’adoption de masse a commencé grâce à l’amélioration de l’efficacité et aux aides gouvernementales pour les énergies renouvelables.",
+    },
+    {
+      year: "2022",
+      description:
+        "L’intégration de systèmes solaires intelligents avec batteries a permis le stockage de l’énergie et une utilisation 24h/24.",
+    },
+    {
+      year: "2024",
+      description:
+        "L’énergie solaire est devenue l’une des sources d’électricité les moins chères au monde, entraînant une forte expansion mondiale.",
+    },
+  ];
 
   return (
     <Box sx={{ py: 10 }}>

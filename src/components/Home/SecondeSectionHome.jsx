@@ -18,33 +18,33 @@ import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 const features = [
   {
     icon: <BoltIcon sx={{ fontSize: 40, color: "#f5c542" }} />,
-    title: "Affordable Solar Solutions",
-    desc: "Solar systems for every budget, for homes and businesses.",
+    title: "Solutions solaires abordables",
+    desc: "Des systèmes solaires adaptés à tous les budgets, pour les particuliers et les entreprises.",
   },
   {
     icon: <BuildIcon sx={{ fontSize: 40, color: "#4caf50" }} />,
-    title: "Professional Installation",
-    desc: "Certified technicians ensure safe and clean installation.",
+    title: "Installation professionnelle",
+    desc: "Des techniciens certifiés assurent une installation sûre et propre.",
   },
   {
     icon: <VerifiedIcon sx={{ fontSize: 40, color: "#2196f3" }} />,
-    title: "High Quality Products",
-    desc: "Reliable solar panels and batteries with long-term warranty.",
+    title: "Produits de haute qualité",
+    desc: "Panneaux solaires et batteries fiables avec garantie à long terme.",
   },
   {
     icon: <SavingsIcon sx={{ fontSize: 40, color: "#ff9800" }} />,
-    title: "Save on Electricity Bills",
-    desc: "Reduce your energy costs with clean solar power.",
+    title: "Économisez sur vos factures d’électricité",
+    desc: "Réduisez vos coûts énergétiques grâce à une énergie solaire propre.",
   },
   {
     icon: <SupportAgentIcon sx={{ fontSize: 40, color: "#9c27b0" }} />,
-    title: "After-Sales Support",
-    desc: "We assist you even after installation anytime you need help.",
+    title: "Service après-vente",
+    desc: "Nous vous accompagnons même après l’installation, à tout moment.",
   },
   {
     icon: <LocalShippingIcon sx={{ fontSize: 40, color: "#00bcd4" }} />,
-    title: "Fast Delivery",
-    desc: "Quick delivery and service in multiple regions.",
+    title: "Livraison rapide",
+    desc: "Livraison et service rapides dans plusieurs régions.",
   },
 ];
 
@@ -53,7 +53,7 @@ export default function WhyChooseUs() {
     <Box sx={{ py: 6 }}>
       <Container>
         <Typography variant="h4" align="center" fontWeight="bold" gutterBottom>
-          Why Choose Us
+          Pourquoi nous choisir
         </Typography>
 
         <Typography
@@ -62,16 +62,17 @@ export default function WhyChooseUs() {
           color="text.secondary"
           sx={{ mb: 6 }}
         >
-          Smart solar solutions designed to save energy and money
+          Des solutions solaires intelligentes conçues pour économiser l’énergie
+          et l’argent
         </Typography>
 
-        <Grid container spacing={2} sx={{justifyContent:"center"}}>
+        <Grid container spacing={2} sx={{ justifyContent: "center" }}>
           {features.map((item, index) => (
             <Grid size={{ xs: 12, sm: 6, md: 4 }} key={index}>
               <Card
                 sx={{
                   border: "2px solid black",
-                  borderRadius: "15px", 
+                  borderRadius: "15px",
                   height: "100%",
                   boxShadow: 3,
                   transition: "0.3s",

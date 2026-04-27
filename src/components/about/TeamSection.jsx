@@ -29,7 +29,7 @@ export default function TeamSection({ team }) {
           mb: 5,
         }}
       >
-        Our Team
+        Notre équipe
       </Typography>
 
       {/* MOBILE VIEW */}

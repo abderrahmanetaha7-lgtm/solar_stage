@@ -51,12 +51,12 @@ export default function Navbar() {
   const isActive = (path) => Location.pathname === path;
   const { mode, toggleTheme } = useData();
   const links = [
-    { label: "Home", path: "/" },
-    { label: "Products", path: "/products" },
-    { label: "Services", path: "/services" },
-    { label: "About", path: "/about" },
-    { label: "Contact", path: "/contact" },
-  ];
+  { label: "Accueil", path: "/" },
+  { label: "Produits", path: "/products" },
+  { label: "Services", path: "/services" },
+  { label: "À propos", path: "/about" },
+  { label: "Contact", path: "/contact" },
+];
 
   const theme = useTheme();
   
@@ -130,7 +130,7 @@ export default function Navbar() {
           >
             <SearchIcon />    
           </IconButton>  */}
-          <Tooltip title="Login/Register">
+          <Tooltip title="Connexion / Inscription">
             <IconButton
               onClick={(e) => setAnchorElUser(e.currentTarget)}
               sx={{
@@ -148,12 +148,12 @@ export default function Navbar() {
           >
             <MenuItem>
               <Typography sx={{ "&:hover": { color: "primary.main" } }}>
-                Login
+                Connexion
               </Typography>
             </MenuItem>
             <MenuItem>
               <Typography sx={{ "&:hover": { color: "primary.main" } }}>
-                Register
+                Inscription
               </Typography>
             </MenuItem>
           </Menu>
@@ -211,7 +211,7 @@ export default function Navbar() {
               mx: 1,
             }}
           >
-            <ListItemText primary="Language" sx={{ color: "text.primary" }} />
+            <ListItemText primary="Langue" sx={{ color: "text.primary" }} />
             <LanguageSwitcher  
               value={switchLang}
               onChange={(e) => setSwitchLang(e.target.value)}

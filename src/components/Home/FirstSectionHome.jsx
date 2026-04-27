@@ -73,7 +73,7 @@ export default function FirstSectionHome() {
               mb: 3,
             }}
           >
-            Power Your Future with Clean Solar Energy
+            Alimentez votre avenir avec l’énergie solaire propre
           </Typography>
 
           <Typography
@@ -84,8 +84,8 @@ export default function FirstSectionHome() {
               mb: 4,
             }}
           >
-            Premium solar panels, batteries, and smart energy solutions designed
-            for a sustainable tomorrow.
+            Panneaux solaires haut de gamme, batteries et solutions énergétiques
+            intelligentes conçus pour un avenir durable.
           </Typography>
 
           <Box
@@ -111,7 +111,7 @@ export default function FirstSectionHome() {
                 },
               }}
             >
-              Shop Now
+              Acheter maintenant
               <KeyboardArrowRightIcon sx={{ ml: 1 }} />
             </Button>
 
@@ -130,7 +130,7 @@ export default function FirstSectionHome() {
                 },
               }}
             >
-              Learn More
+              En savoir plus
             </Button>
           </Box>
         </Box>

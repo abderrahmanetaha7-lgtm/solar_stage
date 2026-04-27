@@ -5,7 +5,7 @@ import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 export default function GoContactHome() {
   return (
     // Outer container for centering the content
-    <Box
+    <Box 
       sx={{
         px: 3, // Horizontal padding
         py: 8, // Vertical padding
@@ -41,7 +41,7 @@ export default function GoContactHome() {
             fontSize: { xs: "1.8rem", md: "2.2rem" }, // Responsive font size
           }}
         >
-          Ready to Go Solar?
+          Prêt à passer à l’énergie solaire ?
         </Typography>
 
         {/* Description text */}
@@ -54,8 +54,7 @@ export default function GoContactHome() {
             lineHeight: 1.6, // Improve readability
           }}
         >
-          Get a free consultation and discover how much you can save with solar
-          energy.
+            Obtenez une consultation gratuite et découvrez combien vous pouvez économiser avec l’énergie solaire.
         </Typography>
 
         {/* Call-to-action button */}
@@ -76,7 +75,7 @@ export default function GoContactHome() {
             },
           }}
         >
-          Get Free Quote
+          Obtenir un devis gratuit
         </Button>
       </Box>
     </Box>

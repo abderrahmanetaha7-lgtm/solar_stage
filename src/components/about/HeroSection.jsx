@@ -20,7 +20,7 @@ export default function HeroSection({ isDark, heroImg }) {
             color: isDark ? "#fff" : "#111",
           }}
         >
-          About Sunergy
+          À propos de Sunergy
         </Typography>
         <Typography
           sx={{
@@ -29,8 +29,8 @@ export default function HeroSection({ isDark, heroImg }) {
             lineHeight: 1.6,
           }}
         >
-          We're on a mission to accelerate the world's transition to sustainable
-          energy.
+          Notre mission est d’accélérer la transition du monde vers l’énergie
+          durable.
         </Typography>
       </Box>
       <Box
@@ -73,13 +73,13 @@ export default function HeroSection({ isDark, heroImg }) {
             mb={3}
             sx={{ fontSize: { xs: "30px", sm: "40px", md: "50px" } }}
           >
-            Clean Energy for a Better Future
+            Une énergie propre pour un meilleur avenir
           </Typography>
 
           <Typography sx={{ color: "#e2e8f0", fontSize: "1.3rem" }}>
-            We are a company specialized in solar energy solutions, committed to
-            delivering clean, sustainable, and cost-effective power for homes
-            and businesses.
+            Nous sommes une entreprise spécialisée dans les solutions d’énergie
+            solaire. Nous fournissons une énergie propre, durable et économique
+            pour les maisons et les entreprises.
           </Typography>
         </Box>
       </Box>

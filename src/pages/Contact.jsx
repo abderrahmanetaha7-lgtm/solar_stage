@@ -55,12 +55,12 @@ export default function Contact() {
                 fontSize: { xs: "30px", sm: "40px", md: "50px" },
               }}
             >
-              Get in Touch
+              Contactez-nous
             </Typography>
             <Typography
               sx={{ textAlign: "center", color: "text.secondary", mt: 2 }}
             >
-              Have questions? We'd love to hear from you.{" "}
+              Vous avez des questions ? Nous serons ravis de vous répondre.
             </Typography>
           </Box>
 
@@ -77,7 +77,7 @@ export default function Contact() {
                           <TextField
                             fullWidth
                             variant="outlined"
-                            placeholder="Name"
+                            placeholder="Nom"
                           />
                         </Grid>
                         <Grid item xs={12} sm={6}>
@@ -93,13 +93,13 @@ export default function Contact() {
                       <TextField
                         fullWidth
                         variant="outlined"
-                        placeholder="Phone"
+                        placeholder="Téléphone"
                         sx={{ mt: 2 }}
                       />
                       <TextField
                         fullWidth
                         variant="outlined"
-                        placeholder="Subject"
+                        placeholder="Sujet"
                         sx={{ mt: 2 }}
                       />
                       <TextField
@@ -119,7 +119,7 @@ export default function Contact() {
                         sx={{ mt: 3, borderRadius: 2 }}
                         onClick={handleSubmitted}
                       >
-                        Send Message
+                        Envoyer le message
                       </Button>
                     </Stack>
                   </CardContent>
@@ -137,12 +137,12 @@ export default function Contact() {
                       },
                       {
                         icon: <LocalPhoneOutlinedIcon />,
-                        label: "Phone",
-                        value: "+212 66666666",
+                        label: "Téléphone",
+                        value: "+212 78541954",
                       },
                       {
                         icon: <LocationOnOutlinedIcon />,
-                        label: "Address",
+                        label: "Adresse",
                         value: "Marrakech",
                       },
                     ].map((item, i) => (

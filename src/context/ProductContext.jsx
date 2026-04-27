@@ -25,10 +25,10 @@ export const ProductProvider = ({ children }) => {
     const fetchProducts = async () => {
       try {
         setLoading(true); // Set loading to true before fetching
-        
+
         // Simulate API delay (500ms)
-        await new Promise(resolve => setTimeout(resolve, 500));
-        
+        await new Promise((resolve) => setTimeout(resolve, 500));
+
         // Initial product data (would normally come from an API)
         const initialProducts = [
           {
@@ -36,9 +36,10 @@ export const ProductProvider = ({ children }) => {
             name: "SolarMax Pro 400W",
             price: 899,
             image: sol1,
-            category: "panels",
+            category: "inverters",
             efficiency: "22.8%",
-            description: "Premium monocrystalline solar panel with advanced cell technology for maximum energy output. Perfect for residential and commercial use.",
+            description:
+              "Panneau solaire haut de gamme avec technologie avancée pour produire plus d’énergie. Idéal pour les maisons et les entreprises.",
             createdAt: "2026-04-20T10:00:00Z",
           },
           {
@@ -48,7 +49,8 @@ export const ProductProvider = ({ children }) => {
             image: sol2,
             category: "batteries",
             efficiency: "21.3%",
-            description: "High-efficiency panel with eco-friendly manufacturing process and enhanced durability in harsh weather conditions.",
+            description:
+              "Panneau solaire efficace et écologique. Il résiste bien aux mauvaises conditions météo.",
             createdAt: "2026-04-19T10:00:00Z",
           },
           {
@@ -56,9 +58,10 @@ export const ProductProvider = ({ children }) => {
             name: "SunPower Elite 500W",
             price: 1099,
             image: sol3,
-            category: "inverters",
+            category: "panels",
             efficiency: "23.5%",
-            description: "Ultra-high efficiency solar panel for maximum power generation. Features advanced cell technology and 25-year warranty.",
+            description:
+              "Panneau solaire très puissant pour produire beaucoup d’énergie. Garantie de 25 ans.",
             createdAt: "2026-04-18T10:00:00Z",
           },
           {
@@ -66,59 +69,62 @@ export const ProductProvider = ({ children }) => {
             name: "HomeSolar Basic 300W",
             price: 599,
             image: sol4,
-            category: "PANELS",
+            category: "panels",
             efficiency: "19.8%",
-            description: "Affordable solar solution for residential use. Easy installation and reliable performance for everyday energy needs.",
+            description:
+              "Solution solaire simple et pas chère pour la maison. Facile à installer et fiable.",
             createdAt: "2026-04-17T10:00:00Z",
           },
           {
             id: 5,
-            name: "Solar Inverter Pro",
+            name: "Onduleur Solaire Pro",
             price: 1299,
             image: sol5,
-            category: "INVERTERS",
+            category: "batteries",
             efficiency: "98%",
-            description: "Smart hybrid inverter with WiFi monitoring and battery-ready design. Maximize your solar investment.",
+            description:
+              "Onduleur intelligent avec WiFi et batterie. Permet de mieux gérer l’énergie solaire.",
             createdAt: "2026-04-16T10:00:00Z",
           },
           {
             id: 6,
-            name: "Solar Inverter Pro",
+            name: "Onduleur Solaire Pro",
             price: 1299,
             image: sol6,
-            category: "INVERTERS",
+            category: "inverters",
             efficiency: "98%",
-            description: "Smart hybrid inverter with WiFi monitoring and battery-ready design. Maximize your solar investment.",
+            description:
+              "Onduleur intelligent avec WiFi et batterie. Permet de mieux gérer l’énergie solaire.",
             createdAt: "2026-04-16T10:00:00Z",
           },
           {
             id: 7,
-            name: "Solar Inverter Pro",
+            name: "Onduleur Solaire Pro",
             price: 1299,
             image: sol7,
-            category: "INVERTERS",
+            category: "batteries",
             efficiency: "98%",
-            description: "Smart hybrid inverter with WiFi monitoring and battery-ready design. Maximize your solar investment.",
+            description:
+              "Onduleur intelligent avec WiFi et batterie. Permet de mieux gérer l’énergie solaire.",
             createdAt: "2026-04-16T10:00:00Z",
           },
           {
             id: 8,
-            name: "Solar Inverter Pro",
+            name: "Onduleur Solaire Pro",
             price: 1299,
             image: sol8,
-            category: "INVERTERS",
+            category: "panels",
             efficiency: "98%",
-            description: "Smart hybrid inverter with WiFi monitoring and battery-ready design. Maximize your solar investment.",
+            description:
+              "Onduleur intelligent avec WiFi et batterie. Permet de mieux gérer l’énergie solaire.",
             createdAt: "2026-04-16T10:00:00Z",
           },
-          
-
         ];
-        
+
         setProducts(initialProducts); // Set products to state
         setError(null); // Clear any previous errors
       } catch (err) {
-        setError("Failed to load products"); // Set error message
+        setError("Échec du chargement des produits"); // Set error message
         console.error(err); // Log error to console
       } finally {
         setLoading(false); // Always set loading to false when done
@@ -131,23 +137,25 @@ export const ProductProvider = ({ children }) => {
   // Add new product
   const addProduct = (newProduct) => {
     // Calculate new ID (max existing ID + 1)
-    const maxId = products.length > 0 ? Math.max(...products.map(p => p.id)) : 0;
+    const maxId =
+      products.length > 0 ? Math.max(...products.map((p) => p.id)) : 0;
     setProducts((prev) => [
       ...prev, // Spread existing products
-      { 
+      {
         ...newProduct, // Spread new product data
         id: maxId + 1, // Assign new ID
-        createdAt: new Date().toISOString() // Add current timestamp
-      }
+        createdAt: new Date().toISOString(), // Add current timestamp
+      },
     ]);
   };
 
   // Update existing product by ID
   const updateProduct = (id, updatedProduct) => {
     setProducts((prev) =>
-      prev.map((product) =>
-        product.id === id ? { ...product, ...updatedProduct } : product // Replace matching product, keep others
-      )
+      prev.map(
+        (product) =>
+          product.id === id ? { ...product, ...updatedProduct } : product, // Replace matching product, keep others
+      ),
     );
   };
 
@@ -160,10 +168,10 @@ export const ProductProvider = ({ children }) => {
   return (
     <ProductContext.Provider
       value={{
-        products,      // Array of products
-        loading,       // Loading state
-        error,         // Error state
-        addProduct,    // Function to add product
+        products, // Array of products
+        loading, // Loading state
+        error, // Error state
+        addProduct, // Function to add product
         updateProduct, // Function to update product
         deleteProduct, // Function to delete product
       }}

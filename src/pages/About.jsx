@@ -13,13 +13,12 @@ import img2 from "../assets/images/img2.jpeg";
 import sol3 from "../assets/images/sol3.webp";
 import heroImg from "../assets/images/heroImg.png";
 import team2 from "../assets/images/team2.jpg";
-import team4 from "../assets/images/team4.jpg"; 
-
+import team4 from "../assets/images/team4.jpg";
 
 import Timeline from "../components/about/Timeline";
 import ZigzagItem from "../components/about/ZigzagItem";
 import HeroSection from "../components/about/HeroSection";
-import TeamSection from "../components/about/TeamSection"; 
+import TeamSection from "../components/about/TeamSection";
 
 export default function About() {
   const theme = useTheme();
@@ -27,18 +26,18 @@ export default function About() {
 
   const sections = [
     {
-      title: "About Us",
-      text: "We are a team of experts in renewable energy, specializing in the design and installation of solar panel systems. Our goal is to help our clients reduce electricity costs while contributing to a cleaner and greener environment.",
+      title: "À propos de nous",
+      text: "Nous sommes une équipe d’experts en énergie renouvelable, spécialisée dans la conception et l’installation de panneaux solaires. Notre objectif est d’aider nos clients à réduire leurs coûts d’électricité tout en contribuant à un environnement plus propre et plus vert.",
       img: img1,
     },
     {
-      title: "Our Vision",
-      text: "We envision a world fully powered by clean, renewable energy where solar energy is accessible to everyone.",
+      title: "Notre vision",
+      text: "Nous imaginons un monde entièrement alimenté par une énergie propre et renouvelable, où l’énergie solaire est accessible à tous.",
       img: img2,
     },
     {
-      title: "Our Values",
-      text: "We believe in innovation, transparency, quality, and long-term commitment to our clients and the environment.",
+      title: "Nos valeurs",
+      text: "Nous croyons en l’innovation, la transparence, la qualité et un engagement à long terme envers nos clients et l’environnement.",
       img: sol3,
     },
   ];
@@ -49,11 +48,10 @@ export default function About() {
     { id: 3, name: "mohmed azerty", role: "CTO", img: team2 },
     { id: 4, name: "salah med", role: "Operations", img: team4 },
   ];
- 
 
   return (
     <>
-      <Box sx={{py:10}}>
+      <Box sx={{ py: 10 }}>
         <Container>
           <HeroSection isDark={isDark} heroImg={heroImg} />
 

@@ -58,7 +58,7 @@ export default function Products({ handleAddToCart }) {
         if (p.price < priceRange[0] || p.price > priceRange[1]) return false;
 
         // Filter by minimum efficiency
-        if (p.efficiency < minEfficiency) return false;
+        if (parseFloat(p.efficiency) < minEfficiency) return false;
 
         return true;
       }),
@@ -97,7 +97,7 @@ export default function Products({ handleAddToCart }) {
               letterSpacing: "-0.5px",
             }}
           >
-            Our Products
+            Nos produits
           </Typography>
 
           <Typography
@@ -107,7 +107,7 @@ export default function Products({ handleAddToCart }) {
               // fontSize: { xs: "15px", sm: "17px", md: "20px" },
             }}
           >
-            Premium solar energy solutions for every need
+            Solutions d’énergie solaire haut de gamme pour tous les besoins
           </Typography>
         </Box>
 
@@ -151,7 +151,7 @@ export default function Products({ handleAddToCart }) {
             color="text.secondary"
             sx={{ margin: "20px 0 0 0" }}
           >
-            No products match your filters.
+            Aucun produit ne correspond à vos filtres.
           </Typography>
         )}
       </Container>

@@ -18,53 +18,48 @@ import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 const ProductCard = ({ product, onAddToCart }) => {
   const [isFavorite, setIsFavorite] = useState(false);
   const [imageError, setImageError] = useState(false);
-  const theme = useTheme(); // استخدام الثيم الحالي
-  const isDarkMode = theme.palette.mode === 'dark';
+  const theme = useTheme();
+  const isDarkMode = theme.palette.mode === "dark";
 
   // Default fallback values
   const {
     id,
-    name = "Product Name",
+    name = "Nom du produit",
     price = 0,
     image = "https://via.placeholder.com/500x300?text=No+Image",
     category = "GENERAL",
     efficiency = "0%",
-    description = "No description available",
+    description = "Aucune description disponible",
   } = product;
 
-  
-  const fallbackImage = "https://via.placeholder.com/500x300?text=Image+Not+Found";
+  const fallbackImage =
+    "https://via.placeholder.com/500x300?text=Image+Not+Found";
   const imageSrc = imageError ? fallbackImage : image;
 
   const handleFavoriteClick = () => {
     setIsFavorite(!isFavorite);
   };
 
-  
-  const formattedPrice = typeof price === 'number' 
-    ? price.toLocaleString() 
-    : price;
+  const formattedPrice =
+    typeof price === "number" ? price.toLocaleString() : price;
 
-    
   const getFavoriteButtonBgColor = () => {
     if (isDarkMode) {
-      return "rgba(30, 30, 30, 0.95)"; 
+      return "rgba(30, 30, 30, 0.95)";
     }
-    return "rgba(255, 255, 255, 0.95)"; 
+    return "rgba(255, 255, 255, 0.95)";
   };
 
-  
   const getFavoriteButtonBorder = () => {
     if (isDarkMode) {
-      return "1px solid rgba(255, 255, 255, 0.2)"; 
+      return "1px solid rgba(255, 255, 255, 0.2)";
     }
-    return "1px solid rgba(0, 0, 0, 0.08)"; 
+    return "1px solid rgba(0, 0, 0, 0.08)";
   };
 
-  
   const getFavoriteIconColor = () => {
     if (isDarkMode) {
-      return "#e0e0e0";  
+      return "#e0e0e0";
     }
     return "#666666"; // رمادي غامق لللايت مود
   };
@@ -73,14 +68,14 @@ const ProductCard = ({ product, onAddToCart }) => {
     <Card
       sx={{
         borderRadius: 4,
-        boxShadow: isDarkMode 
-          ? "0 8px 24px rgba(0,0,0,0.3)" 
+        boxShadow: isDarkMode
+          ? "0 8px 24px rgba(0,0,0,0.3)"
           : "0 8px 24px rgba(0,0,0,0.08)",
         transition: "all 0.3s ease-in-out",
         "&:hover": {
           transform: "translateY(-8px)",
-          boxShadow: isDarkMode 
-            ? "0 16px 32px rgba(0,0,0,0.4)" 
+          boxShadow: isDarkMode
+            ? "0 16px 32px rgba(0,0,0,0.4)"
             : "0 16px 32px rgba(0,0,0,0.12)",
         },
         height: "100%",
@@ -121,7 +116,6 @@ const ProductCard = ({ product, onAddToCart }) => {
           onError={() => setImageError(true)}
         />
 
-        {/* كفاءة الطاقة - تحسين المظهر */}
         <Chip
           icon={<FlashOnIcon sx={{ fontSize: 16, color: "#fff" }} />}
           label={efficiency}
@@ -141,7 +135,6 @@ const ProductCard = ({ product, onAddToCart }) => {
           }}
         />
 
-
         <IconButton
           onClick={handleFavoriteClick}
           sx={{
@@ -155,8 +148,8 @@ const ProductCard = ({ product, onAddToCart }) => {
             height: 40,
             transition: "all 0.2s ease",
             "&:hover": {
-              bgcolor: isDarkMode 
-                ? "rgba(50, 50, 50, 1)" 
+              bgcolor: isDarkMode
+                ? "rgba(50, 50, 50, 1)"
                 : "rgba(255, 255, 255, 1)",
               transform: "scale(1.1)",
             },
@@ -165,13 +158,14 @@ const ProductCard = ({ product, onAddToCart }) => {
           {isFavorite ? (
             <FavoriteIcon sx={{ color: "#e91e63", fontSize: 22 }} />
           ) : (
-            <FavoriteBorderIcon sx={{ color: getFavoriteIconColor(), fontSize: 22 }} />
+            <FavoriteBorderIcon
+              sx={{ color: getFavoriteIconColor(), fontSize: 22 }}
+            />
           )}
         </IconButton>
       </Box>
 
-
-      <CardContent sx={{ flexGrow: 1, p: 3 }}> 
+      <CardContent sx={{ flexGrow: 1, p: 3 }}>
         <Typography
           variant="caption"
           sx={{
@@ -202,7 +196,7 @@ const ProductCard = ({ product, onAddToCart }) => {
             WebkitLineClamp: 2,
             WebkitBoxOrient: "vertical",
             overflow: "hidden",
-            color: "text.primary", // يتكيف مع الثيم
+            color: "text.primary",
           }}
         >
           {name}
@@ -242,10 +236,10 @@ const ProductCard = ({ product, onAddToCart }) => {
               color="text.secondary"
               sx={{ textDecoration: "line-through", fontSize: "0.75rem" }}
             >
-              ${(formattedPrice * 1.2).toLocaleString()}
+              {(formattedPrice * 1.2).toLocaleString()} DH
             </Typography>
-            <Typography variant="h5" fontWeight="bold" color="primary">
-              ${formattedPrice}
+            <Typography variant="h6" fontWeight="bold" color="primary">
+              {formattedPrice} DH
             </Typography>
           </Box>
 
@@ -266,7 +260,7 @@ const ProductCard = ({ product, onAddToCart }) => {
               },
             }}
           >
-            Add
+            Ajouter
           </Button>
         </Box>
       </CardContent>
