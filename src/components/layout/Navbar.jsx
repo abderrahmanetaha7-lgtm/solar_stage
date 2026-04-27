@@ -13,56 +13,52 @@ import {
   Drawer,
   Typography,
   FormControl,
-  InputLabel,
   Select,
 } from "@mui/material";
 
 import MenuIcon from "@mui/icons-material/Menu";
-// import SearchIcon from "@mui/icons-material/Search";
 import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 import LightModeOutlinedIcon from "@mui/icons-material/LightModeOutlined";
 import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
 
-import { Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink, useLocation } from "react-router-dom";
 import { useState } from "react";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
 
-import { useLocation } from "react-router-dom";
-
 import logo from "../../assets/images/logo.png";
 import { useData } from "../../context/AuthContext";
 
-
-const LanguageSwitcher  = ({ value, onChange }) => (
-    <FormControl size="small">
-      <Select value={value} onChange={onChange} sx={{ minWidth: 80 }}>
-        <MenuItem value="FR">FR</MenuItem>
-        <MenuItem value="AR">AR</MenuItem>
-      </Select>
-    </FormControl>
-  );
+// 🌐 Language Switcher
+const LanguageSwitcher = ({ value, onChange }) => (
+  <FormControl size="small">
+    <Select value={value} onChange={onChange} sx={{ minWidth: 80 }}>
+      <MenuItem value="FR">FR</MenuItem>
+      <MenuItem value="AR">AR</MenuItem>
+    </Select>
+  </FormControl>
+);
 
 export default function Navbar() {
-  const Location = useLocation();
+  const location = useLocation();
+  const isActive = (path) => location.pathname === path;
 
-  const isActive = (path) => Location.pathname === path;
   const { mode, toggleTheme } = useData();
+
   const links = [
-  { label: "Accueil", path: "/" },
-  { label: "Produits", path: "/products" },
-  { label: "Services", path: "/services" },
-  { label: "À propos", path: "/about" },
-  { label: "Contact", path: "/contact" },
-];
+    { label: "Accueil", path: "/" },
+    { label: "Produits", path: "/products" },
+    { label: "Services", path: "/services" },
+    { label: "À propos", path: "/about" },
+    { label: "Contact", path: "/contact" },
+  ];
 
   const theme = useTheme();
-  
-  const [switchLang, setSwitchLang] = useState("FR");
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
+  const [switchLang, setSwitchLang] = useState("FR");
   const [anchorElUser, setAnchorElUser] = useState(null);
   const [openDrawer, setOpenDrawer] = useState(false);
 
@@ -71,18 +67,17 @@ export default function Navbar() {
   return (
     <AppBar sx={{ bgcolor: "background.default", boxShadow: "none" }}>
       <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
+        {/* LEFT */}
         <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
           {isMobile && (
-            <IconButton
-              onClick={toggleDrawer(true)}
-              sx={{ color: "text.primary" }}
-            >
+            <IconButton onClick={toggleDrawer(true)} sx={{ color: "text.primary" }}>
               <MenuIcon />
             </IconButton>
           )}
           <img src={logo} alt="Logo" style={{ height: 45 }} />
         </Box>
 
+        {/* CENTER LINKS */}
         {!isMobile && (
           <Box sx={{ display: "flex", gap: 1 }}>
             {links.map((item) => (
@@ -108,13 +103,16 @@ export default function Navbar() {
           </Box>
         )}
 
+        {/* RIGHT */}
         <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
           {!isMobile && (
-            <LanguageSwitcher 
+            <LanguageSwitcher
               value={switchLang}
               onChange={(e) => setSwitchLang(e.target.value)}
             />
           )}
+
+          {/* DARK MODE */}
           <IconButton
             onClick={toggleTheme}
             sx={{ color: "text.primary", "&:hover": { color: "primary.main" } }}
@@ -125,11 +123,8 @@ export default function Navbar() {
               <DarkModeOutlinedIcon />
             )}
           </IconButton>
-          {/* <IconButton
-            sx={{ color: "text.primary", "&:hover": { color: "primary.main" } }}
-          >
-            <SearchIcon />    
-          </IconButton>  */}
+
+          {/* USER MENU */}
           <Tooltip title="Connexion / Inscription">
             <IconButton
               onClick={(e) => setAnchorElUser(e.currentTarget)}
@@ -141,22 +136,30 @@ export default function Navbar() {
               <PersonOutlineOutlinedIcon />
             </IconButton>
           </Tooltip>
+
           <Menu
             anchorEl={anchorElUser}
             open={Boolean(anchorElUser)}
             onClose={() => setAnchorElUser(null)}
           >
-            <MenuItem>
-              <Typography sx={{ "&:hover": { color: "primary.main" } }}>
-                Connexion
-              </Typography>
+            <MenuItem
+              component={RouterLink}
+              to="/login"
+              onClick={() => setAnchorElUser(null)}
+            >
+              Connexion
             </MenuItem>
-            <MenuItem>
-              <Typography sx={{ "&:hover": { color: "primary.main" } }}>
-                Inscription
-              </Typography>
+
+            <MenuItem
+              component={RouterLink}
+              to="/register"
+              onClick={() => setAnchorElUser(null)}
+            >
+              Inscription
             </MenuItem>
           </Menu>
+
+          {/* FAVORITES */}
           <IconButton
             sx={{ color: "text.primary", "&:hover": { color: "primary.main" } }}
           >
@@ -164,6 +167,8 @@ export default function Navbar() {
               <FavoriteBorderIcon />
             </Badge>
           </IconButton>
+
+          {/* CART */}
           <IconButton
             sx={{ color: "text.primary", "&:hover": { color: "primary.main" } }}
           >
@@ -174,6 +179,7 @@ export default function Navbar() {
         </Box>
       </Toolbar>
 
+      {/* DRAWER (MOBILE) */}
       <Drawer anchor="left" open={openDrawer} onClose={toggleDrawer(false)}>
         <Box sx={{ width: 220, mt: 8 }}>
           {links.map((item) => (
@@ -182,8 +188,10 @@ export default function Navbar() {
                 component={RouterLink}
                 to={item.path}
                 onClick={toggleDrawer(false)}
-                sx={{ 
-                  bgcolor: isActive(item.path) ? "primary.main" : "transparent",
+                sx={{
+                  bgcolor: isActive(item.path)
+                    ? "primary.main"
+                    : "transparent",
                   "&:hover": {
                     bgcolor: "primary.main",
                     "& .MuiListItemText-primary": {
@@ -204,15 +212,12 @@ export default function Navbar() {
             </List>
           ))}
         </Box>
+
+        {/* LANGUAGE IN DRAWER */}
         <List sx={{ mt: 2 }}>
-          <ListItemButton
-            sx={{
-              borderRadius: 2,
-              mx: 1,
-            }}
-          >
+          <ListItemButton sx={{ borderRadius: 2, mx: 1 }}>
             <ListItemText primary="Langue" sx={{ color: "text.primary" }} />
-            <LanguageSwitcher  
+            <LanguageSwitcher
               value={switchLang}
               onChange={(e) => setSwitchLang(e.target.value)}
             />
