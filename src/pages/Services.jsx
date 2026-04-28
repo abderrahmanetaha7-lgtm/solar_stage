@@ -5,47 +5,31 @@ import { Box, Container, Typography, useTheme } from "@mui/material";
 import Installation from "../assets/images/Installation.jpg";
 import Maintenance from "../assets/images/Maintenance.png";
 import experts from "../assets/images/experts.jpg";
-
-const services = [
-  {
-    title: "Installation solaire",
-    desc: "Installation professionnelle par des techniciens certifiés. Travail précis et bon placement des panneaux.",
-    image: Installation,
-    items: [
-      "Étude du site",
-      "Conception du système",
-      "Installation des panneaux",
-      "Connexion au réseau",
-      "Test du système",
-    ],
-  },
-  {
-    title: "Plan de maintenance",
-    desc: "Gardez votre système en bon état avec un entretien régulier.",
-    image: Maintenance,
-    items: [
-      "Contrôles trimestriels",
-      "Nettoyage des panneaux",
-      "Rapports de performance",
-      "Support rapide",
-      "Remplacement des pièces",
-    ],
-  },
-  {
-    title: "Conseil en énergie",
-    desc: "Conseils pour mieux utiliser votre énergie et augmenter le retour sur investissement solaire.",
-    image: experts,
-    items: [
-      "Analyse de la consommation",
-      "Dimension du système",
-      "Estimation du retour sur investissement",
-      "Options de financement",
-      "Aide et conseils",
-    ],
-  },
-];
+import { useTranslation } from "react-i18next";
 
 export default function Services() {
+  const { t } = useTranslation();
+  const services = [
+    {
+      title: t("services.list.installation.title"),
+      desc: t("services.list.installation.desc"),
+      image: Installation,
+      items: t("services.list.installation.items", { returnObjects: true }),
+    },
+    {
+      title: t("services.list.maintenance.title"),
+      desc: t("services.list.maintenance.desc"),
+      image: Maintenance,
+      items: t("services.list.maintenance.items", { returnObjects: true }),
+    },
+    {
+      title: t("services.list.consulting.title"),
+      desc: t("services.list.consulting.desc"),
+      image: experts,
+      items: t("services.list.consulting.items", { returnObjects: true }),
+    },
+  ];
+
   const theme = useTheme();
   const isDark = theme.palette.mode === "dark";
 
@@ -75,7 +59,7 @@ export default function Services() {
               color: isDark ? "#fff" : "#111",
             }}
           >
-            Nos services
+            {t("services.title")}
           </Typography>
 
           <Typography
@@ -85,8 +69,7 @@ export default function Services() {
               mx: "auto",
             }}
           >
-            Des solutions complètes d’énergie solaire, de la consultation à
-            l’installation et au-delà.
+            {t("services.subtitle")}
           </Typography>
         </Box>
 

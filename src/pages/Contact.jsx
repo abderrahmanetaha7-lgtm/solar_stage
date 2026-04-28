@@ -20,8 +20,14 @@ import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
 import TaskAltOutlinedIcon from "@mui/icons-material/TaskAltOutlined";
 import SendOutlinedIcon from "@mui/icons-material/SendOutlined";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useTheme } from "@mui/material/styles";
 
 export default function Contact() {
+  const { t } = useTranslation();
+  const theme = useTheme();
+  const isRtl = theme.direction === "rtl";
+
   const [submitted, setSubmitted] = useState(false);
   const [open, setOpen] = useState(false);
 
@@ -55,12 +61,12 @@ export default function Contact() {
                 fontSize: { xs: "30px", sm: "40px", md: "50px" },
               }}
             >
-              Contactez-nous
+              {t("contactPage.title")}
             </Typography>
             <Typography
               sx={{ textAlign: "center", color: "text.secondary", mt: 2 }}
             >
-              Vous avez des questions ? Nous serons ravis de vous répondre.
+              {t("contactPage.subtitle")}
             </Typography>
           </Box>
 
@@ -77,14 +83,14 @@ export default function Contact() {
                           <TextField
                             fullWidth
                             variant="outlined"
-                            placeholder="Nom"
+                            placeholder={t("contactPage.form.name")}
                           />
                         </Grid>
                         <Grid item xs={12} sm={6}>
                           <TextField
                             fullWidth
                             variant="outlined"
-                            placeholder="Email"
+                            placeholder={t("contactPage.form.email")}
                             type="email"
                           />
                         </Grid>
@@ -93,19 +99,19 @@ export default function Contact() {
                       <TextField
                         fullWidth
                         variant="outlined"
-                        placeholder="Téléphone"
+                        placeholder={t("contactPage.form.phone")}
                         sx={{ mt: 2 }}
                       />
                       <TextField
                         fullWidth
                         variant="outlined"
-                        placeholder="Sujet"
+                        placeholder={t("contactPage.form.subject")}
                         sx={{ mt: 2 }}
                       />
                       <TextField
                         fullWidth
                         variant="outlined"
-                        placeholder="Message"
+                        placeholder={t("contactPage.form.message")}
                         multiline
                         rows={5}
                         sx={{ mt: 2 }}
@@ -115,11 +121,17 @@ export default function Contact() {
                         fullWidth
                         variant="contained"
                         size="large"
-                        startIcon={<SendOutlinedIcon />}
+                        endIcon={
+                          <SendOutlinedIcon
+                            sx={{
+                              transform: isRtl ? "rotate(180deg)" : "none",
+                            }}
+                          />
+                        }
                         sx={{ mt: 3, borderRadius: 2 }}
                         onClick={handleSubmitted}
                       >
-                        Envoyer le message
+                        {t("contactPage.form.button")}
                       </Button>
                     </Stack>
                   </CardContent>
@@ -132,18 +144,18 @@ export default function Contact() {
                     {[
                       {
                         icon: <EmailOutlinedIcon />,
-                        label: "Email",
+                        label: "contactPage.info.email",
                         value: "sunergy@gmail.com",
                       },
                       {
                         icon: <LocalPhoneOutlinedIcon />,
-                        label: "Téléphone",
+                        label: "contactPage.info.phone",
                         value: "+212 78541954",
                       },
                       {
                         icon: <LocationOnOutlinedIcon />,
-                        label: "Adresse",
-                        value: "Marrakech",
+                        label: "contactPage.info.address",
+                        value: t("contactPage.info.city"),
                       },
                     ].map((item, i) => (
                       <Grid item xs={12} key={i}>
@@ -175,7 +187,7 @@ export default function Contact() {
 
                           <Box>
                             <Typography fontWeight="medium">
-                              {item.label}
+                              {t(item.label)}
                             </Typography>
                             <Typography variant="body2" color="text.secondary">
                               {item.value}

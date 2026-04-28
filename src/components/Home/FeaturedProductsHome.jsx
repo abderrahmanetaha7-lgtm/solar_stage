@@ -1,4 +1,3 @@
-import React from "react";
 import {
   Box,
   Typography,
@@ -8,13 +7,14 @@ import {
   Container,
   Skeleton,
 } from "@mui/material";
-import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
-
+// import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { useProducts } from "../../context/ProductContext";
 import ProductCard from "../Products/ProductCard";
 
 const FeaturedProducts = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate(); // Hook for programmatic navigation
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm")); // Check if screen is mobile size
@@ -91,7 +91,7 @@ const FeaturedProducts = () => {
             letterSpacing: 2,
           }}
         >
-          Notre collection
+          {t("home.products.collection")}
         </Typography>
         <Typography
           variant="h3"
@@ -101,15 +101,14 @@ const FeaturedProducts = () => {
             mb: 1,
           }}
         >
-          Produits en vedette
+          {t("home.products.title")}
         </Typography>
         <Typography
           variant="body1"
           color="text.secondary"
           sx={{ maxWidth: 600, mx: "auto" }}
         >
-          Découvrez nos dernières solutions d’énergie solaire conçues pour une
-          efficacité maximale et une durabilité optimale and sustainability
+          {t("home.products.subtitle")}
         </Typography>
       </Box>
 
@@ -150,8 +149,8 @@ const FeaturedProducts = () => {
             },
           }}
         >
-          Voir tous les produits 
-          <KeyboardArrowRightIcon sx={{ ml: 1 }} />
+          {t("home.products.buttons.view_all")}
+          {/* <KeyboardArrowRightIcon sx={{ ml: 1 }} /> */}
         </Button>
       </Box>
     </Container>

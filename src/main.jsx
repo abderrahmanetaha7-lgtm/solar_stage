@@ -6,6 +6,7 @@ import { BrowserRouter } from "react-router-dom";
 import ThemeContextProvider from "./context/AuthContext.jsx";
 import { CssBaseline } from "@mui/material";
 import { ProductProvider } from "./context/ProductContext";
+import './i18n';
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>

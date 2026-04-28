@@ -1,7 +1,12 @@
 import { createTheme } from "@mui/material/styles";
 
-export const getTheme = (mode) =>
+export const getTheme = (mode, language) =>
   createTheme({
+    typography: {
+      fontFamily: "'Inter', sans-serif",
+    },
+    direction: language === "ar" ? "rtl" : "ltr",
+
     palette: {
       mode,
 

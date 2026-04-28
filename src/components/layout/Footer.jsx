@@ -7,8 +7,10 @@ import PhoneIcon from "@mui/icons-material/PhoneOutlined";
 import LocationOnIcon from "@mui/icons-material/LocationOnOutlined";
 import BoltIcon from "@mui/icons-material/BoltOutlined";
 import logo from "../../assets/images/logo.png";
+import { useTranslation } from "react-i18next";
 
 const Footer = () => {
+  const { t } = useTranslation();
   const theme = useTheme();
   const isDark = theme.palette.mode === "dark"; // Check if dark mode is active
 
@@ -37,14 +39,13 @@ const Footer = () => {
               {/* Icon container with gradient background */}
               <Box>
                 {/* Brand name */}
-                <img src={logo} alt="Logo" style={{ height: 45 }} />
+                <img src={logo} alt="Logo" style={{ height: 60 }} />
               </Box>
             </Stack>
 
             {/* Company description */}
             <Typography sx={{ maxWidth: 280, lineHeight: 1.7 }}>
-              Alimenter un avenir durable avec une technologie solaire avancée
-              et des solutions d’énergie renouvelable de haute qualité.
+              {t("footer.description")}
             </Typography>
           </Grid>
 
@@ -57,19 +58,19 @@ const Footer = () => {
                 color: isDark ? "#E2E8F0" : "#0F172A",
               }}
             >
-              Produits
+              {t("footer.products.title")}
             </Typography>
 
             {/* Product links */}
             <Stack spacing={1.5}>
               <Link href="#" underline="none" sx={{ color: "#3B82F6" }}>
-                Panneaux solaires
+                {t("footer.products.panels")}
               </Link>
-              <Link href="#" underline="none" color="inherit">
-                Batteries
+              <Link href="#" underline="none"  sx={{ color: "#3B82F6" }}>
+                {t("footer.products.batteries")}
               </Link>
-              <Link href="#" underline="none" color="inherit">
-                Onduleurs
+              <Link href="#" underline="none"  sx={{ color: "#3B82F6" }}>
+                {t("footer.products.inverters")}
               </Link>
             </Stack>
           </Grid>
@@ -83,19 +84,19 @@ const Footer = () => {
                 color: isDark ? "#E2E8F0" : "#0F172A",
               }}
             >
-              Entreprise
+              {t("footer.company.title")}
             </Typography>
 
             {/* Company links */}
             <Stack spacing={1.5}>
-              <Link href="#" underline="none" color="inherit">
-                À propos de nous
+              <Link href="#" underline="none"  sx={{ color: "#3B82F6" }}>
+                {t("footer.company.about")}
               </Link>
-              <Link href="#" underline="none" color="inherit">
-                Services
+              <Link href="#" underline="none"  sx={{ color: "#3B82F6" }}>
+                {t("footer.company.services")}
               </Link>
-              <Link href="#" underline="none" color="inherit">
-                Contact
+              <Link href="#" underline="none"  sx={{ color: "#3B82F6" }}>
+                {t("footer.company.contact")}
               </Link>
             </Stack>
           </Grid>
@@ -109,7 +110,7 @@ const Footer = () => {
                 color: isDark ? "#E2E8F0" : "#0F172A",
               }}
             >
-              Contact
+              {t("footer.contact.title")}
             </Typography>
 
             {/* Contact information items */}
@@ -117,19 +118,25 @@ const Footer = () => {
               {/* Email contact */}
               <Stack direction="row" spacing={1.5} alignItems="center">
                 <MailOutlineIcon sx={{ fontSize: 18 }} />
-                <Typography variant="body2">sunergy@gmail.com</Typography>
+                <Typography variant="body2">
+                  {t("footer.contact.email")}
+                </Typography>
               </Stack>
 
               {/* Phone contact */}
               <Stack direction="row" spacing={1.5} alignItems="center">
                 <PhoneIcon sx={{ fontSize: 18 }} />
-                <Typography variant="body2">+212 745826931</Typography>
+                <Typography variant="body2">
+                  {t("footer.contact.phone")}
+                </Typography>
               </Stack>
 
               {/* Address contact */}
               <Stack direction="row" spacing={1.5} alignItems="center">
                 <LocationOnIcon sx={{ fontSize: 18 }} />
-                <Typography variant="body2">Marrakech</Typography>
+                <Typography variant="body2">
+                  {t("footer.contact.location")}
+                </Typography>
               </Stack>
             </Stack>
           </Grid>
@@ -147,10 +154,7 @@ const Footer = () => {
           }}
         >
           {/* Copyright notice */}
-          <Typography variant="body2">
-            © 2026 SolarNova. Tous droits réservés. Conçu pour un avenir plus
-            lumineux.
-          </Typography>
+          <Typography variant="body2">{t("footer.copyright")}</Typography>
         </Box>
       </Container>
     </Box>

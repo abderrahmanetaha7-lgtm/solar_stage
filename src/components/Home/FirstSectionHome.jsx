@@ -1,9 +1,11 @@
 import React from "react";
 import imgHome from "../../assets/images/imgHome.png";
 import { Box, Container, Typography, Button } from "@mui/material";
-import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
+// import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import { Link as RouterLink } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 export default function FirstSectionHome() {
+  const { t } = useTranslation();
   return (
     <Box
       component="section"
@@ -23,7 +25,7 @@ export default function FirstSectionHome() {
           position: "absolute",
           top: 0,
           right: 0,
-          width: { xs: "100%", md: "60%" },
+          width: { xs: "100%", md: "100%" },
           height: "100%",
           backgroundImage: `url(${imgHome})`,
           backgroundSize: "contain",
@@ -39,7 +41,7 @@ export default function FirstSectionHome() {
           position: "absolute",
           inset: 0,
           background:
-            "linear-gradient(to right, rgba(13,27,42,1) 40%, rgba(13,27,42,0.3))",
+            "linear-gradient(to right, rgba(16, 39, 64, 0.53) 40%, rgba(13, 27, 42, 0))",
           zIndex: 1,
         }}
       />
@@ -73,7 +75,7 @@ export default function FirstSectionHome() {
               mb: 3,
             }}
           >
-            Alimentez votre avenir avec l’énergie solaire propre
+            {t("home.hero.title")}
           </Typography>
 
           <Typography
@@ -84,8 +86,7 @@ export default function FirstSectionHome() {
               mb: 4,
             }}
           >
-            Panneaux solaires haut de gamme, batteries et solutions énergétiques
-            intelligentes conçus pour un avenir durable.
+            {t("home.hero.description")}
           </Typography>
 
           <Box
@@ -111,8 +112,8 @@ export default function FirstSectionHome() {
                 },
               }}
             >
-              Acheter maintenant
-              <KeyboardArrowRightIcon sx={{ ml: 1 }} />
+              {t("home.hero.buttons.buy")}
+              {/* <KeyboardArrowRightIcon sx={{ ml: 1 }} /> */}
             </Button>
 
             <Button
@@ -130,7 +131,7 @@ export default function FirstSectionHome() {
                 },
               }}
             >
-              En savoir plus
+              {t("home.hero.buttons.learn")}
             </Button>
           </Box>
         </Box>

@@ -14,8 +14,10 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import FlashOnIcon from "@mui/icons-material/FlashOn";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import { useTranslation } from "react-i18next";
 
 const ProductCard = ({ product, onAddToCart }) => {
+  const { t } = useTranslation();
   const [isFavorite, setIsFavorite] = useState(false);
   const [imageError, setImageError] = useState(false);
   const theme = useTheme();
@@ -236,10 +238,11 @@ const ProductCard = ({ product, onAddToCart }) => {
               color="text.secondary"
               sx={{ textDecoration: "line-through", fontSize: "0.75rem" }}
             >
-              {(formattedPrice * 1.2).toLocaleString()} DH
+              {(formattedPrice * 1.2).toLocaleString()} {" "}
+              {t("productsPage.currency")}
             </Typography>
-            <Typography variant="h6" fontWeight="bold" color="primary">
-              {formattedPrice} DH
+            <Typography variant="p" fontWeight="bold" color="primary">
+              {formattedPrice} {" "} {t("productsPage.currency")}
             </Typography>
           </Box>
 
@@ -260,7 +263,7 @@ const ProductCard = ({ product, onAddToCart }) => {
               },
             }}
           >
-            Ajouter
+            {t("productsPage.add")}
           </Button>
         </Box>
       </CardContent>

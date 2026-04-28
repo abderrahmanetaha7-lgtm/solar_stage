@@ -12,41 +12,33 @@ import img1 from "../assets/images/img1.jpg";
 import img2 from "../assets/images/img2.jpeg";
 import sol3 from "../assets/images/sol3.webp";
 import heroImg from "../assets/images/heroImg.png";
-import team2 from "../assets/images/team2.jpg";
-import team4 from "../assets/images/team4.jpg";
 
-import Timeline from "../components/about/Timeline";
 import ZigzagItem from "../components/about/ZigzagItem";
 import HeroSection from "../components/about/HeroSection";
-import TeamSection from "../components/about/TeamSection";
+import { useTranslation } from "react-i18next";
 
 export default function About() {
   const theme = useTheme();
+  const {t} = useTranslation();
+
   const isDark = theme.palette.mode === "dark";
 
   const sections = [
     {
-      title: "À propos de nous",
-      text: "Nous sommes une équipe d’experts en énergie renouvelable, spécialisée dans la conception et l’installation de panneaux solaires. Notre objectif est d’aider nos clients à réduire leurs coûts d’électricité tout en contribuant à un environnement plus propre et plus vert.",
+      title: t("about.sections.about.title"),
+      text: t("about.sections.about.text"),
       img: img1,
     },
     {
-      title: "Notre vision",
-      text: "Nous imaginons un monde entièrement alimenté par une énergie propre et renouvelable, où l’énergie solaire est accessible à tous.",
+      title: t("about.sections.vision.title"),
+      text: t("about.sections.vision.text"),
       img: img2,
     },
     {
-      title: "Nos valeurs",
-      text: "Nous croyons en l’innovation, la transparence, la qualité et un engagement à long terme envers nos clients et l’environnement.",
+      title: t("about.sections.values.title"),
+      text: t("about.sections.values.text"),
       img: sol3,
     },
-  ];
-
-  const team = [
-    { id: 1, name: "Brahim qwerty", role: "CEO", img: team2 },
-    { id: 2, name: "karim Kim", role: "Design Lead", img: team4 },
-    { id: 3, name: "mohmed azerty", role: "CTO", img: team2 },
-    { id: 4, name: "salah med", role: "Operations", img: team4 },
   ];
 
   return (
@@ -63,11 +55,7 @@ export default function About() {
               isDark={isDark}
             />
           ))}
-
-          <TeamSection team={team} />
         </Container>
-
-        <Timeline />
       </Box>
     </>
   );

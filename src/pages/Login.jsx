@@ -6,202 +6,171 @@ import {
   Button,
   Typography,
   Paper,
-  IconButton,
-  InputAdornment,
   Checkbox,
   FormControlLabel,
-  Stack
+  Stack,
+  InputAdornment,
+  IconButton,
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
-import { useFormik } from "formik";
-import * as Yup from "yup";
-import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 export default function Login() {
-  const navigate = useNavigate();
-
-  // Controls password visibility toggle (UX improvement for user input)
+  const { t } = useTranslation();
   const [showPassword, setShowPassword] = useState(false);
 
-  // 🌍 Language state (persisted in localStorage for session continuity)
-  const [lang, setLang] = useState(localStorage.getItem("lang") || "fr");
-
-  // Toggle between supported languages and persist user preference
-  const changeLang = () => {
-    const newLang = lang === "fr" ? "ar" : "fr";
-    setLang(newLang);
-    localStorage.setItem("lang", newLang);
-  };
-
-  // 🌍 Static translation dictionary (should ideally be replaced with i18n library in production)
-  const t = {
-    fr: {
-      title: "Bienvenue 👋",
-      subtitle: "Connectez-vous à votre compte",
-      email: "Email",
-      password: "Mot de passe",
-      remember: "Se souvenir de moi",
-      login: "Se connecter",
-      logging: "Connexion...",
-      noAccount: "Vous n'avez pas de compte ?",
-      register: "Créer un compte",
-      forgot: "Mot de passe oublié ?"
-    },
-    ar: {
-      title: "مرحبا 👋",
-      subtitle: "قم بتسجيل الدخول",
-      email: "البريد الإلكتروني",
-      password: "كلمة المرور",
-      remember: "تذكرني",
-      login: "تسجيل الدخول",
-      logging: "جارٍ تسجيل الدخول...",
-      noAccount: "ليس لديك حساب؟",
-      register: "إنشاء حساب",
-      forgot: "نسيت كلمة المرور؟"
-    }
-  };
-
-  // Form validation schema (basic required fields validation)
-  const validationSchema = Yup.object({
-    email: Yup.string().required(),
-    password: Yup.string().required()
+  const [form, setForm] = useState({
+    email: "",
+    password: "",
+    remember: false,
   });
 
-  // Formik hook for form state management and submission handling
-  const formik = useFormik({
-    initialValues: { email: "", password: "", remember: false },
-    validationSchema,
-
-    // Simulated async login request (replace with real API call)
-    onSubmit: async (_, { setSubmitting }) => {
-      await new Promise((res) => setTimeout(res, 1000));
-      alert("Login success");
-      setSubmitting(false);
-    }
-  });
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setForm((prev) => ({
+      ...prev,
+      [name]: type === "checkbox" ? checked : value,
+    }));
+  };
 
   return (
     <Container maxWidth="sm">
-      {/* 🌍 Language switcher button (top-right for accessibility & visibility) */}
-      <Box textAlign="right" mt={2}>
-        <Button size="small" onClick={changeLang}>
-          {lang === "fr" ? "AR" : "FR"}
-        </Button>
-      </Box>
-
+      {/* FULL PAGE WRAPPER */}
       <Box
         sx={{
-          minHeight: "90vh",
+          minHeight: "100vh",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-
-          // Dynamically adjust layout direction for RTL/LTR languages
-          direction: lang === "ar" ? "rtl" : "ltr"
+          px: { xs: 2, sm: 3 },
+          backgroundColor: "#f5f7fb",
         }}
       >
-        <Paper elevation={6} sx={{ p: 4, width: "100%", borderRadius: 3 }}>
-          {/* Page title */}
-          <Typography variant="h4" align="center" fontWeight="bold">
-            {t[lang].title}
-          </Typography>
-
-          {/* Subtitle / description */}
-          <Typography align="center" color="text.secondary" mb={2}>
-            {t[lang].subtitle}
-          </Typography>
-
-          {/* Authentication form */}
-          <form onSubmit={formik.handleSubmit}>
-            {/* Email input field */}
-            <TextField
-              fullWidth
-              margin="normal"
-              label={t[lang].email}
-              name="email"
-              value={formik.values.email}
-              onChange={formik.handleChange}
-            />
-
-            {/* Password input with visibility toggle */}
-            <TextField
-              fullWidth
-              margin="normal"
-              label={t[lang].password}
-              name="password"
-              type={showPassword ? "text" : "password"}
-              value={formik.values.password}
-              onChange={formik.handleChange}
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton
-                      onClick={() => setShowPassword(!showPassword)}
-                    >
-                      {showPassword ? <VisibilityOff /> : <Visibility />}
-                    </IconButton>
-                  </InputAdornment>
-                )
+        {/* CARD */}
+        <Paper
+          elevation={8}
+          sx={{
+            width: "100%",
+            p: { xs: 3, sm: 5 },
+            borderRadius: 4,
+          }}
+        >
+          {/* HEADER */}
+          <Box sx={{ textAlign: "center", mb: { xs: 3, sm: 4 } }}>
+            <Typography
+              variant="h4"
+              sx={{
+                fontWeight: "bold",
+                fontSize: { xs: "1.8rem", sm: "2.2rem" },
               }}
-            />
+            >
+              {t("login.login_title")}
+            </Typography>
+          </Box>
 
-            {/* Remember me checkbox (useful for persistent authentication) */}
+          {/* FORM */}
+          <Stack spacing={2.5}>
+            {/* EMAIL */}
+            <Box>
+              <Typography fontWeight={500} mb={1}>
+              {t("login.email_label")}
+              </Typography>
+
+              <TextField
+                fullWidth
+                name="email"
+                placeholder={t("login.email_placeholder")}
+                value={form.email}
+                onChange={handleChange}
+              />
+            </Box>
+
+            {/* PASSWORD */}
+            <Box>
+              {/* LABEL ROW */}
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  mb: 1,
+                }}
+              >
+                <Typography fontWeight={500}>{t("login.password_label")}</Typography>
+
+                <Typography
+                  variant="body2"
+                  sx={{
+                    color: "#1976d2",
+                    cursor: "pointer",
+                    fontSize: { xs: "0.75rem", sm: "0.875rem" },
+                    "&:hover": { textDecoration: "underline" },
+                  }}
+                >
+                  {t("login.forgot_password")}
+                </Typography>
+              </Box>
+
+              <TextField
+                fullWidth
+                name="password"
+                type={showPassword ? "text" : "password"}
+                placeholder={t("login.password_placeholder")}
+                value={form.password}
+                onChange={handleChange}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton onClick={() => setShowPassword((s) => !s)}>
+                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
+              />
+            </Box>
+
+            {/* REMEMBER ME */}
             <FormControlLabel
               control={
                 <Checkbox
                   name="remember"
-                  checked={formik.values.remember}
-                  onChange={formik.handleChange}
+                  checked={form.remember}
+                  onChange={handleChange}
                 />
               }
-              label={t[lang].remember}
+              label={t("login.remember_me")}
             />
 
-            {/* Primary action button with proper spacing and visual hierarchy */}
+            {/* BUTTON */}
             <Button
               fullWidth
-              type="submit"
               variant="contained"
               sx={{
-                mt: 2,
-                mb: 3, // spacing between button and secondary actions
-                py: 1.5,
-                fontWeight: "bold"
+                py: 1.4,
+                borderRadius: 2,
+                fontWeight: "bold",
+                textTransform: "none",
               }}
             >
-              {formik.isSubmitting
-                ? t[lang].logging
-                : t[lang].login}
+              {t("login.login_button")}
             </Button>
-          </form>
 
-          {/* Secondary actions (registration + password recovery) */}
-          <Stack spacing={2} alignItems="center">
-            <Typography>
-              {t[lang].noAccount}{" "}
-              <span
-                style={{
-                  color: "#1976d2",
-                  cursor: "pointer",
-                  fontWeight: "bold"
-                }}
-                // Navigate to registration page (client-side routing)
-                onClick={() => navigate("/register")}
-              >
-                {t[lang].register}
-              </span>
-            </Typography>
-
-            {/* Password recovery action */}
-            <Typography
-              sx={{
-                color: "#1976d2",
-                cursor: "pointer",
-                "&:hover": { textDecoration: "underline" }
-              }}
-            >
-              {t[lang].forgot}
-            </Typography>
+            {/* SIGN UP */}
+            <Box sx={{ mt: 1, textAlign: "center" }}>
+              <Typography variant="body2">
+                {t("login.no_account")}{"  "}
+                <span
+                  style={{
+                    color: "#1976d2",
+                    fontWeight: 600,
+                    cursor: "pointer",
+                  }}
+                >
+                  {t("login.signup")}
+                </span>
+              </Typography>
+            </Box>
           </Stack>
         </Paper>
       </Box>

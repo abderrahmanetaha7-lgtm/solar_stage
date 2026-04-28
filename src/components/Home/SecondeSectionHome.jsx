@@ -14,46 +14,51 @@ import VerifiedIcon from "@mui/icons-material/Verified";
 import SavingsIcon from "@mui/icons-material/Savings";
 import SupportAgentIcon from "@mui/icons-material/SupportAgent";
 import LocalShippingIcon from "@mui/icons-material/LocalShipping";
+import { useTranslation } from "react-i18next";
 
 const features = [
   {
     icon: <BoltIcon sx={{ fontSize: 40, color: "#f5c542" }} />,
-    title: "Solutions solaires abordables",
-    desc: "Des systèmes solaires adaptés à tous les budgets, pour les particuliers et les entreprises.",
+    title: "home.features.items.affordable.title",
+    desc: "home.features.items.affordable.description"
   },
   {
     icon: <BuildIcon sx={{ fontSize: 40, color: "#4caf50" }} />,
-    title: "Installation professionnelle",
-    desc: "Des techniciens certifiés assurent une installation sûre et propre.",
+    title: "home.features.items.installation.title",
+    desc: "home.features.items.installation.description"
   },
   {
     icon: <VerifiedIcon sx={{ fontSize: 40, color: "#2196f3" }} />,
-    title: "Produits de haute qualité",
-    desc: "Panneaux solaires et batteries fiables avec garantie à long terme.",
+    title: "home.features.items.quality.title",
+    desc: "home.features.items.quality.description"
+    
   },
   {
     icon: <SavingsIcon sx={{ fontSize: 40, color: "#ff9800" }} />,
-    title: "Économisez sur vos factures d’électricité",
-    desc: "Réduisez vos coûts énergétiques grâce à une énergie solaire propre.",
+    title: "home.features.items.saving.title",
+    desc: "home.features.items.saving.description"
+    
   },
   {
     icon: <SupportAgentIcon sx={{ fontSize: 40, color: "#9c27b0" }} />,
-    title: "Service après-vente",
-    desc: "Nous vous accompagnons même après l’installation, à tout moment.",
+    title: "home.features.items.support.title",
+    desc: "home.features.items.support.description"
+    
   },
   {
     icon: <LocalShippingIcon sx={{ fontSize: 40, color: "#00bcd4" }} />,
-    title: "Livraison rapide",
-    desc: "Livraison et service rapides dans plusieurs régions.",
+    title: "home.features.items.delivery.title",
+    desc: "home.features.items.delivery.description"
   },
 ];
 
 export default function WhyChooseUs() {
+  const { t } = useTranslation();
   return (
     <Box sx={{ py: 6 }}>
       <Container>
         <Typography variant="h4" align="center" fontWeight="bold" gutterBottom>
-          Pourquoi nous choisir
+          {t("home.features.title")}
         </Typography>
 
         <Typography
@@ -62,8 +67,7 @@ export default function WhyChooseUs() {
           color="text.secondary"
           sx={{ mb: 6 }}
         >
-          Des solutions solaires intelligentes conçues pour économiser l’énergie
-          et l’argent
+          {t("home.features.subtitle")}
         </Typography>
 
         <Grid container spacing={2} sx={{ justifyContent: "center" }}>
@@ -82,10 +86,10 @@ export default function WhyChooseUs() {
                 <CardContent>
                   <Box sx={{ mb: 2 }}>{item.icon}</Box>
                   <Typography variant="h6" fontWeight="bold" gutterBottom>
-                    {item.title}
+                    {t(item.title)}
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
-                    {item.desc}
+                    {t(item.desc)}
                   </Typography>
                 </CardContent>
               </Card>

@@ -1,0 +1,244 @@
+{
+  "nav": {
+    "home": "Accueil",
+    "products": "Produits",
+    "services": "Services",
+    "about": "À propos",
+    "contact": "Contact",
+    "login": "Connexion",
+    "register": "Inscription",
+    "lang":"langue",
+    "fr":"Français",
+    "ar":"Arabic"
+  },
+
+  "home": {
+    "hero": {
+      "title": "Alimentez votre avenir avec l’énergie solaire propre",
+      "description": "Panneaux solaires haut de gamme, batteries et solutions énergétiques intelligentes conçues pour un avenir durable.",
+      "buttons": {
+        "buy": "ACHETER MAINTENANT",
+        "learn": "EN SAVOIR PLUS"
+      }
+    },
+
+    "features": {
+      "title": "Pourquoi nous choisir",
+      "subtitle": "Des solutions solaires intelligentes conçues pour économiser l’énergie et l’argent",
+      "items": {
+        "affordable": {
+          "title": "Solutions solaires abordables",
+          "description": "Des systèmes solaires adaptés à tous les budgets, pour les particuliers et les entreprises."
+        },
+        "installation": {
+          "title": "Installation professionnelle",
+          "description": "Des techniciens certifiés assurent une installation sûre et propre."
+        },
+        "quality": {
+          "title": "Produits de haute qualité",
+          "description": "Panneaux solaires et batteries fiables avec garantie à long terme."
+        },
+        "saving": {
+          "title": "Économisez sur vos factures d’électricité",
+          "description": "Réduisez vos coûts énergétiques grâce à une énergie solaire propre."
+        },
+        "support": {
+          "title": "Service après-vente",
+          "description": "Nous vous accompagnons même après l’installation, à tout moment."
+        },
+        "delivery": {
+          "title": "Livraison rapide",
+          "description": "Livraison et service rapides dans plusieurs régions."
+        }
+      }
+    },
+
+    "products": {
+      "collection": "Notre collection",
+      "title": "Produits en vedette",
+      "subtitle": "Découvrez nos dernières solutions d’énergie solaire conçues pour une efficacité maximale et une durabilité optimale",
+      "buttons": { 
+        "view_all": "Voir tous les produits"
+      },
+      "currency": "DH",
+      "categories": {
+        "inverters": "Onduleurs",
+        "batteries": "Batteries",
+        "panels": "Panneaux"
+      }
+    },
+
+    "testimonials": {
+      "title": "Ce que disent nos clients"
+    },
+
+    "cta": {
+      "title": "Prêt à passer à l’énergie solaire ?",
+      "description": "Obtenez une consultation gratuite et découvrez combien vous pouvez économiser avec l’énergie solaire.",
+      "button": "Obtenir un devis gratuit"
+    }
+  },
+
+  "footer": {
+    "description": "Alimenter un avenir durable avec une technologie solaire avancée et des solutions d’énergie renouvelable de haute qualité.",
+
+    "products": {
+      "title": "Produits",
+      "panels": "Panneaux solaires",
+      "batteries": "Batteries",
+      "inverters": "Onduleurs"
+    },
+
+    "company": {
+      "title": "Entreprise",
+      "about": "À propos de nous",
+      "services": "Services",
+      "contact": "Contact"
+    },
+
+    "contact": {
+      "title": "Contact",
+      "email": "sunergy@gmail.com",
+      "phone": "+212 745826931",
+      "location": "Marrakech"
+    },
+
+    "copyright": "© 2026 SolarNova. Tous droits réservés. Conçu pour un avenir plus lumineux."
+  },
+
+  "productsPage": {
+    "title": "Nos produits",
+    "subtitle": "Solutions d’énergie solaire haut de gamme pour tous les besoins",
+    "not_found":"Aucun produit ne correspond à vos filtres.",
+
+    "search": "Rechercher des produits...",
+    "filters": "Filtres",
+    "currency": "MAD", 
+    "add": "Ajouter",
+
+    "category": {
+      "label": "Catégorie",
+      "all": "Tous les produits",
+      "panels": "Panneaux",
+      "batteries": "Batteries",
+      "inverters": "Onduleurs"
+    },
+
+    "price": {
+      "max": "Prix max"
+    },
+
+    "efficiency": {
+      "min": "Efficacité minimale"
+    }
+  },
+
+  "contactPage": {
+    "title": "Contactez-nous",
+    "subtitle": "Vous avez des questions ? Nous serons ravis de vous répondre.",
+
+    "form": {
+      "name": "Nom",
+      "email": "Email",
+      "phone": "Téléphone",
+      "subject": "Sujet",
+      "message": "Message",
+      "button": "Envoyer le message"
+    },
+
+    "info": {
+      "email": "Email",
+      "phone": "Téléphone",
+      "address": "Adresse",
+      "city":"Marrakech"
+    }
+  },
+
+  "about": {
+    "heroTitle": "À propos de nous",
+    "subtitle":"Notre mission est d'accélérer la transition du monde vers une énergie durable.",
+    "hero_title":"Une énergie propre pour un meilleur avenir",
+    "hero_description":"Nous sommes une entreprise spécialisée dans les solutions d’énergie solaire. Nous fournissons une énergie propre, durable et économique pour les maisons et les entreprises.",
+
+    "sections": {
+      "about": {
+        "title": "À propos de nous",
+        "text": "Nous sommes une équipe d’experts en énergie renouvelable, spécialisée dans la conception et l’installation de panneaux solaires. Notre objectif est d’aider nos clients à réduire leurs coûts d’électricité tout en contribuant à un environnement plus propre et plus vert."
+      },
+      "vision": {
+        "title": "Notre vision",
+        "text": "Nous imaginons un monde entièrement alimenté par une énergie propre et renouvelable, où l’énergie solaire est accessible à tous."
+      },
+      "values": {
+        "title": "Nos valeurs",
+        "text": "Nous croyons en l’innovation, la transparence, la qualité et un engagement à long terme envers nos clients et l’environnement."
+      }
+    }
+  },
+
+  "services": {
+    "title": "Nos services",
+    "subtitle": "Des solutions complètes d’énergie solaire, de la consultation à l’installation et au-delà.",
+    "list": {
+      "installation": {
+        "title": "Installation solaire",
+        "desc": "Installation professionnelle par des techniciens certifiés. Travail précis et bon placement des panneaux.",
+        "items": [
+          "Étude du site",
+          "Conception du système",
+          "Installation des panneaux",
+          "Connexion au réseau",
+          "Test du système"
+        ]
+      },
+      "maintenance": {
+        "title": "Plan de maintenance",
+        "desc": "Gardez votre système en bon état avec un entretien régulier.",
+        "items": [
+          "Contrôles trimestriels",
+          "Nettoyage des panneaux",
+          "Rapports de performance",
+          "Support rapide",
+          "Remplacement des pièces"
+        ]
+      },
+      "consulting": {
+        "title": "Conseil en énergie",
+        "desc": "Conseils pour mieux utiliser votre énergie et augmenter le retour sur investissement solaire.",
+        "items": [
+          "Analyse de la consommation",
+          "Dimension du système",
+          "Estimation du retour sur investissement",
+          "Options de financement",
+          "Aide et conseils"
+        ]
+      }
+    }
+  },
+
+  "login": {
+    "login_title": "Login",
+    "email_label": "Email",
+    "email_placeholder": "Enter your email",
+    "password_label": "Password",
+    "password_placeholder": "Enter your password",
+    "forgot_password": "Forgot password?",
+    "remember_me": "Remember me",
+    "login_button": "Login",
+    "no_account": "Don't have an account?",
+    "signup": "Sign up"
+  },
+
+  "signup": {
+    "title": "Create Account",
+    "full_name": "Full name",
+    "email": "Email",
+    "password": "Password",
+    "confirm_password": "Confirm password",
+    "button": "Create account",
+    "already_account": "Already have an account?",
+    "login": "Login"
+  }
+
+
+}

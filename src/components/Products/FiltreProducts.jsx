@@ -13,6 +13,7 @@ import {
   Chip,
 } from "@mui/material";
 import { Search, Tune } from "@mui/icons-material";
+import { useTranslation } from "react-i18next";
 
 import React, { useState } from "react";
 
@@ -29,13 +30,15 @@ export default function FiltreProducts(props) {
   } = props.value;
 
   const categories = [
-    { value: "all", label: "Tous les produits" },
-    { value: "panels", label: "Panneaux" },
-    { value: "batteries", label: "Batteries" },
-    { value: "inverters", label: "Onduleurs" },
+    { value: "all", label: "productsPage.category.all" },
+    { value: "panels", label: "productsPage.category.panels" },
+    { value: "batteries", label: "productsPage.category.batteries" },
+    { value: "inverters", label: "productsPage.category.inverters" },
   ];
 
   const [showFilters, setShowFilters] = useState(false);
+
+  const { t } = useTranslation();
 
   return (
     <>
@@ -52,7 +55,7 @@ export default function FiltreProducts(props) {
       >
         <TextField
           variant="outlined"
-          placeholder="Rechercher des produits..."
+          placeholder={t("productsPage.search")}
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           fullWidth
@@ -81,7 +84,7 @@ export default function FiltreProducts(props) {
             width: { xs: "100%", sm: "auto" },
           }}
         >
-          Filtres
+          {t("productsPage.filters")}
         </Button>
       </Box>
 
@@ -112,16 +115,16 @@ export default function FiltreProducts(props) {
             {/* Category Filter Dropdown */}
             <Grid item xs={12} sm={4}>
               <FormControl fullWidth>
-                <InputLabel>Catégorie</InputLabel>
+                <InputLabel>{t("productsPage.category.label")}</InputLabel>
                 <Select
                   sx={{ width: { xs: "100%", sm: "150px" } }}
                   value={category}
-                  label="Catégorie"
+                  label={t("productsPage.category.label")}
                   onChange={(e) => setCategory(e.target.value)}
                 >
                   {categories.map((c) => (
                     <MenuItem key={c.value} value={c.value}>
-                      {c.label}
+                      {t(c.label)}
                     </MenuItem>
                   ))}
                 </Select>
@@ -130,7 +133,7 @@ export default function FiltreProducts(props) {
 
             {/* Price Filter Slider */}
             <Grid item xs={12} sm={4}>
-              <Typography gutterBottom>Prix max : ${priceRange[1]}</Typography>
+              <Typography gutterBottom>{t("productsPage.price.max")} : ${priceRange[1]}</Typography>
               <Slider
                 value={priceRange[1]}
                 min={0}
@@ -142,7 +145,7 @@ export default function FiltreProducts(props) {
             {/* Efficiency Filter Slider */}
             <Grid item xs={12} sm={4}>
               <Typography gutterBottom>
-                Efficacité minimale : {minEfficiency}%
+                {t("productsPage.efficiency.min")} : {minEfficiency}%
               </Typography>
               <Slider
                 value={minEfficiency}
@@ -167,7 +170,7 @@ export default function FiltreProducts(props) {
         {categories.map((c) => (
           <Chip
             key={c.value}
-            label={c.label}
+            label={t(c.label)}
             color={category === c.value ? "primary" : "default"}
             onClick={() => setCategory(c.value)}
           />

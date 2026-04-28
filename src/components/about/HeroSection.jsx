@@ -1,6 +1,8 @@
 import { Box, Typography } from "@mui/material";
+import { useTranslation } from "react-i18next";
 
 export default function HeroSection({ isDark, heroImg }) {
+  const { t } = useTranslation();
   return (
     <>
       <Box
@@ -20,7 +22,7 @@ export default function HeroSection({ isDark, heroImg }) {
             color: isDark ? "#fff" : "#111",
           }}
         >
-          À propos de Sunergy
+          {t("about.heroTitle")}
         </Typography>
         <Typography
           sx={{
@@ -28,9 +30,9 @@ export default function HeroSection({ isDark, heroImg }) {
             color: isDark ? "#94a3b8" : "#6b7280",
             lineHeight: 1.6,
           }}
-        >
-          Notre mission est d’accélérer la transition du monde vers l’énergie
-          durable.
+          >
+          {t("about.subtitle")}
+          
         </Typography>
       </Box>
       <Box
@@ -73,13 +75,11 @@ export default function HeroSection({ isDark, heroImg }) {
             mb={3}
             sx={{ fontSize: { xs: "30px", sm: "40px", md: "50px" } }}
           >
-            Une énergie propre pour un meilleur avenir
+            {t("about.hero_title")}
           </Typography>
 
           <Typography sx={{ color: "#e2e8f0", fontSize: "1.3rem" }}>
-            Nous sommes une entreprise spécialisée dans les solutions d’énergie
-            solaire. Nous fournissons une énergie propre, durable et économique
-            pour les maisons et les entreprises.
+            {t("about.hero_description")}
           </Typography>
         </Box>
       </Box>

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Box, Card, Typography, IconButton, Rating } from "@mui/material";
 import { ArrowBack, ArrowForward } from "@mui/icons-material";
-
+import { useTranslation } from "react-i18next";
 // Array of customer testimonials data
 const testimonials = [
   {
@@ -25,6 +25,8 @@ const testimonials = [
 ];
 
 export default function CustomersOpinionHome() {
+  const { t } = useTranslation();
+
   // State to track current testimonial index
   const [index, setIndex] = useState(0);
 
@@ -62,7 +64,7 @@ export default function CustomersOpinionHome() {
           marginBottom: "30px", // Additional bottom margin
         }}
       >
-        Ce que disent nos clients
+        {t("home.testimonials.title")}
       </Typography>
 
       {/* Testimonial card */}

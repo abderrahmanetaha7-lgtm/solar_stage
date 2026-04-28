@@ -20,8 +20,11 @@ import { Search, Tune } from "@mui/icons-material";
 import { useProducts } from "../context/ProductContext";
 import ProductCard from "../components/Products/ProductCard";
 import { useTheme } from "@mui/material/styles";
+import { useTranslation } from "react-i18next";
 
 export default function Products({ handleAddToCart }) {
+  const { t } = useTranslation();
+  
   // Get products from global context
   const { products } = useProducts();
 
@@ -97,7 +100,7 @@ export default function Products({ handleAddToCart }) {
               letterSpacing: "-0.5px",
             }}
           >
-            Nos produits
+            {t("productsPage.title")}
           </Typography>
 
           <Typography
@@ -107,7 +110,7 @@ export default function Products({ handleAddToCart }) {
               // fontSize: { xs: "15px", sm: "17px", md: "20px" },
             }}
           >
-            Solutions d’énergie solaire haut de gamme pour tous les besoins
+            {t("productsPage.subtitle")}
           </Typography>
         </Box>
 
@@ -151,7 +154,7 @@ export default function Products({ handleAddToCart }) {
             color="text.secondary"
             sx={{ margin: "20px 0 0 0" }}
           >
-            Aucun produit ne correspond à vos filtres.
+            {t("productsPage.not_found")}
           </Typography>
         )}
       </Container>

@@ -1,81 +1,84 @@
 import React from "react";
 import { Box, Typography, Button } from "@mui/material";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
-
+import { useTranslation } from "react-i18next";
 export default function GoContactHome() {
+  const { t } = useTranslation();
   return (
-    // Outer container for centering the content
-    <Box 
+     
+    <Box
       sx={{
-        px: 3, // Horizontal padding
-        py: 8, // Vertical padding
+        px: 3,  
+        py: 8,  
         display: "flex",
-        justifyContent: "center", // Center the inner box horizontally
+        justifyContent: "center",  
       }}
     >
       {/* Main call-to-action card */}
       <Box
         sx={{
           width: "100%",
-          maxWidth: "1100px", // Maximum width of the card
-          textAlign: "center", // Center align all text
-          borderRadius: "20px", // Rounded corners
-          px: { xs: 3, md: 6 }, // Responsive horizontal padding
-          py: { xs: 6, md: 8 }, // Responsive vertical padding
-          backgroundColor: "background.paper", // Theme-aware background color
-          color: "text.primary", // Theme-aware text color
+          maxWidth: "1100px",  
+          textAlign: "center",  
+          borderRadius: "20px", 
+          px: { xs: 3, md: 6 },  
+          py: { xs: 6, md: 8 }, 
+          backgroundColor: "background.paper",  
+          color: "text.primary", 
           boxShadow: (theme) =>
             theme.palette.mode === "dark"
-              ? "0 4px 20px rgba(0,0,0,0.6)" // Dark mode shadow
-              : "0 4px 20px rgba(0,0,0,0.08)", // Light mode shadow
+              ? "0 4px 20px rgba(0,0,0,0.6)" 
+              : "0 4px 20px rgba(0,0,0,0.08)",  
           border: "1px solid",
-          borderColor: "divider", // Theme-aware border color
+          borderColor: "divider",  
         }}
       >
         {/* Main heading */}
         <Typography
           variant="h4"
           sx={{
-            fontWeight: 700, // Bold text
-            mb: 2, // Bottom margin
-            fontSize: { xs: "1.8rem", md: "2.2rem" }, // Responsive font size
+            fontWeight: 700, 
+            mb: 2, 
+            fontSize: { xs: "1.8rem", md: "2.2rem" },  
           }}
         >
-          Prêt à passer à l’énergie solaire ?
+          {t("home.cta.title")}
         </Typography>
 
         {/* Description text */}
         <Typography
           sx={{
-            maxWidth: 550, // Limit text width for readability
-            mx: "auto", // Center horizontally
-            mb: 5, // Bottom margin
-            color: "text.secondary", // Theme-aware secondary text color
-            lineHeight: 1.6, // Improve readability
+            maxWidth: 550, 
+            mx: "auto", 
+            mb: 5,  
+            color: "text.secondary", 
+            lineHeight: 1.6,  
           }}
-        >
-            Obtenez une consultation gratuite et découvrez combien vous pouvez économiser avec l’énergie solaire.
+          >
+          {t("home.cta.description")}
+          
         </Typography>
 
         {/* Call-to-action button */}
         <Button
           variant="contained"
-          endIcon={<ArrowForwardIcon />} // Icon at the end of button
+          endIcon={<ArrowForwardIcon />}  
           sx={{
-            px: 4, // Horizontal padding
-            py: 1.3, // Vertical padding
-            borderRadius: "999px", // Fully rounded (pill shape)
-            textTransform: "none", // Prevent uppercase transformation
-            fontWeight: 600, // Semi-bold text
-            backgroundColor: "primary.main", // Theme primary color
-            transition: "0.3s", // Smooth transition for hover effects
+            px: 4,  
+            py: 1.3,  
+            borderRadius: "999px",  
+            textTransform: "none", 
+            fontWeight: 600,  
+            backgroundColor: "primary.main", 
+            transition: "0.3s", 
             "&:hover": {
-              backgroundColor: "primary.dark", // Darker shade on hover
-              transform: "translateY(-2px)", // Slight lift effect on hover
+              backgroundColor: "primary.dark",  
+              transform: "translateY(-2px)", 
             },
           }}
-        >
-          Obtenir un devis gratuit
+          >
+          {t("home.cta.button")}
+          
         </Button>
       </Box>
     </Box>
