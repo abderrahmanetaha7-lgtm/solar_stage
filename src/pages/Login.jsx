@@ -19,11 +19,13 @@ import { useNavigate } from "react-router-dom";
 
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import ForgotPassword from "../components/ForgotPassword";
 
 export default function Login() {
   const { t, i18n } = useTranslation();
   const Navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
+  const [showResetPwd, setShowResetPwd] = useState(false);
 
   const [form, setForm] = useState({
     email: "",
@@ -37,6 +39,13 @@ export default function Login() {
       ...prev,
       [name]: type === "checkbox" ? checked : value,
     }));
+  };
+  const handleShowResetPwd = () => {
+    setShowResetPwd(true);
+  };
+  
+  const handleCloseResetPwd = () => {
+    setShowResetPwd(false);
   };
 
   return (
@@ -77,6 +86,7 @@ export default function Login() {
               textAlign: "center",
               fontWeight: "bold",
               fontSize: { xs: "1.8rem", sm: "2.2rem" },
+              mb: 3 
             }}
           >
             {t("login.login_title")}
@@ -115,6 +125,7 @@ export default function Login() {
                 </Typography>
 
                 <Typography
+                  onClick={handleShowResetPwd}
                   variant="body2"
                   sx={{
                     color: "#1976d2",
@@ -185,6 +196,7 @@ export default function Login() {
           </Stack>
         </Paper>
       </Box>
+      <ForgotPassword open={showResetPwd} handleClose={handleCloseResetPwd} />
     </Container>
   );
 }

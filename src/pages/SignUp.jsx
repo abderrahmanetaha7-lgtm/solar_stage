@@ -14,7 +14,7 @@ import {
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { useTranslation } from "react-i18next";
-import { Link, Link as RouterLink } from "react-router-dom"; 
+import { Link, Link as RouterLink } from "react-router-dom";
 
 import { useNavigate } from "react-router-dom";
 
@@ -77,8 +77,13 @@ export default function SignUp() {
           </Button>
           {/* TITLE */}
           <Typography
-            variant="h5"
-            sx={{ textAlign: "center", fontWeight: "bold", mb: 3 }}
+            variant="h4"
+            sx={{
+              textAlign: "center",
+              fontWeight: "bold",
+              fontSize: { xs: "1.8rem", sm: "2.2rem" },
+              mb: 3,
+            }}
           >
             {t("signup.title")}
           </Typography>
@@ -167,7 +172,7 @@ export default function SignUp() {
               <Typography variant="body2">
                 {t("signup.already_account")}{" "}
                 <Link component={RouterLink} to="/login">
-                  {t("login.login")}
+                  {t("signup.login")}
                 </Link>
               </Typography>
             </Box>

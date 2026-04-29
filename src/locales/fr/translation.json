@@ -229,6 +229,14 @@
     "signup": "Sign up"
   },
 
+  "forgot_password": {
+    "title": "Réinitialiser le mot de passe",
+    "description": "Entrez l'adresse e-mail de votre compte et nous vous enverrons un lien pour réinitialiser votre mot de passe.",
+    "email_placeholder": "Adresse e-mail",
+    "cancel": "Annuler",
+    "continue": "Continuer"
+  },
+
   "signup": {
     "common-back":"Retour",
     "title": "Create Account",
