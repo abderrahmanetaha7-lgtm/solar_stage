@@ -145,12 +145,12 @@ export default function Contact() {
                       {
                         icon: <EmailOutlinedIcon />,
                         label: "contactPage.info.email",
-                        value: "sunergy@gmail.com",
+                        value: "moyasol.sol@gmail.com",
                       },
                       {
                         icon: <LocalPhoneOutlinedIcon />,
                         label: "contactPage.info.phone",
-                        value: "+212 78541954",
+                        value: "0726553374",
                       },
                       {
                         icon: <LocationOnOutlinedIcon />,
