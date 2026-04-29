@@ -14,9 +14,17 @@ import {
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { useTranslation } from "react-i18next";
+import { Link, Link as RouterLink } from "react-router-dom"; 
+
+import { useNavigate } from "react-router-dom";
+
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 
 export default function SignUp() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+
+  const navigate = useNavigate();
 
   const [showPassword, setShowPassword] = useState(false);
 
@@ -58,6 +66,15 @@ export default function SignUp() {
             borderRadius: 4,
           }}
         >
+          <Button
+            sx={{ textTransform: "none" }}
+            startIcon={
+              i18n.language === "ar" ? <ArrowForwardIcon /> : <ArrowBackIcon />
+            }
+            onClick={() => navigate(-1)}
+          >
+            {t("signup.common-back")}
+          </Button>
           {/* TITLE */}
           <Typography
             variant="h5"
@@ -149,15 +166,9 @@ export default function SignUp() {
             <Box sx={{ textAlign: "center" }}>
               <Typography variant="body2">
                 {t("signup.already_account")}{" "}
-                <span
-                  style={{
-                    color: "#1976d2",
-                    fontWeight: 600,
-                    cursor: "pointer",
-                  }}
-                >
-                  {t("signup.login")}
-                </span>
+                <Link component={RouterLink} to="/login">
+                  {t("login.login")}
+                </Link>
               </Typography>
             </Box>
           </Stack>

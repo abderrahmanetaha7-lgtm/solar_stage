@@ -230,6 +230,7 @@
   },
 
   "signup": {
+    "common-back":"Retour",
     "title": "Create Account",
     "full_name": "Full name",
     "email": "Email",

@@ -33,8 +33,7 @@ import { useData } from "../../context/AuthContext";
 import { useTranslation } from "react-i18next";
 
 // Language Switcher (clean)
-const LanguageSwitcher = ({ i18n }) => {
-  const { t } = useTranslation();
+const LanguageSwitcher = ({ i18n }) => { 
 
   const handleChange = (e) => {
     i18n.changeLanguage(e.target.value);
@@ -47,8 +46,8 @@ const LanguageSwitcher = ({ i18n }) => {
         onChange={handleChange}
         sx={{ minWidth: 80 }}
       >
-        <MenuItem value="fr">{t("nav.fr")}</MenuItem>
-        <MenuItem value="ar">{t("nav.ar")}</MenuItem>
+        <MenuItem value="fr">Français</MenuItem>
+        <MenuItem value="ar">العربية</MenuItem>
       </Select>
     </FormControl>
   );

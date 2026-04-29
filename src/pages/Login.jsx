@@ -14,9 +14,15 @@ import {
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { useTranslation } from "react-i18next";
+import { Link, Link as RouterLink } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 
 export default function Login() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const Navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
 
   const [form, setForm] = useState({
@@ -56,24 +62,32 @@ export default function Login() {
           }}
         >
           {/* HEADER */}
-          <Box sx={{ textAlign: "center", mb: { xs: 3, sm: 4 } }}>
-            <Typography
-              variant="h4"
-              sx={{
-                fontWeight: "bold",
-                fontSize: { xs: "1.8rem", sm: "2.2rem" },
-              }}
-            >
-              {t("login.login_title")}
-            </Typography>
-          </Box>
+          <Button
+            sx={{ textTransform: "none" }}
+            startIcon={
+              i18n.language === "ar" ? <ArrowForwardIcon /> : <ArrowBackIcon />
+            }
+            onClick={() => Navigate(-1)}
+          >
+            {t("signup.common-back")}
+          </Button>
+          <Typography
+            variant="h4"
+            sx={{
+              textAlign: "center",
+              fontWeight: "bold",
+              fontSize: { xs: "1.8rem", sm: "2.2rem" },
+            }}
+          >
+            {t("login.login_title")}
+          </Typography>
 
           {/* FORM */}
           <Stack spacing={2.5}>
             {/* EMAIL */}
             <Box>
               <Typography fontWeight={500} mb={1}>
-              {t("login.email_label")}
+                {t("login.email_label")}
               </Typography>
 
               <TextField
@@ -96,7 +110,9 @@ export default function Login() {
                   mb: 1,
                 }}
               >
-                <Typography fontWeight={500}>{t("login.password_label")}</Typography>
+                <Typography fontWeight={500}>
+                  {t("login.password_label")}
+                </Typography>
 
                 <Typography
                   variant="body2"
@@ -159,16 +175,11 @@ export default function Login() {
             {/* SIGN UP */}
             <Box sx={{ mt: 1, textAlign: "center" }}>
               <Typography variant="body2">
-                {t("login.no_account")}{"  "}
-                <span
-                  style={{
-                    color: "#1976d2",
-                    fontWeight: 600,
-                    cursor: "pointer",
-                  }}
-                >
+                {t("login.no_account")}
+                {"  "}
+                <Link component={RouterLink} to="/register">
                   {t("login.signup")}
-                </span>
+                </Link>
               </Typography>
             </Box>
           </Stack>
