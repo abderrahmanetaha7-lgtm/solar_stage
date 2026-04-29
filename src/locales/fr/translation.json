@@ -252,6 +252,24 @@
   "favorite":{
     "title":"Mes favoris", 
     "no-favorite":"Aucun nouveau produit favori"
+  },
+
+  "testimonials": {
+    "1": {
+      "text": "Mes factures d’électricité ont beaucoup diminué et je produis maintenant ma propre énergie. Très satisfait du résultat."
+    },
+    "2": {
+      "text": "Installation rapide et service professionnel. Tout s’est bien passé du début à la fin."
+    },
+    "3": {
+      "text": "Je vois une vraie différence sur ma consommation d’énergie. Le système est très efficace."
+    },
+    "4": {
+      "text": "Très bonne expérience globale, avec une équipe sérieuse et à l’écoute."
+    },
+    "5": {
+      "text": "Solution fiable et rentable. Je recommande sans hésitation."
+    }
   }
 
 

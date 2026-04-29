@@ -1,23 +1,45 @@
 import React, { useState } from "react";
-import { Box, Card, Typography, IconButton, Rating } from "@mui/material";
+import {
+  Box,
+  Card,
+  Typography,
+  IconButton, 
+  Button,
+} from "@mui/material";
 import { ArrowBack, ArrowForward } from "@mui/icons-material";
 import { useTranslation } from "react-i18next";
-// Array of customer testimonials data
+import FormatQuoteIcon from "@mui/icons-material/FormatQuote";
+
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+
 const testimonials = [
   {
-    text: "SolarNova a transformé nos factures d’électricité. Nous produisons maintenant plus d’énergie que nous en consommons !",
+    text: "testimonials.1.text",
     name: "Jennifer W.",
     role: "Propriétaire",
     rating: 5,
   },
   {
-    text: "Service et installation incroyables. Je recommande fortement !",
+    text: "testimonials.2.text",
     name: "David K.",
     role: "Entrepreneur",
     rating: 4,
   },
   {
-    text: "J’ai beaucoup réduit ma facture ! Une très bonne expérience.",
+    text: "testimonials.3.text",
+    name: "Ahmed B.",
+    role: "Client",
+    rating: 5,
+  },
+  {
+    text: "testimonials.4.text",
+    name: "Ahmed B.",
+    role: "Client",
+    rating: 5,
+  },
+  {
+    text: "testimonials.5.text",
     name: "Ahmed B.",
     role: "Client",
     rating: 5,
@@ -25,89 +47,115 @@ const testimonials = [
 ];
 
 export default function CustomersOpinionHome() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
-  // State to track current testimonial index
   const [index, setIndex] = useState(0);
 
-  // Handle previous button click - loop to last testimonial if at first
   const handlePrev = () => {
     setIndex((prev) => (prev === 0 ? testimonials.length - 1 : prev - 1));
   };
 
-  // Handle next button click - loop to first testimonial if at last
   const handleNext = () => {
     setIndex((prev) => (prev === testimonials.length - 1 ? 0 : prev + 1));
   };
 
-  // Get current testimonial based on index
   const current = testimonials[index];
 
   return (
-    // Main container with background and padding
     <Box
       sx={{
-        textAlign: "center", // Center align all content
-        py: 8, // Vertical padding
-        backgroundColor: "background.default", // Theme-aware background
-        color: "text.primary", // Theme-aware text color
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        textAlign: "center",
+        py: 8,
       }}
     >
-      {/* Section title */}
       <Typography
         variant="h3"
-        component="h2"
         fontWeight="bold"
         sx={{
-          fontSize: { xs: "1.75rem", sm: "2rem", md: "2.5rem" }, // Responsive font sizes
-          mb: 1,
-          marginBottom: "30px", // Additional bottom margin
+          mb: 5,
+          fontSize: { xs: "1.75rem", sm: "2rem", md: "2.5rem" },
         }}
       >
         {t("home.testimonials.title")}
       </Typography>
 
-      {/* Testimonial card */}
-      <Card
-        sx={{
-          maxWidth: 600, // Maximum card width
-          mx: "auto", // Center horizontally
-          p: 4, // Inner padding
-          borderRadius: 3, // Rounded corners
-          boxShadow: 3, // Shadow elevation
-          backgroundColor: "background.paper", // Theme-aware card background
-        }}
+      {/* Card Wrapper */}
+      <Box
+        sx={{ position: "relative", display: "flex", justifyContent: "center" }}
       >
-        {/* Star rating display (read-only) */}
-        <Rating value={current.rating} readOnly />
+        {/* Left Arrow */}
+        <Button
+          onClick={handlePrev}
+          sx={{
+            position: "absolute",
+            left: -50,
+            top: "50%",
+            transform: "translateY(-50%)",
+            zIndex: 2,
+          }}
+        >
+          {i18n.language === "ar" ? <ArrowForwardIcon /> : <ArrowBackIcon />}
+        </Button>
 
-        {/* Testimonial text with italic styling */}
-        <Typography mt={2} fontStyle="italic">
-          "{current.text}"
-        </Typography>
+        {/* Card */}
+        <Card
+          sx={{
+            width: { xs: "90%", md: 700 },
+            height: 240,
+            borderRadius: 4,
+            p: 4,
+            m:4,
+            position: "relative",
+            overflow: "hidden",
+            boxShadow: 5,
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            textAlign: "center",
+          }}
+        >
+          <FormatQuoteIcon sx={{ fontSize: 50, opacity: 0.4, mx: "auto" }} />
 
-        {/* Customer name */}
-        <Typography mt={3} fontWeight="bold">
-          {current.name}
-        </Typography>
+          <Typography
+            sx={{
+              fontSize: "1.2rem",
+              lineHeight: 1.6,
+              mt: 2,
+            }}
+          >
+            {t(current.text)}
+          </Typography>
 
-        {/* Customer role */}
-        <Typography variant="body2" color="text.secondary">
-          {current.role}
-        </Typography>
-      </Card>
+          <Box
+            sx={{
+              mt: 3,
+              width: 50,
+              height: 4,
+              backgroundColor: "white",
+              opacity: 0.6,
+              borderRadius: 10,
+              mx: "auto",
+            }}
+          />
+        </Card>
 
-      {/* Navigation buttons container */}
-      <Box mt={3}>
-        {/* Previous button */}
-        <IconButton onClick={handlePrev} sx={{ color: "text.primary" }}>
-          <ArrowBack />
-        </IconButton>
-
-        {/* Next button */}
-        <IconButton onClick={handleNext} sx={{ color: "text.primary" }}>
-          <ArrowForward />
-        </IconButton>
+        {/* Right Arrow */}
+        <Button
+          onClick={handleNext}
+          sx={{
+            position: "absolute",
+            right: -50,
+            top: "50%",
+            transform: "translateY(-50%)",
+            zIndex: 2, 
+          }}
+        >
+          {i18n.language === "ar" ? <ArrowBackIcon /> : <ArrowForwardIcon />}
+        </Button>
       </Box>
     </Box>
   );
