@@ -33,8 +33,7 @@ import { useData } from "../../context/AuthContext";
 import { useTranslation } from "react-i18next";
 
 // Language Switcher (clean)
-const LanguageSwitcher = ({ i18n }) => { 
-
+const LanguageSwitcher = ({ i18n }) => {
   const handleChange = (e) => {
     i18n.changeLanguage(e.target.value);
   };
@@ -57,7 +56,7 @@ export default function Navbar() {
   const { t, i18n } = useTranslation();
   const location = useLocation();
 
-  const { mode, toggleTheme } = useData();
+  const { mode, toggleTheme,favorites } = useData();
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
@@ -153,8 +152,12 @@ export default function Navbar() {
             </MenuItem>
           </Menu>
 
-          <IconButton sx={{ color: "text.primary" }}>
-            <Badge badgeContent={1} color="primary">
+          <IconButton
+            sx={{ color: "text.primary" }}
+            component={RouterLink}
+            to="/favorites"
+          >
+            <Badge badgeContent={favorites.length} color="primary">
               <FavoriteBorderIcon />
             </Badge>
           </IconButton>
@@ -186,14 +189,14 @@ export default function Navbar() {
           ))}
 
           <List sx={{ mt: 2 }}>
-            <ListItemButton sx={{ borderRadius: 2, mx: 1 }}> 
+            <ListItemButton sx={{ borderRadius: 2, mx: 1 }}>
               <ListItemText
                 primary={t("nav.lang")}
                 sx={{ color: "text.primary" }}
               />
               <LanguageSwitcher i18n={i18n} />
             </ListItemButton>
-          </List> 
+          </List>
         </Box>
       </Drawer>
     </AppBar>

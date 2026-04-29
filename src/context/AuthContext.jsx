@@ -12,6 +12,29 @@ const ThemeContext = createContext();
 
 export default function ThemeContextProvider({ children }) {
   const [mode, setMode] = useState("dark");
+  const [favorites, setFavorites] = useState(() => {
+    return JSON.parse(localStorage.getItem("favorites")) || [];
+  });
+
+  useEffect(() => {
+    localStorage.setItem("favorites", JSON.stringify(favorites));
+  }, [favorites]);
+
+  const toggleFavorite = (product) => {
+    setFavorites((prev) => {
+      const exists = prev.find((item) => item.id === product.id);
+
+      if (exists) {
+        return prev.filter((item) => item.id !== product.id);
+      } else {
+        return [...prev, product];
+      }
+    });
+  };
+
+  const isFavorite = (id) => {
+    return favorites.some((item) => item.id === id);
+  };
 
   const [lang, setLang] = useState(i18n.language);
 
@@ -51,7 +74,16 @@ export default function ThemeContextProvider({ children }) {
   };
 
   return (
-    <ThemeContext.Provider value={{ mode, toggleTheme }}>
+    <ThemeContext.Provider
+      value={{
+        mode,
+        toggleTheme,
+        favorites,
+        setFavorites,
+        toggleFavorite,
+        isFavorite,
+      }}
+    >
       <CacheProvider value={isRTL ? cacheRtl : cacheLtr}>
         <ThemeProvider theme={theme}>{children}</ThemeProvider>
       </CacheProvider>

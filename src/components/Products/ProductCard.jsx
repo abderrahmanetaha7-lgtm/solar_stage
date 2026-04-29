@@ -15,10 +15,14 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import FlashOnIcon from "@mui/icons-material/FlashOn";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { useTranslation } from "react-i18next";
+import { useData } from "../../context/AuthContext";
 
 const ProductCard = ({ product, onAddToCart }) => {
+  const { toggleFavorite, isFavorite } = useData();
+
+  const favorite = isFavorite(product.id);
+
   const { t } = useTranslation();
-  const [isFavorite, setIsFavorite] = useState(false);
   const [imageError, setImageError] = useState(false);
   const theme = useTheme();
   const isDarkMode = theme.palette.mode === "dark";
@@ -38,9 +42,7 @@ const ProductCard = ({ product, onAddToCart }) => {
     "https://via.placeholder.com/500x300?text=Image+Not+Found";
   const imageSrc = imageError ? fallbackImage : image;
 
-  const handleFavoriteClick = () => {
-    setIsFavorite(!isFavorite);
-  };
+  
 
   const formattedPrice =
     typeof price === "number" ? price.toLocaleString() : price;
@@ -138,7 +140,7 @@ const ProductCard = ({ product, onAddToCart }) => {
         />
 
         <IconButton
-          onClick={handleFavoriteClick}
+          onClick={() => toggleFavorite(product)}
           sx={{
             position: "absolute",
             top: 12,
@@ -157,7 +159,7 @@ const ProductCard = ({ product, onAddToCart }) => {
             },
           }}
         >
-          {isFavorite ? (
+          {favorite  ? (
             <FavoriteIcon sx={{ color: "#e91e63", fontSize: 22 }} />
           ) : (
             <FavoriteBorderIcon
@@ -238,11 +240,11 @@ const ProductCard = ({ product, onAddToCart }) => {
               color="text.secondary"
               sx={{ textDecoration: "line-through", fontSize: "0.75rem" }}
             >
-              {(formattedPrice * 1.2).toLocaleString()} {" "}
+              {(formattedPrice * 1.2).toLocaleString()}{" "}
               {t("productsPage.currency")}
             </Typography>
             <Typography variant="p" fontWeight="bold" color="primary">
-              {formattedPrice} {" "} {t("productsPage.currency")}
+              {formattedPrice} {t("productsPage.currency")}
             </Typography>
           </Box>
 

@@ -13,8 +13,12 @@ import { useNavigate } from "react-router-dom";
 import { useProducts } from "../../context/ProductContext";
 import ProductCard from "../Products/ProductCard";
 
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+
+
 const FeaturedProducts = () => {
-  const { t } = useTranslation();
+  const { t,i18n } = useTranslation();
   const navigate = useNavigate(); // Hook for programmatic navigation
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm")); // Check if screen is mobile size
@@ -135,6 +139,13 @@ const FeaturedProducts = () => {
           onClick={() => navigate("/products")} // Navigate to products page
           variant="outlined"
           size="large"
+          endIcon={
+              i18n.language === "ar" ? (
+                <ArrowBackIcon />
+              ) : (
+                <ArrowForwardIcon />
+              )
+            }
           sx={{
             borderRadius: 3,
             px: 4,
@@ -149,8 +160,7 @@ const FeaturedProducts = () => {
             },
           }}
         >
-          {t("home.products.buttons.view_all")}
-          {/* <KeyboardArrowRightIcon sx={{ ml: 1 }} /> */}
+          {t("home.products.buttons.view_all")} 
         </Button>
       </Box>
     </Container>

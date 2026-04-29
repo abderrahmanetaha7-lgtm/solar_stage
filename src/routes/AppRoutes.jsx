@@ -12,6 +12,7 @@ import Login from "../pages/Login";
 import About from "../pages/About";
 
 import ScrollToTop from "../components/ScrollToTop";
+import Favorites from "../pages/Favorites";
 
 export default function AppRoutes() {
   return (
@@ -24,6 +25,7 @@ export default function AppRoutes() {
           <Route path="/" element={<Home />} />
           <Route path="/products" element={<Products />} />
           <Route path="/services" element={<Services />} />
+          <Route path="/favorites" element={<Favorites />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} /> 
         </Route>

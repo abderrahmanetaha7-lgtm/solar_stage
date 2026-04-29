@@ -1,11 +1,14 @@
 import React from "react";
 import imgHome from "../../assets/images/imgHome.png";
 import { Box, Container, Typography, Button } from "@mui/material";
-// import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
+
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+
 import { Link as RouterLink } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 export default function FirstSectionHome() {
-  const { t } = useTranslation();
+  const { t,i18n } = useTranslation();
   return (
     <Box
       component="section"
@@ -100,6 +103,13 @@ export default function FirstSectionHome() {
             <Button
               variant="contained"
               color="primary"
+              endIcon={
+                i18n.language === "ar" ? (
+                  <ArrowBackIcon />
+                ) : (
+                  <ArrowForwardIcon />
+                )
+              }
               component={RouterLink}
               to="/products"
               sx={{
@@ -113,7 +123,6 @@ export default function FirstSectionHome() {
               }}
             >
               {t("home.hero.buttons.buy")}
-              {/* <KeyboardArrowRightIcon sx={{ ml: 1 }} /> */}
             </Button>
 
             <Button
