@@ -247,6 +247,11 @@
     "button": "Create account",
     "already_account": "Already have an account?",
     "login": "Login"
+  },
+
+  "favorite":{
+    "title":"Mes favoris", 
+    "no-favorite":"Aucun nouveau produit favori"
   }
 
 

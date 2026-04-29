@@ -3,9 +3,11 @@ import { Box, Typography, Grid, useMediaQuery, useTheme } from "@mui/material";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import { useData } from "../context/AuthContext";
 import ProductCard from "../components/Products/ProductCard";
+import { useTranslation } from "react-i18next";
 
 export default function Favorites({ handleAddToCart }) {
   const { favorites } = useData();
+  const { t } = useTranslation();
 
   const hasFavorites = favorites.length > 0;
 
@@ -20,11 +22,16 @@ export default function Favorites({ handleAddToCart }) {
   };
 
   return (
-    <Box sx={{ minHeight: "90vh", p: 3 }}>
+    <Box sx={{ minHeight: "100vh", p: 3 }}>
+      <Box sx={{ display: "flex", justifyContent: "space-between", mt: 7 }}>
+        <Typography variant="h5" fontWeight="bold">
+          {t("favorite.title")} 
+        </Typography> 
+      </Box>
       {!hasFavorites ? (
         <Box
           sx={{
-            minHeight: "70vh",
+            minHeight: "60vh",
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
@@ -35,20 +42,11 @@ export default function Favorites({ handleAddToCart }) {
           <FavoriteBorderIcon sx={{ fontSize: 80, color: "gray", mb: 2 }} />
 
           <Typography variant="h6" color="text.secondary">
-            No new favorite products
+            {t("favorite.no-favorite")}
           </Typography>
         </Box>
       ) : (
         <>
-          <Box sx={{ display: "flex", justifyContent: "space-between", mt: 8 }}>
-            <Typography variant="h5" fontWeight="bold">
-              My Favorites
-            </Typography>
-            <Typography variant="h6" color="primary">
-              You have <b>{favorites.length} </b> favorite products
-            </Typography>
-          </Box>
-
           <Box
             sx={{
               mt: 4,
