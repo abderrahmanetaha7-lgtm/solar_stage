@@ -10,6 +10,7 @@ import {
   IconButton,
   useTheme,
 } from "@mui/material";
+import { Link } from "react-router-dom";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import FlashOnIcon from "@mui/icons-material/FlashOn";
@@ -40,9 +41,11 @@ const ProductCard = ({ product, onAddToCart }) => {
 
   const fallbackImage =
     "https://via.placeholder.com/500x300?text=Image+Not+Found";
-  const imageSrc = imageError ? fallbackImage : image;
-
-  
+  const imageSrc = imageError
+  ? fallbackImage
+  : Array.isArray(image)
+  ? image[0]
+  : image;
 
   const formattedPrice =
     typeof price === "number" ? price.toLocaleString() : price;
@@ -100,25 +103,25 @@ const ProductCard = ({ product, onAddToCart }) => {
           bgcolor: isDarkMode ? "#1a1a1a" : "#f5f5f5",
           cursor: "pointer",
         }}
-      >
-        <Box
-          component="img"
-          src={imageSrc}
-          alt={name}
-          sx={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            width: "100%",
-            height: "100%",
-            objectFit: "cover",
-            transition: "transform 0.4s ease-in-out",
-            "&:hover": {
-              transform: "scale(1.05)",
-            },
-          }}
-          onError={() => setImageError(true)}
-        />
+      > 
+          <Box
+            component="img"
+            src={imageSrc}
+            alt={name}
+            sx={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+              transition: "transform 0.4s ease-in-out",
+              "&:hover": {
+                transform: "scale(1.05)",
+              },
+            }}
+            onError={() => setImageError(true)}
+          /> 
 
         <Chip
           icon={<FlashOnIcon sx={{ fontSize: 16, color: "#fff" }} />}
@@ -159,7 +162,7 @@ const ProductCard = ({ product, onAddToCart }) => {
             },
           }}
         >
-          {favorite  ? (
+          {favorite ? (
             <FavoriteIcon sx={{ color: "#e91e63", fontSize: 22 }} />
           ) : (
             <FavoriteBorderIcon
@@ -189,6 +192,8 @@ const ProductCard = ({ product, onAddToCart }) => {
 
         {/* اسم المنتج */}
         <Typography
+          component={Link}
+          to={`/product-detail/${id}`}
           variant="h6"
           fontWeight="bold"
           sx={{
@@ -200,7 +205,12 @@ const ProductCard = ({ product, onAddToCart }) => {
             WebkitLineClamp: 2,
             WebkitBoxOrient: "vertical",
             overflow: "hidden",
+            cursor: "pointer",
             color: "text.primary",
+            "&:hover": {
+              color: "primary.main",
+            },
+            textDecoration:"none"
           }}
         >
           {name}

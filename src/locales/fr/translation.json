@@ -270,6 +270,16 @@
     "5": {
       "text": "Solution fiable et rentable. Je recommande sans hésitation."
     }
+  },
+
+  "product-detail": {
+    "efficiency": "Rendement",
+    "inStock": "En stock",
+    "outOfStock": "Rupture de stock", 
+    "currency": "MAD",
+    "addToCart": "Ajouter au panier",
+    "request": "Demander",
+    "back":"Back to products"
   }
 
 

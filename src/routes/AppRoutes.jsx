@@ -13,6 +13,7 @@ import About from "../pages/About";
 
 import ScrollToTop from "../components/ScrollToTop";
 import Favorites from "../pages/Favorites";
+import ProductDetail from "../pages/ProductDetaills";
 
 export default function AppRoutes() {
   return (
@@ -24,6 +25,7 @@ export default function AppRoutes() {
         <Route element={<MainLayout />}>
           <Route path="/" element={<Home />} />
           <Route path="/products" element={<Products />} />
+          <Route path="/product-detail/:id" element={<ProductDetail />} />
           <Route path="/services" element={<Services />} />
           <Route path="/favorites" element={<Favorites />} />
           <Route path="/about" element={<About />} />

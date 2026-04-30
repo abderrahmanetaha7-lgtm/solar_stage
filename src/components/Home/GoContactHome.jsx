@@ -4,6 +4,7 @@ import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import { useTranslation } from "react-i18next";
 
 import ArrowBackIcon from "@mui/icons-material/ArrowBack"; 
+import { Link as RouterLink } from "react-router-dom";
 
 export default function GoContactHome() {
   const { t, i18n } = useTranslation();
@@ -62,6 +63,8 @@ export default function GoContactHome() {
 
         {/* Call-to-action button */}
         <Button
+        component={RouterLink}
+        to="/contact"
           variant="contained"
           endIcon={
             i18n.language === "ar" ? <ArrowBackIcon /> : <ArrowForwardIcon />
