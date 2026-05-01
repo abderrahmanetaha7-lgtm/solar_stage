@@ -1,18 +1,17 @@
 import { createTheme } from "@mui/material/styles";
-
-export const getTheme = (mode, language) =>
+ 
+  export const getTheme = (mode, language) =>
   createTheme({
-    typography: {
-      fontFamily:
-        language === "fr" ? '"Tajawal", sans-serif' : '"Poppins", sans-serif',
-      h1: { fontWeight: 700 },
-      h2: { fontWeight: 600 },
-      button: { textTransform: "none" },
-    },
+    typography: {  
+        fontFamily: ["ELMISSIRI"],
+        h1: { fontWeight: 100 },
+        h5: { fontWeight: 200 },
+        button: { textTransform: "none" },
+      },
     direction: language === "ar" ? "rtl" : "ltr",
 
     palette: {
-      mode,    
+      mode,
 
       primary: {
         main: "#FFC107",
@@ -31,5 +30,7 @@ export const getTheme = (mode, language) =>
         primary: mode === "dark" ? "#FFFFFF" : "#111111",
         secondary: "#B0BEC5",
       },
+
+      
     },
   });
