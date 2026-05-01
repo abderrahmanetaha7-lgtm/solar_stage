@@ -3,12 +3,16 @@ import { createTheme } from "@mui/material/styles";
 export const getTheme = (mode, language) =>
   createTheme({
     typography: {
-      fontFamily: "'Inter', sans-serif",
+      fontFamily:
+        language === "fr" ? '"Tajawal", sans-serif' : '"Poppins", sans-serif',
+      h1: { fontWeight: 700 },
+      h2: { fontWeight: 600 },
+      button: { textTransform: "none" },
     },
     direction: language === "ar" ? "rtl" : "ltr",
 
     palette: {
-      mode,
+      mode,    
 
       primary: {
         main: "#FFC107",
