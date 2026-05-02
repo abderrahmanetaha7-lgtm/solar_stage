@@ -17,8 +17,9 @@ import FlashOnIcon from "@mui/icons-material/FlashOn";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { useTranslation } from "react-i18next";
 import { useData } from "../../context/AuthContext";
+import { useCart } from "../../context/CartContext";
 
-const ProductCard = ({ product, onAddToCart }) => {
+const ProductCard = ({ product }) => {
   const { toggleFavorite, isFavorite } = useData();
 
   const favorite = isFavorite(product.id);
@@ -70,7 +71,7 @@ const ProductCard = ({ product, onAddToCart }) => {
     }
     return "#666666"; // رمادي غامق لللايت مود
   };
-
+const { addToCart } = useCart();
   return (
     <Card
       sx={{
@@ -82,7 +83,7 @@ const ProductCard = ({ product, onAddToCart }) => {
         "&:hover": {
           transform: "translateY(-8px)",
           boxShadow: isDarkMode
-            ? "0 16px 32px rgba(0,0,0,0.4)"
+            ? "0 16px 32px rgba(12, 8, 8, 0.4)"
             : "0 16px 32px rgba(0,0,0,0.12)",
         },
         height: "100%",
@@ -257,26 +258,17 @@ const ProductCard = ({ product, onAddToCart }) => {
               {formattedPrice} {t("productsPage.currency")}
             </Typography>
           </Box>
-
-          <Button
-            variant="contained"
-            size="medium"
-            startIcon={<ShoppingCartIcon />}
-            onClick={() => onAddToCart(id)}
-            sx={{
-              borderRadius: 3,
-              textTransform: "none",
-              fontWeight: 600,
-              px: 3,
-              boxShadow: "none",
-              "&:hover": {
-                transform: "translateY(-2px)",
-                boxShadow: "0 4px 12px rgba(33, 150, 243, 0.3)",
-              },
-            }}
-          >
-            {t("productsPage.add")}
-          </Button>
+<Button
+  variant="contained"
+  startIcon={<ShoppingCartIcon />}
+  onClick={(e) => {
+    e.stopPropagation(); // لمنع انتشار الحدث
+    console.log("Product to add:", product); // للتصحيح
+    addToCart(product);
+  }}
+>
+  {t("productsPage.add")}
+</Button>
         </Box>
       </CardContent>
     </Card>

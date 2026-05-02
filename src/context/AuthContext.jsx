@@ -12,23 +12,33 @@ const ThemeContext = createContext();
 
 export default function ThemeContextProvider({ children }) {
   const [mode, setMode] = useState("dark");
+
+  // ⭐ FAVORITES
   const [favorites, setFavorites] = useState(() => {
     return JSON.parse(localStorage.getItem("favorites")) || [];
   });
 
+  // ⭐ CART
+  const [cart, setCart] = useState(() => {
+    return JSON.parse(localStorage.getItem("cart")) || [];
+  });
+
+  // SAVE
   useEffect(() => {
     localStorage.setItem("favorites", JSON.stringify(favorites));
   }, [favorites]);
 
+  useEffect(() => {
+    localStorage.setItem("cart", JSON.stringify(cart));
+  }, [cart]);
+
+  // FAVORITES LOGIC
   const toggleFavorite = (product) => {
     setFavorites((prev) => {
       const exists = prev.find((item) => item.id === product.id);
-
-      if (exists) {
-        return prev.filter((item) => item.id !== product.id);
-      } else {
-        return [...prev, product];
-      }
+      return exists
+        ? prev.filter((item) => item.id !== product.id)
+        : [...prev, product];
     });
   };
 
@@ -36,20 +46,49 @@ export default function ThemeContextProvider({ children }) {
     return favorites.some((item) => item.id === id);
   };
 
+  // ⭐ CART LOGIC
+  const addToCart = (product) => {
+    setCart((prev) => {
+      const exist = prev.find((item) => item.id === product.id);
+
+      if (exist) {
+        return prev.map((item) =>
+          item.id === product.id
+            ? { ...item, quantity: item.quantity + 1 }
+            : item
+        );
+      }
+
+      return [...prev, { ...product, quantity: 1 }];
+    });
+  };
+
+  const removeFromCart = (id) => {
+    setCart((prev) => prev.filter((item) => item.id !== id));
+  };
+
+  const updateQuantity = (id, quantity) => {
+    setCart((prev) =>
+      prev.map((item) =>
+        item.id === id ? { ...item, quantity } : item
+      )
+    );
+  };
+
+  // LANG + THEME
   const [lang, setLang] = useState(i18n.language);
 
   useEffect(() => {
     const handleChange = (lng) => setLang(lng);
     i18n.on("languageChanged", handleChange);
-
     return () => i18n.off("languageChanged", handleChange);
   }, []);
 
   const isRTL = lang === "ar";
 
   const theme = useMemo(
-    () => getTheme(mode, i18n.language, [mode, i18n.language]),
-    [mode, i18n.language],
+    () => getTheme(mode, i18n.language),
+    [mode, i18n.language]
   );
 
   const cacheRtl = useMemo(
@@ -58,7 +97,7 @@ export default function ThemeContextProvider({ children }) {
         key: "muirtl",
         stylisPlugins: [prefixer, rtlPlugin],
       }),
-    [],
+    []
   );
 
   const cacheLtr = useMemo(
@@ -66,7 +105,7 @@ export default function ThemeContextProvider({ children }) {
       createCache({
         key: "mui",
       }),
-    [],
+    []
   );
 
   const toggleTheme = () => {
@@ -78,10 +117,16 @@ export default function ThemeContextProvider({ children }) {
       value={{
         mode,
         toggleTheme,
+
         favorites,
-        setFavorites,
         toggleFavorite,
         isFavorite,
+
+        // ⭐ CART
+        cart,
+        addToCart,
+        removeFromCart,
+        updateQuantity,
       }}
     >
       <CacheProvider value={isRTL ? cacheRtl : cacheLtr}>

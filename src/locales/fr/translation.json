@@ -11,6 +11,95 @@
     "fr":"Français",
     "ar":"Arabic"
   },
+ "cart": {
+    "title": "Panier ({{count}} articles)",
+    "emptyTitle": "Votre panier est vide",
+    "emptyMessage": "On dirait que vous n'avez pas encore ajouté d'articles à votre panier.",
+    "continueShopping": "Continuer les achats",
+    "clearCart": "Vider le panier",
+    "bulkDiscount": "Remise pour commande en gros",
+    "summary": "Résumé de la commande",
+    "subtotal": "Sous-total ({{count}} articles)",
+    "shipping": "Livraison",
+    "free": "Gratuite",
+    "tax": "Taxe (0.8%)",
+    "total": "Total",
+    "checkout": "Procéder au paiement →",
+    "processing": "Traitement...",
+    "securePayment": "🔒 Paiement sécurisé · Retours gratuits sous 30 jours",
+    "confirmClear": "Êtes-vous sûr de vouloir vider tout votre panier ?",
+    "deleteTitle": "Supprimer l'article",
+    "deleteMessage": "Êtes-vous sûr de vouloir supprimer {{name}} de votre panier ?",
+    "decrementAriaLabel": "Diminuer la quantité de {{name}}",
+    "incrementAriaLabel": "Augmenter la quantité de {{name}}",
+    "deleteAriaLabel": "Supprimer {{name}} du panier"
+  },
+  "common": {
+    "cancel": "Annuler",
+    "delete": "Supprimer"
+  },
+   "checkout": {
+    "title": "Paiement",
+    "steps": {
+      "cart": "Panier",
+      "customerInfo": "Infos Client",
+      "confirmation": "Confirmation"
+    },
+    "emptyCart": "Votre panier est vide",
+    "continueShopping": "Continuer les achats",
+    "perUnit": "l'unité",
+    "summary": "Récapitulatif de la commande",
+    "itemsCount": "{{count}} article(s) dans le panier",
+    "subtotal": "Sous-total",
+    "tax": "TVA (0.8%)",
+    "shipping": "Livraison",
+    "free": "Gratuite",
+    "total": "Total",
+    "continue": "Continuer →",
+    "placeOrder": "Passer la commande ✓",
+    "cashOnDelivery": "Paiement à la livraison",
+    "cashOnDeliveryOnly": "Paiement à la livraison uniquement",
+    "orderConfirmed": "confirmée",
+    "errors": {
+      "firstNameRequired": "Le prénom est requis",
+      "lastNameRequired": "Le nom est requis",
+      "emailRequired": "L'email est requis",
+      "emailInvalid": "L'email est invalide",
+      "phoneRequired": "Le numéro de téléphone est requis",
+      "addressRequired": "L'adresse est requise",
+      "cityRequired": "La ville est requise",
+      "postalCodeRequired": "Le code postal est requis",
+      "emptyCart": "Votre panier est vide !"
+    },
+    "fields": {
+      "firstName": "Prénom",
+      "lastName": "Nom",
+      "email": "Email",
+      "phone": "Numéro de téléphone",
+      "address": "Adresse",
+      "city": "Ville",
+      "postalCode": "Code postal",
+      "country": "Pays"
+    },
+    "decrementAriaLabel": "Diminuer la quantité de {{name}}",
+    "incrementAriaLabel": "Augmenter la quantité de {{name}}",
+    "deleteAriaLabel": "Supprimer {{name}} du panier"
+  },
+   "orderConfirmation": {
+    "title": "Commande Confirmée !",
+    "message": "Merci pour votre achat. Votre commande a été reçue et est en cours de traitement.",
+    "orderNumber": "Commande #{{id}}",
+    "at": "à",
+    "orderSummary": "Récapitulatif de la commande",
+    "subtotal": "Sous-total",
+    "tax": "TVA (0.8%)",
+    "shipping": "Livraison",
+    "free": "Gratuite",
+    "total": "Total",
+    "shippingInfo": "Informations de livraison",
+    "continueShopping": "Continuer les achats",
+    "printReceipt": "Imprimer le reçu"
+  },
 
   "home": {
     "hero": {

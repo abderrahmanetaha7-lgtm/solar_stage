@@ -13,7 +13,10 @@ import About from "../pages/About";
 
 import ScrollToTop from "../components/ScrollToTop";
 import Favorites from "../pages/Favorites";
+import ShoppingCart from "../pages/ShoppingCart";
 import ProductDetail from "../pages/ProductDetaills";
+import OrderConfirmation from "../pages/OrderConfirmation";
+import Checkout from "../pages/Checkout";
 
 export default function AppRoutes() {
   return (
@@ -28,6 +31,9 @@ export default function AppRoutes() {
           <Route path="/product-detail/:id" element={<ProductDetail />} />
           <Route path="/services" element={<Services />} />
           <Route path="/favorites" element={<Favorites />} />
+          <Route path="/shopping-cart" element={<ShoppingCart />} />
+          <Route path="/checkout" element={<Checkout />} />
+          <Route path="/order-confirmation" element={<OrderConfirmation />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} /> 
         </Route>

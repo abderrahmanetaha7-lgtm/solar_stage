@@ -15,7 +15,7 @@ import {
   FormControl,
   Select,
 } from "@mui/material";
-
+import { useCart } from "../../context/CartContext";
 import MenuIcon from "@mui/icons-material/Menu";
 import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
@@ -63,6 +63,7 @@ export default function Navbar() {
 
   const isActive = (path) => location.pathname === path;
 
+  const { totalItems } = useCart();
   const links = [
     { label: "nav.home", path: "/" },
     { label: "nav.products", path: "/products" },
@@ -162,11 +163,15 @@ export default function Navbar() {
             </Badge>
           </IconButton>
 
-          <IconButton sx={{ color: "text.primary" }}>
-            <Badge badgeContent={1} color="primary">
-              <ShoppingCartOutlinedIcon />
-            </Badge>
-          </IconButton>
+          <IconButton
+  sx={{ color: "text.primary" }}
+  component={RouterLink}
+  to="/shopping-cart"
+>
+  <Badge badgeContent={totalItems} color="primary">
+  <ShoppingCartOutlinedIcon />
+</Badge>
+</IconButton>
         </Box>
       </Toolbar>
 

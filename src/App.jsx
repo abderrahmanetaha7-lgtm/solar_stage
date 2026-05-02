@@ -3,6 +3,7 @@ import "./App.css";
 import AppRoutes from "./routes/AppRoutes";
 import { ThemeProvider, CssBaseline } from "@mui/material";
 import { useTranslation } from "react-i18next";
+import { CartProvider } from "./context/CartContext";
 
 function App() {
   const { i18n } = useTranslation();
@@ -14,7 +15,9 @@ function App() {
   
   return (
     <>
+    <CartProvider>
       <AppRoutes />
+    </CartProvider>
     </>
   );
 }

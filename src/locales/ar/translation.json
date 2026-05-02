@@ -11,6 +11,96 @@
     "fr": "الفرنسية",
     "ar": "العربية"
   },
+    "cart": {
+    "title": "سلة التسوق ({{count}} منتجات)",
+    "emptyTitle": "سلة التسوق فارغة",
+    "emptyMessage": "يبدو أنك لم تقم بإضافة أي منتجات إلى سلة التسوق بعد.",
+    "continueShopping": "مواصلة التسوق",
+    "clearCart": "إفراغ السلة",
+    "bulkDiscount": "خصم على الطلبات بالجملة",
+    "summary": "ملخص الطلب",
+    "subtotal": "المجموع الفرعي ({{count}} منتجات)",
+    "shipping": "الشحن",
+    "free": "مجاني",
+    "tax": "الضريبة (0.8%)",
+    "total": "المجموع",
+    "checkout": "متابعة الدفع ←",
+    "processing": "جاري المعالجة...",
+    "securePayment": "🔒 دفع آمن · إرجاع مجاني خلال 30 يومًا",
+    "confirmClear": "هل أنت متأكد من رغبتك في إفراغ سلة التسوق بالكامل؟",
+    "deleteTitle": "حذف المنتج",
+    "deleteMessage": "هل أنت متأكد من رغبتك في حذف {{name}} من سلة التسوق؟",
+    "decrementAriaLabel": "تقليل كمية {{name}}",
+    "incrementAriaLabel": "زيادة كمية {{name}}",
+    "deleteAriaLabel": "حذف {{name}} من السلة"
+  },
+  "common": {
+    "cancel": "إلغاء",
+    "delete": "حذف"
+  },
+   "checkout": {
+    "title": "الدفع",
+    "steps": {
+      "cart": "سلة التسوق",
+      "customerInfo": "معلومات العميل",
+      "confirmation": "التأكيد"
+    },
+    "emptyCart": "سلة التسوق فارغة",
+    "continueShopping": "مواصلة التسوق",
+    "perUnit": "للقطعة",
+    "summary": "ملخص الطلب",
+    "itemsCount": "{{count}} منتج في السلة",
+    "subtotal": "المجموع الفرعي",
+    "tax": "الضريبة (0.8%)",
+    "shipping": "الشحن",
+    "free": "مجاني",
+    "total": "المجموع",
+    "continue": "متابعة ←",
+    "placeOrder": "تقديم الطلب ✓",
+    "cashOnDelivery": "الدفع عند الاستلام",
+    "cashOnDeliveryOnly": "الدفع عند الاستلام فقط",
+    "orderConfirmed": "مؤكدة",
+    "errors": {
+      "firstNameRequired": "الاسم الأول مطلوب",
+      "lastNameRequired": "الاسم الأخير مطلوب",
+      "emailRequired": "البريد الإلكتروني مطلوب",
+      "emailInvalid": "البريد الإلكتروني غير صالح",
+      "phoneRequired": "رقم الهاتف مطلوب",
+      "addressRequired": "العنوان مطلوب",
+      "cityRequired": "المدينة مطلوبة",
+      "postalCodeRequired": "الرمز البريدي مطلوب",
+      "emptyCart": "سلة التسوق فارغة!"
+    },
+    "fields": {
+      "firstName": "الاسم الأول",
+      "lastName": "الاسم الأخير",
+      "email": "البريد الإلكتروني",
+      "phone": "رقم الهاتف",
+      "address": "العنوان",
+      "city": "المدينة",
+      "postalCode": "الرمز البريدي",
+      "country": "الدولة"
+    },
+    "decrementAriaLabel": "تقليل كمية {{name}}",
+    "incrementAriaLabel": "زيادة كمية {{name}}",
+    "deleteAriaLabel": "حذف {{name}} من السلة"
+  },
+  "orderConfirmation": {
+    "title": "تم تأكيد الطلب!",
+    "message": "شكراً لك على الشراء. تم استلام طلبك وهو قيد المعالجة.",
+    "orderNumber": "طلب #{{id}}",
+    "at": "في",
+    "orderSummary": "ملخص الطلب",
+    "subtotal": "المجموع الفرعي",
+    "tax": "الضريبة (0.8%)",
+    "shipping": "الشحن",
+    "free": "مجاني",
+    "total": "المجموع",
+    "shippingInfo": "معلومات الشحن",
+    "continueShopping": "مواصلة التسوق",
+    "printReceipt": "طباعة الإيصال"
+  }
+,
 
   "home": {
     "hero": {
