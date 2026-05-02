@@ -30,9 +30,9 @@ const ShoppingCart = ({ onCheckout }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const navigate = useNavigate();
-  
+
   const { cartItems, updateQuantity, removeFromCart, clearCart } = useCart();
-  
+
   const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false);
   const [itemToDelete, setItemToDelete] = React.useState(null);
   const [isLoading, setIsLoading] = React.useState(false);
@@ -49,13 +49,19 @@ const ShoppingCart = ({ onCheckout }) => {
     return cartItems.reduce((sum, item) => sum + item.quantity, 0);
   }, [cartItems]);
 
-  const handleIncrement = React.useCallback((itemId) => {
-    updateQuantity(itemId, "inc");
-  }, [updateQuantity]);
+  const handleIncrement = React.useCallback(
+    (itemId) => {
+      updateQuantity(itemId, "inc");
+    },
+    [updateQuantity],
+  );
 
-  const handleDecrement = React.useCallback((itemId) => {
-    updateQuantity(itemId, "dec");
-  }, [updateQuantity]);
+  const handleDecrement = React.useCallback(
+    (itemId) => {
+      updateQuantity(itemId, "dec");
+    },
+    [updateQuantity],
+  );
 
   const handleDeleteClick = (item) => {
     setItemToDelete(item);
@@ -92,12 +98,12 @@ const ShoppingCart = ({ onCheckout }) => {
     setIsLoading(true);
     try {
       await new Promise((resolve) => setTimeout(resolve, 500));
-      
+
       if (onCheckout) {
         await onCheckout(cartItems);
       } else {
         localStorage.setItem("cart", JSON.stringify(cartItems));
-        navigate('/checkout', { state: { cartItems } });
+        navigate("/checkout", { state: { cartItems } });
       }
     } catch (error) {
       console.error("Checkout failed:", error);
@@ -110,14 +116,14 @@ const ShoppingCart = ({ onCheckout }) => {
     if (imageErrors[item.id]) {
       return "https://via.placeholder.com/500x300?text=Image+Not+Found";
     }
-    
+
     if (item.image) {
       if (Array.isArray(item.image)) {
         return item.image[0];
       }
       return item.image;
     }
-    
+
     return "https://via.placeholder.com/500x300?text=No+Image";
   };
 
@@ -188,12 +194,12 @@ const ShoppingCart = ({ onCheckout }) => {
       </Box>
 
       <Grid container spacing={4}>
-        <Grid item xs={12} md={8}>
+        <Grid size={{ xs: 12, md: 8 }}>
           <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
             {cartItems.map((item) => {
               const sousTotalArticle = item.price * item.quantity;
               const imageUrl = getImageUrl(item);
-              
+
               return (
                 <Paper
                   key={item.id}
@@ -282,7 +288,9 @@ const ShoppingCart = ({ onCheckout }) => {
                       <IconButton
                         onClick={() => handleDecrement(item.id)}
                         disabled={item.quantity <= 1}
-                        aria-label={t("cart.decrementAriaLabel", { name: item.name })}
+                        aria-label={t("cart.decrementAriaLabel", {
+                          name: item.name,
+                        })}
                         sx={{
                           bgcolor: "action.hover",
                           "&:hover": {
@@ -304,7 +312,9 @@ const ShoppingCart = ({ onCheckout }) => {
                       <IconButton
                         onClick={() => handleIncrement(item.id)}
                         disabled={item.quantity >= (item.maxQuantity || 10)}
-                        aria-label={t("cart.incrementAriaLabel", { name: item.name })}
+                        aria-label={t("cart.incrementAriaLabel", {
+                          name: item.name,
+                        })}
                         sx={{
                           bgcolor: "action.hover",
                           "&:hover": {
@@ -330,7 +340,9 @@ const ShoppingCart = ({ onCheckout }) => {
                     <IconButton
                       color="error"
                       onClick={() => handleDeleteClick(item)}
-                      aria-label={t("cart.deleteAriaLabel", { name: item.name })}
+                      aria-label={t("cart.deleteAriaLabel", {
+                        name: item.name,
+                      })}
                     >
                       <Delete />
                     </IconButton>
@@ -354,7 +366,7 @@ const ShoppingCart = ({ onCheckout }) => {
           </Box>
         </Grid>
 
-        <Grid item xs={12} md={4}>
+        <Grid size={{ xs: 12, md: 4 }}>
           <Box
             sx={{
               position: "sticky",
@@ -375,11 +387,18 @@ const ShoppingCart = ({ onCheckout }) => {
                 overflowY: "auto",
               }}
             >
-              <Typography variant="h5" fontWeight={900} mb={3} sx={{ marginBottom: "15px" }}>
+              <Typography
+                variant="h5"
+                fontWeight={900}
+                mb={3}
+                sx={{ marginBottom: "15px" }}
+              >
                 {t("cart.summary")}
               </Typography>
 
-              <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
+              <Box
+                sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}
+              >
                 <Typography color="text.secondary">
                   {t("cart.subtotal", { count: totalArticles })}
                 </Typography>
@@ -388,28 +407,38 @@ const ShoppingCart = ({ onCheckout }) => {
                 </Typography>
               </Box>
 
-              <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
-                <Typography color="text.secondary">{t("cart.shipping")}</Typography>
+              <Box
+                sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}
+              >
+                <Typography color="text.secondary">
+                  {t("cart.shipping")}
+                </Typography>
                 <Typography color="success.main" fontWeight={600}>
                   {t("cart.free")}
                 </Typography>
               </Box>
 
-              <Box sx={{ display: "flex", justifyContent: "space-between", mb: 3 }}>
+              <Box
+                sx={{ display: "flex", justifyContent: "space-between", mb: 3 }}
+              >
                 <Typography color="text.secondary">{t("cart.tax")}</Typography>
-                <Typography fontWeight={600}>
-                  ${taxe.toFixed(2)}
-                </Typography>
+                <Typography fontWeight={600}>${taxe.toFixed(2)}</Typography>
               </Box>
 
               <Divider sx={{ mb: 3 }} />
 
-              <Box sx={{ display: "flex", justifyContent: "space-between", mb: 3 }}>
+              <Box
+                sx={{ display: "flex", justifyContent: "space-between", mb: 3 }}
+              >
                 <Typography variant="h6" fontWeight={700}>
                   {t("cart.total")}
                 </Typography>
                 <Typography variant="h5" fontWeight={800}>
-                  ${total.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                  $
+                  {total.toLocaleString(undefined, {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  })}
                 </Typography>
               </Box>
 
@@ -441,7 +470,10 @@ const ShoppingCart = ({ onCheckout }) => {
               >
                 {isLoading ? (
                   <>
-                    <CircularProgress size={24} sx={{ mr: 1, color: "white" }} />
+                    <CircularProgress
+                      size={24}
+                      sx={{ mr: 1, color: "white" }}
+                    />
                     {t("cart.processing")}
                   </>
                 ) : (

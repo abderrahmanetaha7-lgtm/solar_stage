@@ -29,7 +29,7 @@ export default function FirstSectionHome() {
           top: 0,
           right: 0,
           width: { xs: "100%", md: "100%" },
-          height: "100%",
+          height: {xs:"85%",md:"100%"},
           backgroundImage: `url(${imgHome})`,
           backgroundSize: "contain",
           backgroundRepeat: "no-repeat",

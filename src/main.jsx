@@ -6,16 +6,19 @@ import { BrowserRouter } from "react-router-dom";
 import ThemeContextProvider from "./context/AuthContext.jsx";
 import { CssBaseline } from "@mui/material";
 import { ProductProvider } from "./context/ProductContext";
-import './i18n';
+import "./i18n";
+import { AuthToken } from "./context/AuthContextToken.jsx";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <ThemeContextProvider>
       <BrowserRouter>
-        <CssBaseline />
-        <ProductProvider>
-          <App />
-        </ProductProvider>
+        <AuthToken>
+          <CssBaseline />
+          <ProductProvider>
+            <App />
+          </ProductProvider>
+        </AuthToken>
       </BrowserRouter>
     </ThemeContextProvider>
   </StrictMode>,

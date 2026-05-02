@@ -37,13 +37,11 @@ export default function AppRoutes() {
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} /> 
         </Route>
-      </Routes>
-      <Routes>
         <Route element={<AuthLayout />}>
           <Route path="/register" element={<SignUp />} />
           <Route path="/login" element={<Login />} />
         </Route>
-      </Routes>
+      </Routes> 
     </>
   );
 }

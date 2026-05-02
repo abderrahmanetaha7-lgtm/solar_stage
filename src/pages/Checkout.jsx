@@ -33,7 +33,7 @@ const Checkout = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const navigate = useNavigate();
   const location = useLocation();
-  
+
   // Récupérer les données du panier depuis props ou localStorage
   const [cartItems, setCartItems] = useState(() => {
     if (location.state?.cartItems) {
@@ -45,7 +45,11 @@ const Checkout = () => {
 
   const [activeStep, setActiveStep] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [snackbar, setSnackbar] = useState({ open: false, message: "", severity: "success" });
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    message: "",
+    severity: "success",
+  });
 
   // Informations client uniquement (suppression des infos de paiement)
   const [customerInfo, setCustomerInfo] = useState({
@@ -63,7 +67,10 @@ const Checkout = () => {
   const [errors, setErrors] = useState({});
 
   // Calcul du total
-  const subtotal = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const subtotal = cartItems.reduce(
+    (sum, item) => sum + item.price * item.quantity,
+    0,
+  );
   const tax = subtotal * 0.008;
   const shipping = subtotal > 100 ? 0 : 20;
   const total = subtotal + tax + shipping;
@@ -72,7 +79,7 @@ const Checkout = () => {
   const steps = [
     t("checkout.steps.cart"),
     t("checkout.steps.customerInfo"),
-    t("checkout.steps.confirmation")
+    t("checkout.steps.confirmation"),
   ];
 
   // Gestion des changements de champs
@@ -89,27 +96,36 @@ const Checkout = () => {
   // Validation des informations client
   const validateCustomerInfo = () => {
     const newErrors = {};
-    
-    if (!customerInfo.firstName.trim()) newErrors.firstName = t("checkout.errors.firstNameRequired");
-    if (!customerInfo.lastName.trim()) newErrors.lastName = t("checkout.errors.lastNameRequired");
+
+    if (!customerInfo.firstName.trim())
+      newErrors.firstName = t("checkout.errors.firstNameRequired");
+    if (!customerInfo.lastName.trim())
+      newErrors.lastName = t("checkout.errors.lastNameRequired");
     if (!customerInfo.email.trim()) {
       newErrors.email = t("checkout.errors.emailRequired");
-    } else if (!customerInfo.email.includes("@") || !customerInfo.email.includes(".")) {
+    } else if (
+      !customerInfo.email.includes("@") ||
+      !customerInfo.email.includes(".")
+    ) {
       newErrors.email = t("checkout.errors.emailInvalid");
     }
-    if (!customerInfo.phone.trim()) newErrors.phone = t("checkout.errors.phoneRequired");
-    if (!customerInfo.address.trim()) newErrors.address = t("checkout.errors.addressRequired");
-    if (!customerInfo.city.trim()) newErrors.city = t("checkout.errors.cityRequired");
-    if (!customerInfo.postalCode.trim()) newErrors.postalCode = t("checkout.errors.postalCodeRequired");
-    
+    if (!customerInfo.phone.trim())
+      newErrors.phone = t("checkout.errors.phoneRequired");
+    if (!customerInfo.address.trim())
+      newErrors.address = t("checkout.errors.addressRequired");
+    if (!customerInfo.city.trim())
+      newErrors.city = t("checkout.errors.cityRequired");
+    if (!customerInfo.postalCode.trim())
+      newErrors.postalCode = t("checkout.errors.postalCodeRequired");
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   // Gestion des quantités
   const updateQuantity = (itemId, change) => {
-    setCartItems(prevItems =>
-      prevItems.map(item => {
+    setCartItems((prevItems) =>
+      prevItems.map((item) => {
         if (item.id === itemId) {
           const newQuantity = item.quantity + change;
           if (newQuantity >= 1 && newQuantity <= (item.maxQuantity || 10)) {
@@ -117,25 +133,25 @@ const Checkout = () => {
           }
         }
         return item;
-      })
+      }),
     );
   };
 
   const removeItem = (itemId) => {
-    setCartItems(prevItems => prevItems.filter(item => item.id !== itemId));
+    setCartItems((prevItems) => prevItems.filter((item) => item.id !== itemId));
   };
 
   // Fonction pour générer un numéro de commande unique
   const generateOrderId = () => {
     const now = new Date();
     const year = now.getFullYear();
-    const month = String(now.getMonth() + 1).padStart(2, '0');
-    const day = String(now.getDate()).padStart(2, '0');
-    const hours = String(now.getHours()).padStart(2, '0');
-    const minutes = String(now.getMinutes()).padStart(2, '0');
-    const seconds = String(now.getSeconds()).padStart(2, '0');
-    const milliseconds = String(now.getMilliseconds()).padStart(3, '0');
-    
+    const month = String(now.getMonth() + 1).padStart(2, "0");
+    const day = String(now.getDate()).padStart(2, "0");
+    const hours = String(now.getHours()).padStart(2, "0");
+    const minutes = String(now.getMinutes()).padStart(2, "0");
+    const seconds = String(now.getSeconds()).padStart(2, "0");
+    const milliseconds = String(now.getMilliseconds()).padStart(3, "0");
+
     return `CMD-${year}${month}${day}-${hours}${minutes}${seconds}-${milliseconds}`;
   };
 
@@ -159,11 +175,11 @@ const Checkout = () => {
     if (activeStep === 1) {
       if (validateCustomerInfo()) {
         setIsSubmitting(true);
-        
+
         // Création de l'objet commande
         const orderId = generateOrderId();
         const currentDate = new Date().toISOString();
-        
+
         const orderData = {
           id: orderId,
           orderDate: currentDate,
@@ -174,9 +190,9 @@ const Checkout = () => {
           shipping: shipping,
           total: total,
           paymentMethod: t("checkout.cashOnDelivery"),
-          status: t("checkout.orderConfirmed")
+          status: t("checkout.orderConfirmed"),
         };
-        
+
         // Simulation du traitement de la commande
         setTimeout(() => {
           // Sauvegarde de la commande dans localStorage
@@ -184,13 +200,13 @@ const Checkout = () => {
           const orders = savedOrders ? JSON.parse(savedOrders) : [];
           orders.push(orderData);
           localStorage.setItem("orders", JSON.stringify(orders));
-          
+
           // Vidage du panier
           localStorage.removeItem("cart");
-          
+
           // Redirection vers la page de confirmation avec les données de la commande
           navigate("/order-confirmation", { state: { order: orderData } });
-          
+
           setIsSubmitting(false);
         }, 1500);
       }
@@ -203,7 +219,9 @@ const Checkout = () => {
     <>
       {cartItems.length === 0 ? (
         <Box sx={{ textAlign: "center", py: 8 }}>
-          <ShoppingBagIcon sx={{ fontSize: 80, color: "text.secondary", mb: 2 }} />
+          <ShoppingBagIcon
+            sx={{ fontSize: 80, color: "text.secondary", mb: 2 }}
+          />
           <Typography variant="h5" gutterBottom>
             {t("checkout.emptyCart")}
           </Typography>
@@ -213,20 +231,20 @@ const Checkout = () => {
         </Box>
       ) : (
         cartItems.map((item) => (
-          <Card 
-            key={item.id} 
-            sx={{ 
+          <Card
+            key={item.id}
+            sx={{
               mb: 1.5,
               p: 1,
               borderRadius: 2,
               boxShadow: 1,
-              '&:hover': {
+              "&:hover": {
                 boxShadow: 2,
-              }
+              },
             }}
           >
-            <Grid container spacing={1} alignItems="center">
-              <Grid item xs={3} sm={2}>
+            <Grid container spacing={1} sx={{ alignItems: "center" }}>
+              <Grid size={{ xs: 3, sm: 2 }}>
                 <Box
                   component="img"
                   src={item.image || "https://via.placeholder.com/100"}
@@ -240,7 +258,7 @@ const Checkout = () => {
                   }}
                 />
               </Grid>
-              <Grid item xs={9} sm={6}>
+              <Grid size={{ xs: 12, sm: 6 }}>
                 <Typography variant="body1" fontWeight={600}>
                   {item.name}
                 </Typography>
@@ -248,14 +266,16 @@ const Checkout = () => {
                   ${item.price.toLocaleString()} {t("checkout.perUnit")}
                 </Typography>
               </Grid>
-              <Grid item xs={6} sm={2}>
+              <Grid size={{ xs: 6, sm: 2 }}>
                 <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
                   <IconButton
                     size="small"
                     onClick={() => updateQuantity(item.id, -1)}
                     disabled={item.quantity <= 1}
                     sx={{ p: 0.5 }}
-                    aria-label={t("checkout.decrementAriaLabel", { name: item.name })}
+                    aria-label={t("checkout.decrementAriaLabel", {
+                      name: item.name,
+                    })}
                   >
                     <RemoveIcon fontSize="small" />
                   </IconButton>
@@ -267,24 +287,28 @@ const Checkout = () => {
                     onClick={() => updateQuantity(item.id, 1)}
                     disabled={item.quantity >= (item.maxQuantity || 10)}
                     sx={{ p: 0.5 }}
-                    aria-label={t("checkout.incrementAriaLabel", { name: item.name })}
+                    aria-label={t("checkout.incrementAriaLabel", {
+                      name: item.name,
+                    })}
                   >
                     <AddIcon fontSize="small" />
                   </IconButton>
                 </Box>
               </Grid>
-              <Grid item xs={4} sm={1}>
+              <Grid size={{ xs: 4, sm: 1 }}>
                 <Typography fontWeight={700} variant="body2">
                   ${(item.price * item.quantity).toLocaleString()}
                 </Typography>
               </Grid>
-              <Grid item xs={2} sm={1}>
-                <IconButton 
-                  color="error" 
+              <Grid size={{ xs: 2, sm: 1 }}>
+                <IconButton
+                  color="error"
                   onClick={() => removeItem(item.id)}
                   size="small"
                   sx={{ p: 0.5 }}
-                  aria-label={t("checkout.deleteAriaLabel", { name: item.name })}
+                  aria-label={t("checkout.deleteAriaLabel", {
+                    name: item.name,
+                  })}
                 >
                   <DeleteIcon fontSize="small" />
                 </IconButton>
@@ -299,7 +323,7 @@ const Checkout = () => {
   // Affichage de l'étape des informations client
   const renderCustomerStep = () => (
     <Grid container spacing={3}>
-      <Grid item xs={12} sm={6}>
+      <Grid size={{ xs: 12, sm: 6 }}>
         <TextField
           fullWidth
           label={t("checkout.fields.firstName")}
@@ -312,7 +336,7 @@ const Checkout = () => {
           size="small"
         />
       </Grid>
-      <Grid item xs={12} sm={6}>
+      <Grid size={{ xs: 12, sm: 6 }}>
         <TextField
           fullWidth
           label={t("checkout.fields.lastName")}
@@ -325,7 +349,7 @@ const Checkout = () => {
           size="small"
         />
       </Grid>
-      <Grid item xs={12} sm={6}>
+      <Grid size={{ xs: 12, sm: 6 }}>
         <TextField
           fullWidth
           label={t("checkout.fields.email")}
@@ -339,7 +363,7 @@ const Checkout = () => {
           size="small"
         />
       </Grid>
-      <Grid item xs={12} sm={6}>
+      <Grid size={{ xs: 12, sm: 6 }}>
         <TextField
           fullWidth
           label={t("checkout.fields.phone")}
@@ -352,7 +376,7 @@ const Checkout = () => {
           size="small"
         />
       </Grid>
-      <Grid item xs={12}>
+      <Grid size={{ xs: 12 }}>
         <TextField
           fullWidth
           label={t("checkout.fields.address")}
@@ -365,7 +389,7 @@ const Checkout = () => {
           size="small"
         />
       </Grid>
-      <Grid item xs={12} sm={6}>
+      <Grid size={{ xs: 12, sm: 6 }}>
         <TextField
           fullWidth
           label={t("checkout.fields.city")}
@@ -378,7 +402,7 @@ const Checkout = () => {
           size="small"
         />
       </Grid>
-      <Grid item xs={12} sm={6}>
+      <Grid size={{ xs: 12, sm: 6 }}>
         <TextField
           fullWidth
           label={t("checkout.fields.postalCode")}
@@ -391,7 +415,7 @@ const Checkout = () => {
           size="small"
         />
       </Grid>
-      <Grid item xs={12}>
+      <Grid size={{ xs: 12 }}>
         <TextField
           fullWidth
           label={t("checkout.fields.country")}
@@ -411,7 +435,7 @@ const Checkout = () => {
         <Typography variant="h4" fontWeight={800} gutterBottom align="center">
           {t("checkout.title")}
         </Typography>
-        
+
         <Stepper activeStep={activeStep} alternativeLabel sx={{ mb: 4, mt: 2 }}>
           {steps.map((label) => (
             <Step key={label}>
@@ -421,83 +445,130 @@ const Checkout = () => {
         </Stepper>
 
         <Grid container spacing={4}>
-          <Grid item xs={12} md={7}>
+          <Grid size={{ xs: 12, md: 7 }}>
             {activeStep === 0 && renderCartStep()}
             {activeStep === 1 && renderCustomerStep()}
           </Grid>
 
-          <Grid item xs={12} md={5}>
+          <Grid size={{ xs: 12, md: 5 }}>
             {/* Carte récapitulative agrandie */}
-            <Paper 
-              sx={{ 
-                p: 4, 
-                position: "sticky", 
+            <Paper
+              sx={{
+                p: 4,
+                position: "sticky",
                 top: 100,
                 transform: "scale(1.02)",
                 transition: "transform 0.3s ease",
                 borderRadius: 4,
-                bgcolor: theme.palette.mode === 'dark' ? 'grey.900' : 'background.paper',
-                boxShadow: theme.palette.mode === 'dark' 
-                  ? '0 8px 32px rgba(0,0,0,0.3)' 
-                  : '0 8px 32px rgba(0,0,0,0.1)',
-                border: theme.palette.mode === 'dark' 
-                  ? '1px solid rgba(255,255,255,0.1)' 
-                  : '1px solid rgba(0,0,0,0.1)',
+                bgcolor:
+                  theme.palette.mode === "dark"
+                    ? "grey.900"
+                    : "background.paper",
+                boxShadow:
+                  theme.palette.mode === "dark"
+                    ? "0 8px 32px rgba(0,0,0,0.3)"
+                    : "0 8px 32px rgba(0,0,0,0.1)",
+                border:
+                  theme.palette.mode === "dark"
+                    ? "1px solid rgba(255,255,255,0.1)"
+                    : "1px solid rgba(0,0,0,0.1)",
               }}
             >
-              <Typography 
-                variant="h5" 
-                fontWeight={800} 
+              <Typography
+                variant="h5"
+                fontWeight={800}
                 gutterBottom
                 sx={{
-                  background: theme.palette.mode === 'dark'
-                    ? 'linear-gradient(135deg, #FFD700 0%, #FFA500 100%)'
-                    : 'linear-gradient(135deg, #FF8C00 0%, #FFD700 100%)',
-                  backgroundClip: 'text',
-                  WebkitBackgroundClip: 'text',
-                  color: 'transparent',
-                  mb: 2
+                  background:
+                    theme.palette.mode === "dark"
+                      ? "linear-gradient(135deg, #FFD700 0%, #FFA500 100%)"
+                      : "linear-gradient(135deg, #FF8C00 0%, #FFD700 100%)",
+                  backgroundClip: "text",
+                  WebkitBackgroundClip: "text",
+                  color: "transparent",
+                  mb: 2,
                 }}
               >
                 {t("checkout.summary")}
               </Typography>
-              
+
               <Box sx={{ my: 3 }}>
                 <Typography color="text.secondary" gutterBottom variant="body1">
                   {t("checkout.itemsCount", { count: cartItems.length })}
                 </Typography>
                 <Divider sx={{ my: 2 }} />
-                
+
                 <Box sx={{ mt: 2 }}>
-                  <Box sx={{ display: "flex", justifyContent: "space-between", mb: 1.5 }}>
-                    <Typography variant="body1">{t("checkout.subtotal")}</Typography>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      mb: 1.5,
+                    }}
+                  >
+                    <Typography variant="body1">
+                      {t("checkout.subtotal")}
+                    </Typography>
                     <Typography variant="body1" fontWeight={500}>
                       ${subtotal.toLocaleString()}
                     </Typography>
                   </Box>
-                  <Box sx={{ display: "flex", justifyContent: "space-between", mb: 1.5 }}>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      mb: 1.5,
+                    }}
+                  >
                     <Typography variant="body1">{t("checkout.tax")}</Typography>
                     <Typography variant="body1" fontWeight={500}>
                       ${tax.toFixed(2)}
                     </Typography>
                   </Box>
-                  <Box sx={{ display: "flex", justifyContent: "space-between", mb: 1.5 }}>
-                    <Typography variant="body1">{t("checkout.shipping")}</Typography>
-                    <Typography variant="body1" fontWeight={500} color="success.main">
-                      {shipping === 0 ? t("checkout.free") : `$${shipping.toFixed(2)}`}
+                  <Box
+                    sx={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      mb: 1.5,
+                    }}
+                  >
+                    <Typography variant="body1">
+                      {t("checkout.shipping")}
+                    </Typography>
+                    <Typography
+                      variant="body1"
+                      fontWeight={500}
+                      color="success.main"
+                    >
+                      {shipping === 0
+                        ? t("checkout.free")
+                        : `$${shipping.toFixed(2)}`}
                     </Typography>
                   </Box>
                   <Divider sx={{ my: 2.5 }} />
-                  <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
-                    <Typography variant="h5" fontWeight={800}>{t("checkout.total")}</Typography>
-                    <Typography variant="h4" fontWeight={900} sx={{
-                      background: theme.palette.mode === 'dark'
-                        ? 'linear-gradient(135deg, #FFD700 0%, #FFA500 100%)'
-                        : 'linear-gradient(135deg, #FF8C00 0%, #FFD700 100%)',
-                      backgroundClip: 'text',
-                      WebkitBackgroundClip: 'text',
-                      color: 'transparent',
-                    }}>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      mb: 2,
+                    }}
+                  >
+                    <Typography variant="h5" fontWeight={800}>
+                      {t("checkout.total")}
+                    </Typography>
+                    <Typography
+                      variant="h4"
+                      fontWeight={900}
+                      sx={{
+                        background:
+                          theme.palette.mode === "dark"
+                            ? "linear-gradient(135deg, #FFD700 0%, #FFA500 100%)"
+                            : "linear-gradient(135deg, #FF8C00 0%, #FFD700 100%)",
+                        backgroundClip: "text",
+                        WebkitBackgroundClip: "text",
+                        color: "transparent",
+                      }}
+                    >
                       ${total.toFixed(2)}
                     </Typography>
                   </Box>
@@ -510,44 +581,51 @@ const Checkout = () => {
                 variant="contained"
                 size="large"
                 onClick={handleSubmitOrder}
-                disabled={isSubmitting || (activeStep === 0 && cartItems.length === 0)}
+                disabled={
+                  isSubmitting || (activeStep === 0 && cartItems.length === 0)
+                }
                 sx={{
                   py: 1.8,
                   borderRadius: 3,
-                  fontSize: '1.1rem',
+                  fontSize: "1.1rem",
                   fontWeight: 700,
-                  bgcolor: theme.palette.mode === 'dark' ? '#FFD700' : '#FFA500',
-                  color: theme.palette.mode === 'dark' ? '#000000' : '#ffffff',
-                  '&:hover': {
-                    bgcolor: theme.palette.mode === 'dark' ? '#FFC107' : '#FF8C00',
-                    transform: 'translateY(-2px)',
-                    boxShadow: theme.palette.mode === 'dark'
-                      ? '0 6px 20px rgba(255, 215, 0, 0.3)'
-                      : '0 6px 20px rgba(255, 165, 0, 0.3)',
+                  bgcolor:
+                    theme.palette.mode === "dark" ? "#FFD700" : "#FFA500",
+                  color: theme.palette.mode === "dark" ? "#000000" : "#ffffff",
+                  "&:hover": {
+                    bgcolor:
+                      theme.palette.mode === "dark" ? "#FFC107" : "#FF8C00",
+                    transform: "translateY(-2px)",
+                    boxShadow:
+                      theme.palette.mode === "dark"
+                        ? "0 6px 20px rgba(255, 215, 0, 0.3)"
+                        : "0 6px 20px rgba(255, 165, 0, 0.3)",
                   },
-                  '&:active': {
-                    transform: 'translateY(0px)',
+                  "&:active": {
+                    transform: "translateY(0px)",
                   },
-                  transition: 'all 0.3s ease',
-                  textTransform: 'none',
-                  letterSpacing: '0.5px',
+                  transition: "all 0.3s ease",
+                  textTransform: "none",
+                  letterSpacing: "0.5px",
                 }}
               >
                 {isSubmitting ? (
                   <CircularProgress size={28} color="inherit" />
+                ) : activeStep === 1 ? (
+                  t("checkout.placeOrder")
                 ) : (
-                  activeStep === 1 ? t("checkout.placeOrder") : t("checkout.continue")
+                  t("checkout.continue")
                 )}
               </Button>
 
               {/* Note subtile */}
-              <Typography 
-                variant="caption" 
-                sx={{ 
-                  display: 'block', 
-                  textAlign: 'center', 
+              <Typography
+                variant="caption"
+                sx={{
+                  display: "block",
+                  textAlign: "center",
                   mt: 2,
-                  color: 'text.secondary'
+                  color: "text.secondary",
                 }}
               >
                 {t("checkout.cashOnDeliveryOnly")}
@@ -563,7 +641,10 @@ const Checkout = () => {
         onClose={() => setSnackbar({ ...snackbar, open: false })}
         anchorOrigin={{ vertical: "top", horizontal: "right" }}
       >
-        <Alert severity={snackbar.severity} onClose={() => setSnackbar({ ...snackbar, open: false })}>
+        <Alert
+          severity={snackbar.severity}
+          onClose={() => setSnackbar({ ...snackbar, open: false })}
+        >
           {snackbar.message}
         </Alert>
       </Snackbar>

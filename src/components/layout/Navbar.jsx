@@ -14,9 +14,14 @@ import {
   Typography,
   FormControl,
   Select,
+  Avatar,
+  Divider,
+  ListItem,
+  Button,
 } from "@mui/material";
 import { useCart } from "../../context/CartContext";
 import MenuIcon from "@mui/icons-material/Menu";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
 import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
@@ -31,6 +36,7 @@ import { useTheme } from "@mui/material/styles";
 import logo from "../../assets/images/logo.png";
 import { useData } from "../../context/AuthContext";
 import { useTranslation } from "react-i18next";
+import { useAuth } from "../../context/AuthContextToken";
 
 // Language Switcher (clean)
 const LanguageSwitcher = ({ i18n }) => {
@@ -56,7 +62,7 @@ export default function Navbar() {
   const { t, i18n } = useTranslation();
   const location = useLocation();
 
-  const { mode, toggleTheme,favorites } = useData();
+  const { mode, toggleTheme, favorites } = useData();
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
@@ -76,6 +82,26 @@ export default function Navbar() {
   const [openDrawer, setOpenDrawer] = useState(false);
 
   const toggleDrawer = (state) => () => setOpenDrawer(state);
+
+  const { user, logout } = useAuth();
+  console.log("Navbar user:", user);
+
+  const [anchorEl, setAnchorEl] = useState(null);
+  const openMenu = Boolean(anchorEl);
+
+  const handleMenuOpen = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const [open, setOpen] = useState(false);
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
+  const handleLogOut = () => {
+    setAnchorEl(null);
+    logout();
+    setOpen(false);
+  };
 
   return (
     <AppBar sx={{ bgcolor: "background.default", boxShadow: "none" }}>
@@ -122,7 +148,6 @@ export default function Navbar() {
         {/* Right side */}
         <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
           {!isMobile && <LanguageSwitcher i18n={i18n} />}
-
           <IconButton onClick={toggleTheme} sx={{ color: "text.primary" }}>
             {mode === "dark" ? (
               <LightModeOutlinedIcon />
@@ -131,14 +156,58 @@ export default function Navbar() {
             )}
           </IconButton>
 
-          <Tooltip title="Account">
-            <IconButton
-              onClick={(e) => setAnchorElUser(e.currentTarget)}
-              sx={{ color: "text.primary" }}
-            >
-              <PersonOutlineOutlinedIcon />
-            </IconButton>
-          </Tooltip>
+          {!user && (
+            <>
+              <Tooltip title="Account">
+                <IconButton
+                  onClick={(e) => setAnchorElUser(e.currentTarget)}
+                  sx={{ color: "text.primary" }}
+                >
+                  <PersonOutlineOutlinedIcon />
+                </IconButton>
+              </Tooltip>
+            </>
+          )}
+
+          {user && !isMobile && (
+            <>
+              <Avatar
+                onClick={handleMenuOpen}
+                sx={{
+                  bgcolor: "orange",
+                  width: 35,
+                  height: 35,
+                  ml: 2,
+                  cursor: "pointer",
+                }}
+              >
+                {user.email.charAt(0).toUpperCase()}
+              </Avatar>
+
+              <Menu
+                anchorEl={anchorEl}
+                open={openMenu}
+                onClose={handleMenuClose}
+              >
+                <MenuItem
+                  onClick={handleMenuClose}
+                  sx={{ "&:hover": { color: "primary.main" } }}
+                >
+                  {t("profile.Profile")}
+                </MenuItem>
+                <MenuItem
+                  onClick={handleMenuClose}
+                  sx={{ "&:hover": { color: "primary.main" } }}
+                >
+                  {t("profile.Settings")}
+                </MenuItem>
+                <Divider />
+                <MenuItem onClick={handleLogOut} sx={{ color: "red" }}>
+                  {t("profile.Logout")}
+                </MenuItem>
+              </Menu>
+            </>
+          )}
 
           <Menu
             anchorEl={anchorElUser}
@@ -152,7 +221,6 @@ export default function Navbar() {
               {t("nav.register")}
             </MenuItem>
           </Menu>
-
           <IconButton
             sx={{ color: "text.primary" }}
             component={RouterLink}
@@ -162,38 +230,98 @@ export default function Navbar() {
               <FavoriteBorderIcon />
             </Badge>
           </IconButton>
-
           <IconButton
-  sx={{ color: "text.primary" }}
-  component={RouterLink}
-  to="/shopping-cart"
->
-  <Badge badgeContent={totalItems} color="primary">
-  <ShoppingCartOutlinedIcon />
-</Badge>
-</IconButton>
+            sx={{ color: "text.primary" }}
+            component={RouterLink}
+            to="/shopping-cart"
+          >
+            <Badge badgeContent={totalItems} color="primary">
+              <ShoppingCartOutlinedIcon />
+            </Badge>
+          </IconButton>
         </Box>
       </Toolbar>
 
       {/* Mobile Drawer */}
       <Drawer anchor="left" open={openDrawer} onClose={toggleDrawer(false)}>
-        <Box sx={{ width: 240, mt: 8 }}>
-          {links.map((item) => (
-            <List key={item.label}>
-              <ListItemButton
-                component={RouterLink}
-                to={item.path}
-                onClick={toggleDrawer(false)}
+        <Box
+          sx={{
+            width: 270,
+            height: "100%",
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
+          {/* ================= USER HEADER ================= */}
+          {user && (
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                gap: 1.5,
+                p: 2,
+              }}
+            >
+              <Avatar
                 sx={{
-                  bgcolor: isActive(item.path) ? "primary.main" : "transparent",
+                  bgcolor: "orange",
+                  display: "flex",
+                  alignItems: "center",
                 }}
               >
-                <ListItemText primary={t(item.label)} />
-              </ListItemButton>
-            </List>
-          ))}
+                {user.email.charAt(0).toUpperCase()}
+              </Avatar>
 
-          <List sx={{ mt: 2 }}>
+              <Box sx={{ flex: 1 }}>
+                <Typography fontWeight="bold">{user.name || "User"}</Typography>
+                <Typography variant="body2" color="text.secondary">
+                  {user.email}
+                </Typography>
+              </Box>
+
+              {/* ⋮ MENU */}
+              <IconButton onClick={handleMenuOpen}>
+                <MoreVertIcon />
+              </IconButton>
+            </Box>
+          )}
+
+          {/* MENU ITEMS */}
+          <Menu anchorEl={anchorEl} open={openMenu} onClose={handleMenuClose}>
+            <MenuItem
+              onClick={handleMenuClose}
+              sx={{ "&:hover": { color: "primary.main" } }}
+            >
+              {t("profile.Profile")}
+            </MenuItem>
+            <MenuItem
+              onClick={handleMenuClose}
+              sx={{ "&:hover": { color: "primary.main" } }}
+            >
+              {t("profile.Settings")}
+            </MenuItem>
+          </Menu>
+
+          <Divider />
+
+          <Box sx={{ flex: 1 }}>
+            <List>
+              {links.map((item) => (
+                <ListItemButton
+                  key={item.label}
+                  component={RouterLink}
+                  to={item.path}
+                  onClick={toggleDrawer(false)}
+                  sx={{
+                    bgcolor: isActive(item.path)
+                      ? "primary.main"
+                      : "transparent",
+                  }}
+                >
+                  <ListItemText primary={t(item.label)} />
+                </ListItemButton>
+              ))}
+            </List>
             <ListItemButton sx={{ borderRadius: 2, mx: 1 }}>
               <ListItemText
                 primary={t("nav.lang")}
@@ -201,7 +329,26 @@ export default function Navbar() {
               />
               <LanguageSwitcher i18n={i18n} />
             </ListItemButton>
-          </List>
+          </Box>
+
+          {user && (
+            <Box sx={{ p: 2 }}>
+              <Divider sx={{ mb: 1 }} />
+
+              <Button
+                fullWidth
+                onClick={handleLogOut}
+                sx={{
+                  color: "red",
+                  fontWeight: "bold",
+                  justifyContent: "flex-start",
+                  mb: 2,
+                }}
+              >
+                {t("profile.Logout")}
+              </Button>
+            </Box>
+          )}
         </Box>
       </Drawer>
     </AppBar>

@@ -369,6 +369,12 @@
     "addToCart": "Ajouter au panier",
     "request": "Demander",
     "back":"Back to products"
+  },
+
+  "profile": {
+    "Profile": "Profil",
+    "Settings": "Paramètres",
+    "Logout": "Déconnexion"
   }
 
 

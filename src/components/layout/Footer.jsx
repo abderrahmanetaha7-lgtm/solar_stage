@@ -35,7 +35,7 @@ const Footer = () => {
         >
           {/* Logo Section */}
           <Grid item xs={12} md="auto">
-            <Stack direction="row" spacing={1.5} alignItems="center" mb={2}>
+            <Stack direction="row" spacing={1.5} sx={{alignItems:"center"}} mb={2}>
               {/* Icon container with gradient background */}
               <Box>
                 {/* Brand name */}
@@ -116,7 +116,7 @@ const Footer = () => {
             {/* Contact information items */}
             <Stack spacing={2} alignItems={{ md: "flex-end" }}>
               {/* Email contact */}
-              <Stack direction="row" spacing={1.5} alignItems="center">
+              <Stack direction="row" spacing={1.5} sx={{alignItems:"center"}}>
                 <MailOutlineIcon sx={{ fontSize: 18 }} />
                 <Typography variant="body2">
                   {t("footer.contact.email")}
@@ -124,7 +124,7 @@ const Footer = () => {
               </Stack>
 
               {/* Phone contact */}
-              <Stack direction="row" spacing={1.5} alignItems="center">
+              <Stack direction="row" spacing={1.5} sx={{alignItems:"center"}}>
                 <PhoneIcon sx={{ fontSize: 18 }} />
                 <Typography variant="body2">
                   {t("footer.contact.phone")}
@@ -132,7 +132,7 @@ const Footer = () => {
               </Stack>
 
               {/* Address contact */}
-              <Stack direction="row" spacing={1.5} alignItems="center">
+              <Stack direction="row" spacing={1.5} sx={{alignItems:"center"}}>
                 <LocationOnIcon sx={{ fontSize: 18 }} />
                 <Typography variant="body2">
                   {t("footer.contact.location")}

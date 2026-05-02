@@ -4,8 +4,8 @@ import { createTheme } from "@mui/material/styles";
   createTheme({
     typography: {  
         fontFamily: ["ELMISSIRI"],
-        h1: { fontWeight: 100 },
-        h5: { fontWeight: 200 },
+        h1: { fontWeight: 700 },
+        h5: { fontWeight: 600 },
         button: { textTransform: "none" },
       },
     direction: language === "ar" ? "rtl" : "ltr",

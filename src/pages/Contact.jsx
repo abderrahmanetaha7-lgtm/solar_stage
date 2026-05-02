@@ -20,10 +20,10 @@ import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
 import TaskAltOutlinedIcon from "@mui/icons-material/TaskAltOutlined";
 import SendOutlinedIcon from "@mui/icons-material/SendOutlined";
 import { useState } from "react";
-import { useTranslation } from "react-i18next"; 
+import { useTranslation } from "react-i18next";
 
 export default function Contact() {
-  const { t, i18n } = useTranslation(); 
+  const { t, i18n } = useTranslation();
 
   const [submitted, setSubmitted] = useState(false);
   const [open, setOpen] = useState(false);
@@ -71,19 +71,19 @@ export default function Contact() {
           <Box sx={{ display: "flex", justifyContent: "center" }}>
             <Grid container spacing={4}>
               {/* ===== RIGHT CARD (FORM) ===== */}
-              <Grid item xs={12} md={6}>
+              <Grid size={{ xs: 12, md: 6 }}>
                 <Card sx={{ borderRadius: 3 }}>
                   <CardContent sx={{ p: 4 }}>
                     <Stack spacing={3}>
                       <Grid container spacing={2}>
-                        <Grid item xs={12} sm={6}>
+                        <Grid size={{ xs: 12, sm: 6 }}>
                           <TextField
                             fullWidth
                             variant="outlined"
                             placeholder={t("contactPage.form.name")}
                           />
                         </Grid>
-                        <Grid item xs={12} sm={6}>
+                        <Grid size={{ xs: 12, sm: 6 }}>
                           <TextField
                             fullWidth
                             variant="outlined"
@@ -138,7 +138,7 @@ export default function Contact() {
                 </Card>
               </Grid>
               {/* ===== LEFT CARD ===== */}
-              <Grid item xs={12} md={6}>
+              <Grid size={{ xs: 12, md: 6 }}>
                 <Card sx={{ borderRadius: 3, background: "none" }}>
                   <CardContent sx={{ p: 2 }}>
                     {[
@@ -158,7 +158,7 @@ export default function Contact() {
                         value: t("contactPage.info.city"),
                       },
                     ].map((item, i) => (
-                      <Grid item xs={12} key={i}>
+                      <Grid size={{ xs: 12 }} key={i}>
                         <Paper
                           sx={{
                             p: 3,

@@ -113,7 +113,7 @@ export default function FiltreProducts(props) {
             }}
           >
             {/* Category Filter Dropdown */}
-            <Grid item xs={12} sm={4}>
+            <Grid size={{ xs: 12, sm: 4 }}>
               <FormControl fullWidth>
                 <InputLabel>{t("productsPage.category.label")}</InputLabel>
                 <Select
@@ -132,8 +132,10 @@ export default function FiltreProducts(props) {
             </Grid>
 
             {/* Price Filter Slider */}
-            <Grid item xs={12} sm={4}>
-              <Typography gutterBottom>{t("productsPage.price.max")} : ${priceRange[1]}</Typography>
+            <Grid size={{ xs: 12, sm: 4 }}>
+              <Typography gutterBottom>
+                {t("productsPage.price.max")} : ${priceRange[1]}
+              </Typography>
               <Slider
                 value={priceRange[1]}
                 min={0}
@@ -143,7 +145,7 @@ export default function FiltreProducts(props) {
             </Grid>
 
             {/* Efficiency Filter Slider */}
-            <Grid item xs={12} sm={4}>
+            <Grid size={{ xs: 12, sm: 4 }}>
               <Typography gutterBottom>
                 {t("productsPage.efficiency.min")} : {minEfficiency}%
               </Typography>
@@ -160,12 +162,14 @@ export default function FiltreProducts(props) {
 
       {/* Category Chips for Quick Filtering */}
       <Box
-        sx={{ mt: "20px" }}
-        display="flex"
-        justifyContent="center"
-        gap={1}
-        mb={5}
-        flexWrap="wrap"
+        sx={{
+          mt: "20px",
+          display: "flex",
+          justifyContent: "center",
+          gap: 1,
+          mb: 5,
+          flexWrap: "wrap",
+        }}
       >
         {categories.map((c) => (
           <Chip

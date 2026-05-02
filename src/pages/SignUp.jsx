@@ -110,7 +110,7 @@ export default function SignUp() {
             {/* PASSWORD + CONFIRM PASSWORD (SAME LINE RESPONSIVE) */}
             <Grid container spacing={2}>
               {/* PASSWORD */}
-              <Grid item xs={12} sm={6}>
+              <Grid size={{ xs: 12, sm: 6 }}>
                 <Box>
                   <TextField
                     fullWidth
@@ -141,7 +141,7 @@ export default function SignUp() {
               </Grid>
 
               {/* CONFIRM PASSWORD */}
-              <Grid item xs={12} sm={6}>
+              <Grid size={{ xs: 12, sm: 6 }}>
                 <TextField
                   fullWidth
                   label={t("signup.confirm_password")}
