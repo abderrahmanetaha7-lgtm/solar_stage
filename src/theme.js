@@ -1,10 +1,13 @@
 import { createTheme } from "@mui/material/styles";
-
-export const getTheme = (mode, language) =>
+ 
+  export const getTheme = (mode, language) =>
   createTheme({
-    typography: {
-      fontFamily: "'Inter', sans-serif",
-    },
+    typography: {  
+        fontFamily: ["ELMISSIRI"],
+        h1: { fontWeight: 100 },
+        h5: { fontWeight: 200 },
+        button: { textTransform: "none" },
+      },
     direction: language === "ar" ? "rtl" : "ltr",
 
     palette: {
@@ -27,5 +30,7 @@ export const getTheme = (mode, language) =>
         primary: mode === "dark" ? "#FFFFFF" : "#111111",
         secondary: "#B0BEC5",
       },
+
+      
     },
   });

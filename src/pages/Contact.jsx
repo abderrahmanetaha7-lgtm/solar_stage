@@ -20,13 +20,10 @@ import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
 import TaskAltOutlinedIcon from "@mui/icons-material/TaskAltOutlined";
 import SendOutlinedIcon from "@mui/icons-material/SendOutlined";
 import { useState } from "react";
-import { useTranslation } from "react-i18next";
-import { useTheme } from "@mui/material/styles";
+import { useTranslation } from "react-i18next"; 
 
 export default function Contact() {
-  const { t } = useTranslation();
-  const theme = useTheme();
-  const isRtl = theme.direction === "rtl";
+  const { t, i18n } = useTranslation(); 
 
   const [submitted, setSubmitted] = useState(false);
   const [open, setOpen] = useState(false);
@@ -124,7 +121,10 @@ export default function Contact() {
                         endIcon={
                           <SendOutlinedIcon
                             sx={{
-                              transform: isRtl ? "rotate(180deg)" : "none",
+                              transform:
+                                i18n.language === "ar"
+                                  ? "rotate(180deg)"
+                                  : "rotate(0deg)",
                             }}
                           />
                         }
