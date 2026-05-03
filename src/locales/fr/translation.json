@@ -372,8 +372,8 @@
   },
 
   "profile": {
-    "Profile": "Profil",
-    "Settings": "Paramètres",
+    "Account": "Mon compte",
+    "Orders": "Mes commandes",
     "Logout": "Déconnexion"
   }
 

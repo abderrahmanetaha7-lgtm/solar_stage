@@ -3,14 +3,17 @@ import FirstSectionHome from "./../components/Home/FirstSectionHome";
 import WhyChooseUs from "./../components/Home/SecondeSectionHome";
 import CustomersOpinionHome from "./../components/Home/CustomersOpinionHome";
 import GoContactHome from "./../components/Home/GoContactHome";
+import { Box } from "@mui/material";
 export default function Home() {
   return (
     <>
-      <FirstSectionHome />
-      <WhyChooseUs />
-      <FeaturedProducts />
-      <CustomersOpinionHome />
-      <GoContactHome />
+      <Box >
+        <FirstSectionHome />
+        <WhyChooseUs />
+        <FeaturedProducts />
+        <CustomersOpinionHome />
+        <GoContactHome />
+      </Box>
     </>
   );
 }

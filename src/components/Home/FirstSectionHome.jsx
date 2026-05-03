@@ -13,11 +13,9 @@ export default function FirstSectionHome() {
     <Box
       component="section"
       sx={{
-        width: "100%",
-        minHeight: "600px",
+        width: "100%", 
         display: "flex",
-        alignItems: "center",
-        bgcolor: "background.default",
+        alignItems: "center", 
         position: "relative",
         overflow: "hidden",
       }}

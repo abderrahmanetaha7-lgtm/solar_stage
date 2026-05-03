@@ -1,8 +1,8 @@
-import Navbar from "./Navbar";
 import Footer from "./Footer";
 import { Outlet, useLocation } from "react-router-dom";
 import { Box } from "@mui/material";
-import ScrollTopButton from "../ScrollTopButton";
+import ScrollTopButton from "../ScrollTopButton"; 
+import Navbar from "./Navbar/Navbar";
 
 export default function MainLayout() {
   const location = useLocation();
