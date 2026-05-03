@@ -393,6 +393,7 @@
     "editProfileDialog": {
       "title": "Modifier le profil",
       "fullName": "Nom complet",
+      "changePhoto": "Changer la photo de profil",
       "email": "E-mail",
       "cancel": "Annuler",
       "saveChanges": "Enregistrer les modifications"

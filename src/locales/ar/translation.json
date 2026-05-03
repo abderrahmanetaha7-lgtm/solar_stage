@@ -389,6 +389,7 @@
     "editProfileDialog": {
       "title": "تعديل الملف الشخصي",
       "fullName": "الاسم الكامل",
+      "changePhoto": "تغيير الصورة الشخصية",
       "email": "البريد الإلكتروني",
       "cancel": "إلغاء",
       "saveChanges": "حفظ التغييرات"
