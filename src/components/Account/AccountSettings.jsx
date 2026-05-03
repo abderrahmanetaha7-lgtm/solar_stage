@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Box,
   Typography,
@@ -17,10 +17,43 @@ import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { useAuth } from "../../context/AuthContextToken";
 import { useTranslation } from "react-i18next";
+import ChangePasswordDialog from "./ChangePasswordDialog";
+import ChangeEmailDialog from "./ChangeEmailDialog";
+import DeleteAccountDialog from "./DeleteAccountDialog";
 
 export default function AccountSettings() {
   const { user } = useAuth();
   const { t, i18n } = useTranslation();
+
+  const [openPassword, setOpenPassword] = useState(false);
+  const [openEmail, setOpenEmail] = useState(false);
+  const [openDelete, setOpenDelete] = useState(false);
+
+  //  Password
+  function handleopenPwd() {
+    setOpenPassword(true);
+  }
+  function handleClosePwd() {
+    setOpenPassword(false);
+  }
+  
+  //  Email
+  function handleopenEmail() {
+    setOpenEmail(true);
+  }
+  function handleCloseEmail() {
+    setOpenEmail(false);
+  }
+  
+  // delete
+  function handleOpenDelete() {
+    setOpenDelete(true);
+  }
+  function handleCloseDelete() {
+    setOpenDelete(false);
+  }
+  
+
   return (
     <>
       {/* ACCOUNT SECURITY */}
@@ -31,7 +64,7 @@ export default function AccountSettings() {
 
         <List>
           <ListItem disablePadding>
-            <ListItemButton>
+            <ListItemButton onClick={handleopenPwd}>
               <ListItemText primary={t("accountSettings.changePassword")} />
               <ArrowForwardIosIcon
                 sx={{
@@ -46,7 +79,7 @@ export default function AccountSettings() {
           <Divider sx={{ bgcolor: "#333" }} />
 
           <ListItem disablePadding>
-            <ListItemButton>
+            <ListItemButton onClick={handleopenEmail}>
               <ListItemText
                 primary={t("accountSettings.changeEmail")}
                 secondary={user?.email}
@@ -64,7 +97,7 @@ export default function AccountSettings() {
           <Divider sx={{ bgcolor: "#333" }} />
 
           <ListItem disablePadding>
-            <ListItemButton sx={{ color: "#ff4d4f" }}>
+            <ListItemButton sx={{ color: "#ff4d4f" }} onClick={handleOpenDelete}>
               <ListItemText primary={t("accountSettings.deleteAccount")} />
               <ArrowForwardIosIcon
                 sx={{
@@ -77,6 +110,9 @@ export default function AccountSettings() {
           </ListItem>
         </List>
       </Paper>
+      <ChangePasswordDialog open={openPassword} onClose={handleClosePwd} />
+      <ChangeEmailDialog open={openEmail} onClose={handleCloseEmail} />
+      <DeleteAccountDialog open={openDelete} onClose={handleCloseDelete} />
     </>
   );
 }
