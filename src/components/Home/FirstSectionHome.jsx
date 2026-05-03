@@ -1,38 +1,48 @@
 import React from "react";
 import imgHome from "../../assets/images/imgHome.png";
-import { Box, Container, Typography, Button } from "@mui/material";
+
+import {
+  Box,
+  Container,
+  Typography,
+  Button,
+} from "@mui/material";
 
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 
 import { Link as RouterLink } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+
 export default function FirstSectionHome() {
-  const { t,i18n } = useTranslation();
+  const { t, i18n } = useTranslation();
+
   return (
     <Box
       component="section"
       sx={{
-        width: "100%", 
-        display: "flex",
-        alignItems: "center", 
+        width: "100%",
+        minHeight: "100vh",
         position: "relative",
-        overflow: "hidden",
+        overflowX: "hidden", // IMPORTANT
+        display: "flex",
+        alignItems: "center",
       }}
     >
-      {/* IMAGE */}
+      {/* BACKGROUND IMAGE */}
       <Box
         sx={{
           position: "absolute",
-          top: 0,
-          right: 0,
-          width: { xs: "100%", md: "100%" },
-          height: {xs:"85%",md:"100%"},
+          inset: 0,
+          zIndex: 0,
           backgroundImage: `url(${imgHome})`,
-          backgroundSize: "contain",
+          backgroundSize: "cover",
+          backgroundPosition: {
+            xs: "center",
+            sm: "center",
+            md: "right center",
+          },
           backgroundRepeat: "no-repeat",
-          backgroundPosition: "right center",
-          opacity: { xs: 0.8, md: 0.9 },
         }}
       />
 
@@ -41,66 +51,128 @@ export default function FirstSectionHome() {
         sx={{
           position: "absolute",
           inset: 0,
-          background:
-            "linear-gradient(to right, rgba(16, 39, 64, 0.53) 40%, rgba(13, 27, 42, 0))",
           zIndex: 1,
+          background: {
+            xs: "rgba(16,39,64,0.65)",
+            md: "linear-gradient(to right, rgba(16,39,64,0.75) 40%, rgba(13,27,42,0.1))",
+          },
         }}
       />
 
-      <Container maxWidth="lg" sx={{ position: "relative", zIndex: 2 }}>
+      {/* CONTENT */}
+      <Container
+        maxWidth="lg"
+        disableGutters
+        sx={{
+          position: "relative",
+          zIndex: 2,
+          px: {
+            xs: 2,
+            sm: 3,
+            md: 5,
+          },
+          width: "100%",
+        }}
+      >
         <Box
           sx={{
-            maxWidth: "600px",
+            width: "100%",
+            maxWidth: {
+              xs: "100%",
+              md: "600px",
+            },
 
-            textAlign: { xs: "center", md: "left" },
-            mx: { xs: "auto", md: 0 },
+            textAlign: {
+              xs: "center",
+              md: "left",
+            },
 
             display: "flex",
             flexDirection: "column",
-            justifyContent: { xs: "center", md: "flex-start" },
-            alignItems: { xs: "center", md: "flex-start" },
+
+            alignItems: {
+              xs: "center",
+              md: "flex-start",
+            },
+
+            justifyContent: "center",
           }}
         >
           {/* TITLE */}
           <Typography
-            variant="h2"
+            variant="h1"
             sx={{
-              fontSize: {
-                xs: "2.2rem",
-                sm: "2.4rem",
-                md: "2.8rem",
-                lg: "3.5rem",
-              },
               fontWeight: 700,
-              color: "text.secondary",
+              color: "#fff",
+
+              fontSize: {
+                xs: "2rem",
+                sm: "2.6rem",
+                md: "3.2rem",
+                lg: "4rem",
+              },
+
+              lineHeight: 1.2,
               mb: 3,
             }}
           >
             {t("home.hero.title")}
           </Typography>
 
+          {/* DESCRIPTION */}
           <Typography
             sx={{
-              fontSize: { xs: "1rem", md: "1.15rem" },
-              color: "text.secondary",
-              lineHeight: 1.6,
+              color: "#fff",
+
+              fontSize: {
+                xs: "0.95rem",
+                sm: "1rem",
+                md: "1.1rem",
+              },
+
+              lineHeight: 1.8,
+
               mb: 4,
+
+              maxWidth: {
+                xs: "95%",
+                sm: "80%",
+                md: "100%",
+              },
             }}
           >
             {t("home.hero.description")}
           </Typography>
 
+          {/* BUTTONS */}
           <Box
             sx={{
               display: "flex",
+
+              flexDirection: {
+                xs: "column",
+                sm: "row",
+              },
+
               gap: 2,
-              justifyContent: { xs: "center", md: "flex-start" },
-              width: "100%",
+
+              width: {
+                xs: "100%",
+                sm: "auto",
+              },
+
+              alignItems: "center",
+
+              justifyContent: {
+                xs: "center",
+                md: "flex-start",
+              },
             }}
           >
             <Button
               variant="contained"
-              color="primary"
+              component={RouterLink}
+              to="/products"
               endIcon={
                 i18n.language === "ar" ? (
                   <ArrowBackIcon />
@@ -108,13 +180,23 @@ export default function FirstSectionHome() {
                   <ArrowForwardIcon />
                 )
               }
-              component={RouterLink}
-              to="/products"
               sx={{
-                fontWeight: 600,
-                px: 3,
-                py: 1.2,
+                width: {
+                  xs: "100%",
+                  sm: "auto",
+                },
+
+                py: 1.5,
+                px: 4,
+
+                fontWeight: 700,
+
                 color: "#000",
+
+                borderRadius: 2,
+
+                whiteSpace: "nowrap",
+
                 "&:hover": {
                   bgcolor: "primary.dark",
                 },
@@ -128,13 +210,23 @@ export default function FirstSectionHome() {
               component={RouterLink}
               to="/about"
               sx={{
-                borderColor: "primary",
-                color: "primary",
-                px: 3,
-                py: 1.2,
+                width: {
+                  xs: "100%",
+                  sm: "auto",
+                },
+
+                py: 1.5,
+                px: 4,
+
+                borderRadius: 2,
+
+                borderColor: "primary.main",
+
+                color: "#fff",
+
                 "&:hover": {
                   borderColor: "primary.main",
-                  color: "primary.main",
+                  backgroundColor: "rgba(255,255,255,0.08)",
                 },
               }}
             >

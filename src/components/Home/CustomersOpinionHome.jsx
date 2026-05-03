@@ -92,7 +92,7 @@ export default function CustomersOpinionHome() {
           onClick={handlePrev}
           sx={{
             position: "absolute",
-            left: -50,
+            // left: -50,
             top: "50%",
             transform: "translateY(-50%)",
             zIndex: 2,
@@ -148,7 +148,7 @@ export default function CustomersOpinionHome() {
           onClick={handleNext}
           sx={{
             position: "absolute",
-            right: -50,
+            // right: -50,
             top: "50%",
             transform: "translateY(-50%)",
             zIndex: 2, 

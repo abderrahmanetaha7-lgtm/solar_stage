@@ -79,12 +79,16 @@ export default function MobileDrawer({ open, toggleDrawer }) {
 
             <Menu anchorEl={anchorEl} open={openMenu} onClose={handleMenuClose}>
               <MenuItem
+                component={RouterLink}
+                to="/account"
                 onClick={handleMenuClose}
                 sx={{ "&:hover": { color: "primary.main" } }}
               >
                 {t("profile.Account")}
               </MenuItem>
               <MenuItem
+                component={RouterLink}
+                to="/orders"
                 onClick={handleMenuClose}
                 sx={{ "&:hover": { color: "primary.main" } }}
               >

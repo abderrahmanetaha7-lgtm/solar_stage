@@ -10,6 +10,7 @@ import Services from "../pages/Services";
 import SignUp from "../pages/SignUp";
 import Login from "../pages/Login";
 import About from "../pages/About";
+import Account from "../pages/Account";
 
 import ScrollToTop from "../components/ScrollToTop";
 import Favorites from "../pages/Favorites";
@@ -31,6 +32,8 @@ export default function AppRoutes() {
           <Route path="/product-detail/:id" element={<ProductDetail />} />
           <Route path="/services" element={<Services />} />
           <Route path="/favorites" element={<Favorites />} />
+          <Route path="/account" element={<Account />} />
+
           <Route path="/shopping-cart" element={<ShoppingCart />} />
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/order-confirmation" element={<OrderConfirmation />} />

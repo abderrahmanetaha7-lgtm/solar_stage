@@ -12,7 +12,6 @@ import {
 
 import LightModeOutlinedIcon from "@mui/icons-material/LightModeOutlined";
 import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
-
 import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
@@ -34,25 +33,44 @@ export default function UserMenu() {
   const { totalItems } = useCart();
   const { favorites, mode, toggleTheme } = useData();
 
-  const [anchorEl, setAnchorEl] = useState(null);
-  const [anchorElUser, setAnchorElUser] = useState(null);
-  const openMenu = Boolean(anchorEl);
+  // 🔹 separate states
+  const [anchorElProfile, setAnchorElProfile] = useState(null);
+  const [anchorElAuth, setAnchorElAuth] = useState(null);
 
-  const handleMenuOpen = (e) => setAnchorEl(e.currentTarget);
-  const handleMenuClose = () => setAnchorEl(null);
+  const openProfileMenu = Boolean(anchorElProfile);
+  const openAuthMenu = Boolean(anchorElAuth);
+
+  // ---------------- HANDLERS ----------------
+
+  const handleProfileOpen = (e) => {
+    setAnchorElProfile(e.currentTarget);
+  };
+
+  const handleProfileClose = () => {
+    setAnchorElProfile(null);
+  };
+
+  const handleAuthOpen = (e) => {
+    setAnchorElAuth(e.currentTarget);
+  };
+
+  const handleAuthClose = () => {
+    setAnchorElAuth(null);
+  };
 
   const handleLogOut = () => {
-    setAnchorEl(null);
+    setAnchorElProfile(null);
     logout();
   };
 
   return (
     <>
+      {/* ================= AUTH MENU (LOGIN / REGISTER) ================= */}
       {!user && (
         <>
           <Tooltip title="Account">
             <IconButton
-              onClick={(e) => setAnchorElUser(e.currentTarget)}
+              onClick={handleAuthOpen}
               sx={{
                 color: "text.primary",
                 "&:hover": { color: "primary.main" },
@@ -61,31 +79,43 @@ export default function UserMenu() {
               <PersonOutlineOutlinedIcon />
             </IconButton>
           </Tooltip>
+
+          <Menu
+            anchorEl={anchorElAuth}
+            open={openAuthMenu}
+            onClose={handleAuthClose}
+          >
+            <MenuItem
+              component={RouterLink}
+              to="/login"
+              onClick={handleAuthClose}
+              sx={{ "&:hover": { color: "primary.main" } }}
+            >
+              {t("nav.login")}
+            </MenuItem>
+
+            <MenuItem
+              component={RouterLink}
+              to="/register"
+              onClick={handleAuthClose}
+              sx={{ "&:hover": { color: "primary.main" } }}
+            >
+              {t("nav.register")}
+            </MenuItem>
+          </Menu>
         </>
       )}
+
+      {/* ================= THEME TOGGLE ================= */}
       <IconButton onClick={toggleTheme} sx={{ color: "text.primary" }}>
         {mode === "dark" ? <LightModeOutlinedIcon /> : <DarkModeOutlinedIcon />}
       </IconButton>
-      <Menu anchorEl={anchorElUser} open={openMenu} onClose={handleMenuClose}>
-        <MenuItem
-          component={RouterLink}
-          to="/login"
-          sx={{ "&:hover": { color: "primary.main" } }}
-        >
-          {t("nav.login")}
-        </MenuItem>
-        <MenuItem
-          component={RouterLink}
-          to="/register"
-          sx={{ "&:hover": { color: "primary.main" } }}
-        >
-          {t("nav.register")}
-        </MenuItem>
-      </Menu>
+
+      {/* ================= PROFILE MENU ================= */}
       {user && !isMobile && (
         <>
           <Avatar
-            onClick={handleMenuOpen}
+            onClick={handleProfileOpen}
             sx={{
               bgcolor: "orange",
               width: 35,
@@ -97,20 +127,29 @@ export default function UserMenu() {
             {user.email.charAt(0).toUpperCase()}
           </Avatar>
 
-          <Menu anchorEl={anchorEl} open={openMenu} onClose={handleMenuClose}>
+          <Menu
+            anchorEl={anchorElProfile}
+            open={openProfileMenu}
+            onClose={handleProfileClose}
+          >
             <MenuItem
-              onClick={handleMenuClose}
+              component={RouterLink}
+              to="/account"
+              onClick={handleProfileClose}
               sx={{ "&:hover": { color: "primary.main" } }}
             >
               {t("profile.Account")}
             </MenuItem>
+
             <MenuItem
-              onClick={handleMenuClose}
+              onClick={handleProfileClose}
               sx={{ "&:hover": { color: "primary.main" } }}
             >
               {t("profile.Orders")}
             </MenuItem>
+
             <Divider />
+
             <MenuItem onClick={handleLogOut} sx={{ color: "red" }}>
               {t("profile.Logout")}
             </MenuItem>
@@ -118,8 +157,7 @@ export default function UserMenu() {
         </>
       )}
 
-      
-
+      {/* ================= FAVORITES ================= */}
       <IconButton
         sx={{ color: "text.primary", "&:hover": { color: "primary.main" } }}
         component={RouterLink}
@@ -129,6 +167,8 @@ export default function UserMenu() {
           <FavoriteBorderIcon />
         </Badge>
       </IconButton>
+
+      {/* ================= CART ================= */}
       <IconButton
         sx={{ color: "text.primary", "&:hover": { color: "primary.main" } }}
         component={RouterLink}
