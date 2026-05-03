@@ -16,24 +16,30 @@ import {
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { useAuth } from "../../context/AuthContextToken";
+import { useTranslation } from "react-i18next";
 
 export default function AccountSettings() {
   const { user } = useAuth();
+  const { t, i18n } = useTranslation();
   return (
     <>
       {/* ACCOUNT SECURITY */}
-      <Paper
-        sx={{ p: 2, borderRadius: 3, background: "#1e1e1e", color: "white" }}
-      >
+      <Paper sx={{ p: 2, borderRadius: 3 }}>
         <Typography variant="h6" sx={{ mb: 2 }}>
-          Account security
+          {t("accountSettings.title")}
         </Typography>
 
         <List>
           <ListItem disablePadding>
             <ListItemButton>
-              <ListItemText primary="Change password" />
-              <ArrowForwardIosIcon fontSize="small" />
+              <ListItemText primary={t("accountSettings.changePassword")} />
+              <ArrowForwardIosIcon
+                sx={{
+                  transform:
+                    i18n.language === "ar" ? "rotate(180deg)" : "rotate(0deg)",
+                }}
+                fontSize="small"
+              />
             </ListItemButton>
           </ListItem>
 
@@ -41,17 +47,17 @@ export default function AccountSettings() {
 
           <ListItem disablePadding>
             <ListItemButton>
-              <ListItemText primary="Change email" secondary={user?.email} />
-              <ArrowForwardIosIcon fontSize="small" />
-            </ListItemButton>
-          </ListItem>
-
-          <Divider sx={{ bgcolor: "#333" }} />
-
-          <ListItem disablePadding>
-            <ListItemButton>
-              <ListItemText primary="Change phone number" />
-              <ArrowForwardIosIcon fontSize="small" />
+              <ListItemText
+                primary={t("accountSettings.changeEmail")}
+                secondary={user?.email}
+              />
+              <ArrowForwardIosIcon
+                sx={{
+                  transform:
+                    i18n.language === "ar" ? "rotate(180deg)" : "rotate(0deg)",
+                }}
+                fontSize="small"
+              />
             </ListItemButton>
           </ListItem>
 
@@ -59,8 +65,14 @@ export default function AccountSettings() {
 
           <ListItem disablePadding>
             <ListItemButton sx={{ color: "#ff4d4f" }}>
-              <ListItemText primary="Delete account" />
-              <ArrowForwardIosIcon fontSize="small" />
+              <ListItemText primary={t("accountSettings.deleteAccount")} />
+              <ArrowForwardIosIcon
+                sx={{
+                  transform:
+                    i18n.language === "ar" ? "rotate(180deg)" : "rotate(0deg)",
+                }}
+                fontSize="small"
+              />
             </ListItemButton>
           </ListItem>
         </List>

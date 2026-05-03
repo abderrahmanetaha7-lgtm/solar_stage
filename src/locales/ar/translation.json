@@ -371,6 +371,19 @@
     "Account": "حسابي",
     "Orders": "طلباتي",
     "Logout": "تسجيل الخروج"
-  }
+  },
+
+  "account": { 
+      "email": "البريد الإلكتروني",
+      "city": "المدينة", 
+      "editProfile": "تعديل الملف الشخصي",
+      "signOut": "تسجيل الخروج"
+    },
+    "accountSettings": {
+      "title": "أمان الحساب",
+      "changePassword": "تغيير كلمة المرور",
+      "changeEmail": "تغيير البريد الإلكتروني", 
+      "deleteAccount": "حذف الحساب"
+    }
 }
  

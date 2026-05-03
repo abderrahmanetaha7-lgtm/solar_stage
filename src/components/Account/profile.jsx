@@ -8,9 +8,11 @@ import {
   Divider,
 } from "@mui/material";
 import { useAuth } from "../../context/AuthContextToken";
+import { useTranslation } from "react-i18next";
 
 export default function Profile() {
   const { user } = useAuth();
+  const { t } = useTranslation();
 
   return (
     <Paper
@@ -19,8 +21,7 @@ export default function Profile() {
         p: { xs: 2, sm: 3 },
         borderRadius: 4,
         color: "white",
-        border: "1px solid #2a2a2a",
-        background: "#121212",
+        border: "1px solid #2a2a2a", 
       }}
     >
       {/* MAIN CONTAINER */}
@@ -68,9 +69,9 @@ export default function Profile() {
               {user?.name || "Omar ART"}
             </Typography>
 
-            <Typography sx={{ opacity: 0.6 }}>Email: {user?.email}</Typography>
+            <Typography sx={{ opacity: 0.6 }}>{t("account.email")}: {user?.email}</Typography>
 
-            <Typography sx={{ opacity: 0.6 }}>City: Marrakech</Typography>
+            <Typography sx={{ opacity: 0.6 }}>{t("account.city")}: tinghir</Typography>
           </Box>
         </Stack>
 
@@ -92,7 +93,7 @@ export default function Profile() {
               minWidth: { sm: "160px" },
             }}
           >
-            Edit my profile
+            {t("account.editProfile")}
           </Button>
 
           <Button
@@ -105,8 +106,8 @@ export default function Profile() {
               borderColor: "#444",
               height: "42px",
             }}
-          >
-            Sign out
+            >
+            {t("account.signOut")} 
           </Button>
         </Stack>
       </Stack>

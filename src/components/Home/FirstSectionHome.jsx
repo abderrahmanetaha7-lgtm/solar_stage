@@ -1,12 +1,7 @@
 import React from "react";
 import imgHome from "../../assets/images/imgHome.png";
 
-import {
-  Box,
-  Container,
-  Typography,
-  Button,
-} from "@mui/material";
+import { Box, Container, Typography, Button } from "@mui/material";
 
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";

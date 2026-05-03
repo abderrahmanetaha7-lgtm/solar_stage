@@ -375,7 +375,18 @@
     "Account": "Mon compte",
     "Orders": "Mes commandes",
     "Logout": "Déconnexion"
+  },
+
+  "account": { 
+      "email": "E-mail",
+      "city": "Ville", 
+      "editProfile": "Modifier mon profil",
+      "signOut": "Se déconnecter"
+    },
+    "accountSettings": {
+      "title": "Sécurité du compte",
+      "changePassword": "Changer le mot de passe",
+      "changeEmail": "Changer l’e-mail", 
+      "deleteAccount": "Supprimer le compte"
+    }
   }
-
-
-}
