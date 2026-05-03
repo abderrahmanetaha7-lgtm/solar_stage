@@ -193,8 +193,8 @@ const ShoppingCart = ({ onCheckout }) => {
         </Button>
       </Box>
 
-      <Grid container spacing={4}>
-        <Grid size={{ xs: 12, md: 8 }}>
+     <Grid container spacing={4}>
+  <Grid xs={12} md={8}>
           <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
             {cartItems.map((item) => {
               const sousTotalArticle = item.price * item.quantity;
@@ -366,7 +366,7 @@ const ShoppingCart = ({ onCheckout }) => {
           </Box>
         </Grid>
 
-        <Grid size={{ xs: 12, md: 4 }}>
+        <Grid xs={12} md={4}>
           <Box
             sx={{
               position: "sticky",

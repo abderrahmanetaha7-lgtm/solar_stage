@@ -21,6 +21,7 @@ import { useCart } from "../../context/CartContext";
 
 const ProductCard = ({ product }) => {
   const { toggleFavorite, isFavorite } = useData();
+  const { addToCart } = useCart();
 
   const favorite = isFavorite(product.id);
 
@@ -29,7 +30,7 @@ const ProductCard = ({ product }) => {
   const theme = useTheme();
   const isDarkMode = theme.palette.mode === "dark";
 
-  // Default fallback values
+  // Fallback product values
   const {
     id,
     name = "Nom du produit",
@@ -42,36 +43,27 @@ const ProductCard = ({ product }) => {
 
   const fallbackImage =
     "https://via.placeholder.com/500x300?text=Image+Not+Found";
+
   const imageSrc = imageError
-  ? fallbackImage
-  : Array.isArray(image)
-  ? image[0]
-  : image;
+    ? fallbackImage
+    : Array.isArray(image)
+    ? image[0]
+    : image;
 
   const formattedPrice =
     typeof price === "number" ? price.toLocaleString() : price;
 
-  const getFavoriteButtonBgColor = () => {
-    if (isDarkMode) {
-      return "rgba(30, 30, 30, 0.95)";
-    }
-    return "rgba(255, 255, 255, 0.95)";
-  };
+  const getFavoriteButtonBgColor = () =>
+    isDarkMode ? "rgba(30, 30, 30, 0.95)" : "rgba(255, 255, 255, 0.95)";
 
-  const getFavoriteButtonBorder = () => {
-    if (isDarkMode) {
-      return "1px solid rgba(255, 255, 255, 0.2)";
-    }
-    return "1px solid rgba(0, 0, 0, 0.08)";
-  };
+  const getFavoriteButtonBorder = () =>
+    isDarkMode
+      ? "1px solid rgba(255, 255, 255, 0.2)"
+      : "1px solid rgba(0, 0, 0, 0.08)";
 
-  const getFavoriteIconColor = () => {
-    if (isDarkMode) {
-      return "#e0e0e0";
-    }
-    return "#666666"; // رمادي غامق لللايت مود
-  };
-const { addToCart } = useCart();
+  const getFavoriteIconColor = () =>
+    isDarkMode ? "#e0e0e0" : "#666666";
+
   return (
     <Card
       sx={{
@@ -91,38 +83,38 @@ const { addToCart } = useCart();
         flexDirection: "column",
         overflow: "hidden",
         position: "relative",
-        bgcolor: "background.paper", // يستخدم لون خلفية البطاقة من الثيم
+        bgcolor: "background.paper",
       }}
     >
-      {/* Image Container - حاوية الصورة المحسنة */}
+      {/* Product image */}
       <Box
         sx={{
           position: "relative",
           width: "100%",
-          paddingTop: "75%", // نسبة 4:3
+          paddingTop: "75%", // 4:3 ratio
           overflow: "hidden",
           bgcolor: isDarkMode ? "#1a1a1a" : "#f5f5f5",
           cursor: "pointer",
         }}
-      > 
-          <Box
-            component="img"
-            src={imageSrc}
-            alt={name}
-            sx={{
-              position: "absolute",
-              top: 0,
-              left: 0,
-              width: "100%",
-              height: "100%",
-              objectFit: "cover",
-              transition: "transform 0.4s ease-in-out",
-              "&:hover": {
-                transform: "scale(1.05)",
-              },
-            }}
-            onError={() => setImageError(true)}
-          /> 
+      >
+        <Box
+          component="img"
+          src={imageSrc}
+          alt={name}
+          sx={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+            transition: "transform 0.4s ease-in-out",
+            "&:hover": {
+              transform: "scale(1.05)",
+            },
+          }}
+          onError={() => setImageError(true)}
+        />
 
         <Chip
           icon={<FlashOnIcon sx={{ fontSize: 16, color: "#fff" }} />}
@@ -136,10 +128,6 @@ const { addToCart } = useCart();
             color: "#fff",
             fontWeight: "bold",
             fontSize: "0.75rem",
-            backdropFilter: "blur(4px)",
-            "& .MuiChip-icon": {
-              color: "#fff",
-            },
           }}
         />
 
@@ -154,7 +142,6 @@ const { addToCart } = useCart();
             backdropFilter: "blur(4px)",
             width: 40,
             height: 40,
-            transition: "all 0.2s ease",
             "&:hover": {
               bgcolor: isDarkMode
                 ? "rgba(50, 50, 50, 1)"
@@ -191,7 +178,7 @@ const { addToCart } = useCart();
           {category}
         </Typography>
 
-        {/* اسم المنتج */}
+        {/* Product name */}
         <Typography
           component={Link}
           to={`/product-detail/${id}`}
@@ -208,16 +195,14 @@ const { addToCart } = useCart();
             overflow: "hidden",
             cursor: "pointer",
             color: "text.primary",
-            "&:hover": {
-              color: "primary.main",
-            },
-            textDecoration:"none"
+            "&:hover": { color: "primary.main" },
+            textDecoration: "none",
           }}
         >
           {name}
         </Typography>
 
-        {/* الوصف */}
+        {/* Description */}
         <Typography
           variant="body2"
           color="text.secondary"
@@ -236,7 +221,7 @@ const { addToCart } = useCart();
 
         <Divider sx={{ my: 1.5 }} />
 
-        {/* السعر والزر */}
+        {/* Price & add to cart */}
         <Box
           sx={{
             display: "flex",
@@ -254,21 +239,21 @@ const { addToCart } = useCart();
               {(formattedPrice * 1.2).toLocaleString()}{" "}
               {t("productsPage.currency")}
             </Typography>
-            <Typography variant="p" fontWeight="bold" color="primary">
+            <Typography fontWeight="bold" color="primary">
               {formattedPrice} {t("productsPage.currency")}
             </Typography>
           </Box>
-<Button
-  variant="contained"
-  startIcon={<ShoppingCartIcon />}
-  onClick={(e) => {
-    e.stopPropagation(); // لمنع انتشار الحدث
-    console.log("Product to add:", product); // للتصحيح
-    addToCart(product);
-  }}
->
-  {t("productsPage.add")}
-</Button>
+
+          <Button
+            variant="contained"
+            startIcon={<ShoppingCartIcon />}
+            onClick={(e) => {
+              e.stopPropagation();
+              addToCart(product);
+            }}
+          >
+            {t("productsPage.add")}
+          </Button>
         </Box>
       </CardContent>
     </Card>

@@ -1,6 +1,6 @@
+import React, { useState } from "react";
 import {
   Box,
-  Container,
   Typography,
   TextField,
   Button,
@@ -12,12 +12,10 @@ import {
   FormControl,
   Chip,
 } from "@mui/material";
-import { Search, Tune } from "@mui/icons-material";
+import { Tune } from "@mui/icons-material";
 import { useTranslation } from "react-i18next";
 
-import React, { useState } from "react";
-
-export default function FiltreProducts(props) {
+export default function FiltreProducts({ value }) {
   const {
     search,
     setSearch,
@@ -27,7 +25,10 @@ export default function FiltreProducts(props) {
     setPriceRange,
     minEfficiency,
     setMinEfficiency,
-  } = props.value;
+  } = value || {};
+
+  const { t } = useTranslation();
+  const [showFilters, setShowFilters] = useState(false);
 
   const categories = [
     { value: "all", label: "productsPage.category.all" },
@@ -36,13 +37,9 @@ export default function FiltreProducts(props) {
     { value: "inverters", label: "productsPage.category.inverters" },
   ];
 
-  const [showFilters, setShowFilters] = useState(false);
-
-  const { t } = useTranslation();
-
   return (
     <>
-      {/* Search Bar + Filters Toggle Button */}
+      {/* Search + Filter Button */}
       <Box
         sx={{
           display: "flex",
@@ -51,13 +48,14 @@ export default function FiltreProducts(props) {
           flexDirection: { xs: "column", sm: "row" },
           gap: 1.5,
           alignItems: "center",
+          mx: "auto",
         }}
       >
         <TextField
           variant="outlined"
           placeholder={t("productsPage.search")}
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
+          value={search ?? ""}
+          onChange={(e) => setSearch?.(e.target.value)}
           fullWidth
           sx={{
             "& .MuiOutlinedInput-root": {
@@ -74,8 +72,7 @@ export default function FiltreProducts(props) {
         <Button
           variant="contained"
           startIcon={<Tune />}
-          onClick={() => setShowFilters(!showFilters)}
-          fullWidth={false}
+          onClick={() => setShowFilters((prev) => !prev)}
           sx={{
             height: "44px",
             borderRadius: "50px",
@@ -88,11 +85,9 @@ export default function FiltreProducts(props) {
         </Button>
       </Box>
 
-      {/* Expandable Filters Panel */}
+      {/* Filters Panel */}
       {showFilters && (
         <Box
-          mb={5}
-          p={3}
           sx={{
             border: "1px solid #ddd",
             borderRadius: 2,
@@ -100,27 +95,29 @@ export default function FiltreProducts(props) {
             display: "flex",
             justifyContent: "center",
             mt: 4,
+            py: 4,
+            px: 3,
+            minHeight: { xs: 140, sm: 130, md: 120 },
           }}
         >
           <Grid
             container
             spacing={3}
             sx={{
-              width: "100%",
-              display: "flex",
               justifyContent: "center",
               alignItems: "center",
             }}
           >
-            {/* Category Filter Dropdown */}
-            <Grid size={{ xs: 12, sm: 4 }}>
+            {/* Category */}
+            <Grid item xs={12} sm={4}>
               <FormControl fullWidth>
-                <InputLabel>{t("productsPage.category.label")}</InputLabel>
+                <InputLabel>
+                  {t("productsPage.category.label")}
+                </InputLabel>
                 <Select
-                  sx={{ width: { xs: "100%", sm: "150px" } }}
-                  value={category}
+                  value={category ?? "all"}
                   label={t("productsPage.category.label")}
-                  onChange={(e) => setCategory(e.target.value)}
+                  onChange={(e) => setCategory?.(e.target.value)}
                 >
                   {categories.map((c) => (
                     <MenuItem key={c.value} value={c.value}>
@@ -131,39 +128,49 @@ export default function FiltreProducts(props) {
               </FormControl>
             </Grid>
 
-            {/* Price Filter Slider */}
-            <Grid size={{ xs: 12, sm: 4 }}>
-              <Typography gutterBottom>
-                {t("productsPage.price.max")} : ${priceRange[1]}
+            {/* Price */}
+            <Grid item xs={12} sm={4}>
+              <Typography sx={{ mb: 1 }}>
+                {t("productsPage.price.max")} : ${priceRange?.[1] ?? 0}
               </Typography>
+
               <Slider
-                value={priceRange[1]}
+                value={priceRange?.[1] ?? 0}
                 min={0}
                 max={10000}
-                onChange={(e, val) => setPriceRange(val)}
+                onChange={(e, val) => {
+                  if (Array.isArray(priceRange) && typeof val === "number") {
+                    setPriceRange?.([priceRange[0], val]);
+                  }
+                }}
               />
             </Grid>
 
-            {/* Efficiency Filter Slider */}
-            <Grid size={{ xs: 12, sm: 4 }}>
-              <Typography gutterBottom>
-                {t("productsPage.efficiency.min")} : {minEfficiency}%
+            {/* Efficiency */}
+            <Grid item xs={12} sm={4}>
+              <Typography sx={{ mb: 1 }}>
+                {t("productsPage.efficiency.min")} : {minEfficiency ?? 0}%
               </Typography>
+
               <Slider
-                value={minEfficiency}
+                value={minEfficiency ?? 0}
                 min={0}
                 max={100}
-                onChange={(e, val) => setMinEfficiency(val)}
+                onChange={(e, val) => {
+                  if (typeof val === "number") {
+                    setMinEfficiency?.(val);
+                  }
+                }}
               />
             </Grid>
           </Grid>
         </Box>
       )}
 
-      {/* Category Chips for Quick Filtering */}
+      {/* Category Chips */}
       <Box
         sx={{
-          mt: "20px",
+          mt: 3,
           display: "flex",
           justifyContent: "center",
           gap: 1,
@@ -176,7 +183,7 @@ export default function FiltreProducts(props) {
             key={c.value}
             label={t(c.label)}
             color={category === c.value ? "primary" : "default"}
-            onClick={() => setCategory(c.value)}
+            onClick={() => setCategory?.(c.value)}
           />
         ))}
       </Box>
