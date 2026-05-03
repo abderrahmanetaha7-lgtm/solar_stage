@@ -388,5 +388,13 @@
       "changePassword": "Changer le mot de passe",
       "changeEmail": "Changer l’e-mail", 
       "deleteAccount": "Supprimer le compte"
+    },
+
+    "editProfileDialog": {
+      "title": "Modifier le profil",
+      "fullName": "Nom complet",
+      "email": "E-mail",
+      "cancel": "Annuler",
+      "saveChanges": "Enregistrer les modifications"
     }
   }

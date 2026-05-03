@@ -9,11 +9,22 @@ import {
 } from "@mui/material";
 import { useAuth } from "../../context/AuthContextToken";
 import { useTranslation } from "react-i18next";
+import { useState } from "react";
+import EditProfileDialog from "./EditProfileDialog";
 
 export default function Profile() {
   const { user } = useAuth();
   const { t } = useTranslation();
 
+  const [showEditProfile, setShowEditProfile] = useState(false);
+
+  function handleShowEditProfile() {
+    setShowEditProfile(true);
+  }
+
+  function handleCloseEditProfile() {
+    setShowEditProfile(false);
+  }
   return (
     <Paper
       elevation={0}
@@ -21,15 +32,17 @@ export default function Profile() {
         p: { xs: 2, sm: 3 },
         borderRadius: 4,
         color: "white",
-        border: "1px solid #2a2a2a", 
+        border: "1px solid #2a2a2a",
       }}
     >
       {/* MAIN CONTAINER */}
       <Stack
         direction={{ xs: "column", md: "row" }}
-        alignItems={{ xs: "center", md: "center" }}
         spacing={{ xs: 3, md: 0 }}
-        justifyContent="space-between"
+        sx={{
+          alignItems: { xs: "center", md: "center" },
+          justifyContent: "space-between",
+        }}
       >
         {/* LEFT SIDE */}
         <Stack
@@ -60,18 +73,16 @@ export default function Profile() {
           </Avatar>
 
           {/* USER INFO */}
-          <Box>
+          <Box sx={{ alignItems: "center" }}>
             <Typography
               variant="h5"
               fontWeight="bold"
               sx={{ fontSize: { xs: "20px", sm: "24px" } }}
             >
-              {user?.name || "Omar ART"}
+              {user?.name || "stage web"}
             </Typography>
 
-            <Typography sx={{ opacity: 0.6 }}>{t("account.email")}: {user?.email}</Typography>
-
-            <Typography sx={{ opacity: 0.6 }}>{t("account.city")}: tinghir</Typography>
+            <Typography sx={{ opacity: 0.6 }}>{user?.email}</Typography>
           </Box>
         </Stack>
 
@@ -79,10 +90,10 @@ export default function Profile() {
         <Stack
           direction={{ xs: "column", sm: "row" }}
           spacing={2}
-          width={{ xs: "100%", md: "auto" }}
-          justifyContent="center"
+          sx={{ width: { xs: "100%", md: "auto" }, justifyContent: "center" }}
         >
           <Button
+            onClick={handleShowEditProfile}
             fullWidth
             variant="contained"
             sx={{
@@ -106,13 +117,18 @@ export default function Profile() {
               borderColor: "#444",
               height: "42px",
             }}
-            >
-            {t("account.signOut")} 
+          >
+            {t("account.signOut")}
           </Button>
         </Stack>
       </Stack>
 
       <Divider sx={{ my: 3, borderColor: "#2a2a2a" }} />
+
+      <EditProfileDialog
+        open={showEditProfile}
+        onClose={handleCloseEditProfile}
+      />
     </Paper>
   );
 }

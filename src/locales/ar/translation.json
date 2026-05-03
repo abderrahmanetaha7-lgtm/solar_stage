@@ -384,6 +384,14 @@
       "changePassword": "تغيير كلمة المرور",
       "changeEmail": "تغيير البريد الإلكتروني", 
       "deleteAccount": "حذف الحساب"
+    },
+
+    "editProfileDialog": {
+      "title": "تعديل الملف الشخصي",
+      "fullName": "الاسم الكامل",
+      "email": "البريد الإلكتروني",
+      "cancel": "إلغاء",
+      "saveChanges": "حفظ التغييرات"
     }
 }
  
