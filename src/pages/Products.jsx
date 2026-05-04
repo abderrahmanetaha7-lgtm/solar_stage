@@ -24,7 +24,7 @@ import { useTranslation } from "react-i18next";
 
 export default function Products({ handleAddToCart }) {
   const { t } = useTranslation();
-  
+
   // Get products from global context
   const { products } = useProducts();
 
@@ -149,10 +149,12 @@ export default function Products({ handleAddToCart }) {
         {/* No Results Message */}
         {filtered.length === 0 && (
           <Typography
-            textAlign="center"
-            mt={4}
-            color="text.secondary"
-            sx={{ margin: "20px 0 0 0" }}
+            sx={{
+              margin: "20px 0 0 0",
+              textAlign: "center",
+              mt: 4,
+              color: "text.secondary",
+            }}
           >
             {t("productsPage.not_found")}
           </Typography>

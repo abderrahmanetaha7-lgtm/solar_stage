@@ -25,18 +25,17 @@ import {
 
 import { useNavigate } from "react-router-dom";
 import EmptyOrders from "../components/Order/EmptyOrders";
+import { useTranslation } from "react-i18next";
 
 /* ================= STATUS UI ================= */
 
-const statusConfig = {
-  pending: { label: "Pending", icon: <Pending />, color: "warning" },
-  processing: { label: "Processing", icon: <Receipt />, color: "info" },
-  shipped: { label: "Shipped", icon: <LocalShipping />, color: "primary" },
-  delivered: { label: "Delivered", icon: <CheckCircle />, color: "success" },
-  cancelled: { label: "Cancelled", icon: <Cancel />, color: "error" },
-};
-
 export default function Orders() {
+  const { t } = useTranslation();
+  const statusConfig = {
+    pending: { label: "status.pending", color: "warning" },
+    confirmed: { label: "status.confirmed", color: "primary" },
+    delivered: { label: "status.delivered", color: "success" },
+  };
   const [orders, setOrders] = useState([]);
 
   const navigate = useNavigate();
@@ -60,15 +59,13 @@ export default function Orders() {
 
   const NoOrders = orders.length;
 
- 
-
   const handleDelete = (id) => {
-  if (!window.confirm("Are you sure you want to delete this order?")) return;
+    if (!window.confirm(t("orders.confirmDelete"))) return;
 
-  const updatedOrders = orders.filter((order) => order.id !== id);
-  setOrders(updatedOrders);
-  localStorage.setItem("orders", JSON.stringify(updatedOrders));
-};
+    const updatedOrders = orders.filter((order) => order.id !== id);
+    setOrders(updatedOrders);
+    localStorage.setItem("orders", JSON.stringify(updatedOrders));
+  };
 
   return (
     <Box
@@ -82,7 +79,7 @@ export default function Orders() {
     >
       {/* TITLE */}
       <Typography variant="h5" fontWeight={700} mb={2}>
-        Your Orders
+        {t("orders.title")}
       </Typography>
 
       {NoOrders === 0 && <EmptyOrders />}
@@ -93,7 +90,7 @@ export default function Orders() {
           const status = statusConfig[order.status] || statusConfig.pending;
 
           return (
-            <Grid item xs={12} sm={6} md={4} key={order.id}>
+            <Grid size={{ xs: 12, sm: 6, md: 4 }} key={order.id}>
               <Card
                 sx={{
                   mt: 2,
@@ -105,9 +102,9 @@ export default function Orders() {
               >
                 <CardContent>
                   {/* HEADER */}
-                  <Box display="flex" justifyContent="space-between">
+                  <Box>
                     <Typography fontWeight={700} sx={{ textAlign: "center" }}>
-                      Order #{order.id}
+                      {t("orders.orderNumber")} : {order.id}
                     </Typography>
 
                     <Typography
@@ -121,15 +118,19 @@ export default function Orders() {
 
                     {/* INFO */}
                     <Typography variant="body2">
-                      Items: <b>{order.items?.length || 0}</b>
+                      {t("orders.items")} : <b>{order.items?.length || 0}</b>
                     </Typography>
 
                     <Typography variant="body2" fontWeight={700}>
-                      Total: ${order.total}
+                      {t("orders.total")} : ${order.total} {t("orders.DH")}
                     </Typography>
 
-                    <Typography variant="body2" fontWeight={700}>
-                      Status : {status.label}
+                    <Typography
+                      variant="body2"
+                      fontWeight={700}
+                      color="primary"
+                    >
+                      {t("orders.status")} : {t(status.label)}
                     </Typography>
                   </Box>
 
@@ -147,7 +148,7 @@ export default function Orders() {
                       variant="outlined"
                       onClick={() => navigate(`/orders-detail/${order.id}`)}
                     >
-                      See Details
+                      {t("orders.seeDetails")}
                     </Button>
                     <Button
                       sx={{ width: "100%", borderRadius: "10px" }}
@@ -155,7 +156,7 @@ export default function Orders() {
                       color="error"
                       onClick={() => handleDelete(order.id)}
                     >
-                      Delete Order
+                      {t("orders.deleteOrder")}
                     </Button>
                   </Box>
                 </CardContent>

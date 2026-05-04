@@ -1,9 +1,12 @@
 import { Box, Typography, Button, Container, Paper } from "@mui/material";
 import { ShoppingBagOutlined as ShoppingBagIcon } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
+import { t } from "i18next";
+import { useTranslation } from "react-i18next";
 
 export default function EmptyOrders() {
   const Navigate = useNavigate();
+  const { t } = useTranslation();
   return (
     <Container maxWidth="sm">
       <Box
@@ -41,14 +44,14 @@ export default function EmptyOrders() {
         <Typography
           variant="body1"
           sx={{
-            fontSize: "30px",
+            fontSize: "27px",
             color: "#757575",
             mb: 3,
             maxWidth: 280,
             mx: "auto",
           }}
         >
-          No orders yet
+          {t("emptyOrders.title")}
         </Typography>
 
         {/* Description Text */}
@@ -61,7 +64,7 @@ export default function EmptyOrders() {
             mx: "auto",
           }}
         >
-          Go to the homepage or click below to start sourcing
+          {t("emptyOrders.description")}
         </Typography>
 
         {/* CTA Button */}
@@ -81,7 +84,7 @@ export default function EmptyOrders() {
             },
           }}
         >
-          Start sourcing
+          {t("emptyOrders.cta")}
         </Button>
       </Box>
     </Container>

@@ -418,5 +418,52 @@
     "title": "Supprimer le compte",
     "message": "Êtes-vous sûr de vouloir supprimer votre compte ? Cette action est irréversible.",
     "delete": "Supprimer le compte"
+  },
+
+  "orders": {
+    "orderNumber": "Commande n°",
+    "DH": "MAD",
+    "title": "Mes commandes",
+    "items": "Articles",
+    "total": "Total",
+    "status": "Statut",
+    "seeDetails": "Voir les détails",
+    "deleteOrder": "Supprimer la commande",
+    "confirmDelete": "Êtes-vous sûr de vouloir supprimer cette commande ?"
+  },
+  "status": {
+    "pending": "En attente",
+    "confirmed": "Confirmée", 
+    "delivered": "Livrée"
+  },
+
+  "emptyOrders": {
+    "title": "Aucune commande pour le moment",
+    "description": "Allez à la page d'accueil ou cliquez ci-dessous pour commencer vos achats",
+    "cta": "Commencer vos achats"
+  },
+
+
+  "orderDetails": {
+    "title": "Détails de la commande",
+    "orderNumber": "Commande n° ",
+    "placedOn": "Passée le ",
+    "status": "Statut",
+    "orderItems": "Articles de la commande",
+    "product": "Produit",
+    "price": "Prix",
+    "total": "Total",
+    "quantity": "Quantité",
+    "orderSummary": "Résumé de la commande",
+    "subtotal": "Sous-total",
+    "shipping": "Livraison",
+    "tax": "Taxe",
+    "customerInfo": "Informations client",
+    "fullName": "Nom complet",
+    "email": "Email",
+    "phone": "Téléphone",
+    "address": "Adresse",
+    "notFound": "Commande introuvable",
+    "back": "Retour aux commandes"
   }
-  }
+}
