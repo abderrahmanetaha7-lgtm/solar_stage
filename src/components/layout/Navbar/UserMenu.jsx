@@ -141,7 +141,7 @@ export default function UserMenu() {
               {t("profile.Account")}
             </MenuItem>
 
-            <MenuItem
+            <MenuItem component={RouterLink} to="/orders"
               onClick={handleProfileClose}
               sx={{ "&:hover": { color: "primary.main" } }}
             >

@@ -10,7 +10,7 @@ import Services from "../pages/Services";
 import SignUp from "../pages/SignUp";
 import Login from "../pages/Login";
 import About from "../pages/About";
-import Account from "../pages/Account";
+import Account from "../pages/Account"; 
 
 import ScrollToTop from "../components/ScrollToTop";
 import Favorites from "../pages/Favorites";
@@ -18,6 +18,8 @@ import ShoppingCart from "../pages/ShoppingCart";
 import ProductDetail from "../pages/ProductDetaills";
 import OrderConfirmation from "../pages/OrderConfirmation";
 import Checkout from "../pages/Checkout";
+import Orders from "../pages/Orders";
+import OrderDetails from "../components/Order/OrderDetails";
 
 export default function AppRoutes() {
   return (
@@ -33,6 +35,8 @@ export default function AppRoutes() {
           <Route path="/services" element={<Services />} />
           <Route path="/favorites" element={<Favorites />} />
           <Route path="/account" element={<Account />} />
+          <Route path="/orders" element={<Orders />} />
+          <Route path="/orders-detail/:id" element={<OrderDetails />} />
 
           <Route path="/shopping-cart" element={<ShoppingCart />} />
           <Route path="/checkout" element={<Checkout />} />

@@ -192,7 +192,6 @@ const Checkout = () => {
           paymentMethod: t("checkout.cashOnDelivery"),
           status: t("checkout.orderConfirmed"),
         };
-
         // Simulation du traitement de la commande
         setTimeout(() => {
           // Sauvegarde de la commande dans localStorage
@@ -200,7 +199,8 @@ const Checkout = () => {
           const orders = savedOrders ? JSON.parse(savedOrders) : [];
           orders.push(orderData);
           localStorage.setItem("orders", JSON.stringify(orders));
-
+          window.dispatchEvent(new Event("ordersUpdated"));
+          
           // Vidage du panier
           localStorage.removeItem("cart");
 

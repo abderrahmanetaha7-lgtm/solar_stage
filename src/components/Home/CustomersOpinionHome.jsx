@@ -1,11 +1,5 @@
 import React, { useState } from "react";
-import {
-  Box,
-  Card,
-  Typography,
-  IconButton, 
-  Button,
-} from "@mui/material";
+import { Box, Card, Typography, IconButton, Button } from "@mui/material";
 import { ArrowBack, ArrowForward } from "@mui/icons-material";
 import { useTranslation } from "react-i18next";
 import FormatQuoteIcon from "@mui/icons-material/FormatQuote";
@@ -85,32 +79,28 @@ export default function CustomersOpinionHome() {
 
       {/* Card Wrapper */}
       <Box
-        sx={{ position: "relative", display: "flex", justifyContent: "center" }}
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: { xs: 1, md: 3 },
+          width: "100%",
+          maxWidth: 900,
+        }}
       >
         {/* Left Arrow */}
-        <Button
-          onClick={handlePrev}
-          sx={{
-            position: "absolute",
-            // left: -50,
-            top: "50%",
-            transform: "translateY(-50%)",
-            zIndex: 2,
-          }}
-        >
+        <IconButton onClick={handlePrev}>
           {i18n.language === "ar" ? <ArrowForwardIcon /> : <ArrowBackIcon />}
-        </Button>
+        </IconButton>
 
         {/* Card */}
         <Card
           sx={{
-            width: { xs: "90%", md: 700 },
-            height: 240,
+            flex: 1,
+            maxWidth: 700,
+            minHeight: 240,
             borderRadius: 4,
-            p: 4,
-            m:4,
-            position: "relative",
-            overflow: "hidden",
+            p: { xs: 2, md: 4 },
             boxShadow: 5,
             display: "flex",
             flexDirection: "column",
@@ -142,20 +132,11 @@ export default function CustomersOpinionHome() {
             }}
           />
         </Card>
-
+ 
         {/* Right Arrow */}
-        <Button
-          onClick={handleNext}
-          sx={{
-            position: "absolute",
-            // right: -50,
-            top: "50%",
-            transform: "translateY(-50%)",
-            zIndex: 2, 
-          }}
-        >
+        <IconButton onClick={handleNext}>
           {i18n.language === "ar" ? <ArrowBackIcon /> : <ArrowForwardIcon />}
-        </Button>
+        </IconButton>
       </Box>
     </Box>
   );
