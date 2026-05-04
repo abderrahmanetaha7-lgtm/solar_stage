@@ -35,8 +35,8 @@ const Footer = () => {
           {/* Logo & description */}
           <Grid xs={12} md="auto">
             <Stack direction="row" spacing={1.5} sx={{ alignItems: "center" }} mb={2}>
-              <Box>
-                <img src={logo} alt="Logo" style={{ height: 60 }} />
+              <Box sx={{m:0}}>
+                <img src={logo} alt="Logo" style={{ height: 85 }} />
               </Box>
             </Stack>
 
@@ -107,7 +107,7 @@ const Footer = () => {
               {t("footer.contact.title")}
             </Typography>
 
-            <Stack spacing={2} sx={{ alignItems: { md: "flex-end" } }}>
+            <Stack spacing={2} sx={{ alignItems: { md: "flex-start" } }}>
               <Stack direction="row" spacing={1.5} sx={{ alignItems: "center" }}>
                 <MailOutlineIcon sx={{ fontSize: 18 }} />
                 <Typography variant="body2">

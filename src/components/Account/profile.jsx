@@ -13,7 +13,7 @@ import { useState } from "react";
 import EditProfileDialog from "./EditProfileDialog";
 
 export default function Profile() {
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
   const { t } = useTranslation();
 
   const [showEditProfile, setShowEditProfile] = useState(false);
@@ -108,6 +108,7 @@ export default function Profile() {
           </Button>
 
           <Button
+            onClick={() => logout()}
             fullWidth
             variant="outlined"
             color="inherit"

@@ -109,11 +109,9 @@ export default function FiltreProducts({ value }) {
             }}
           >
             {/* Category */}
-            <Grid item xs={12} sm={4}>
+            <Grid size={{ xs: 12, sm: 4 }}>
               <FormControl fullWidth>
-                <InputLabel>
-                  {t("productsPage.category.label")}
-                </InputLabel>
+                <InputLabel>{t("productsPage.category.label")}</InputLabel>
                 <Select
                   value={category ?? "all"}
                   label={t("productsPage.category.label")}
@@ -129,7 +127,7 @@ export default function FiltreProducts({ value }) {
             </Grid>
 
             {/* Price */}
-            <Grid item xs={12} sm={4}>
+            <Grid size={{ xs: 12, sm: 4 }}>
               <Typography sx={{ mb: 1 }}>
                 {t("productsPage.price.max")} : ${priceRange?.[1] ?? 0}
               </Typography>
@@ -147,7 +145,7 @@ export default function FiltreProducts({ value }) {
             </Grid>
 
             {/* Efficiency */}
-            <Grid item xs={12} sm={4}>
+            <Grid size={{ xs: 12, sm: 4 }}>
               <Typography sx={{ mb: 1 }}>
                 {t("productsPage.efficiency.min")} : {minEfficiency ?? 0}%
               </Typography>
