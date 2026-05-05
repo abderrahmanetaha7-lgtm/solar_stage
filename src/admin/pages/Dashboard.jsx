@@ -44,8 +44,6 @@ function Dashboard() {
   const theme = useTheme();
   const { products = [], orders = [], users = [], loading } = useAdmin();
 
- 
-  // total revenue
   const totalRevenue = useMemo(() => {
     return orders.reduce((sum, o) => {
       const value = parseFloat(o.total);
@@ -53,7 +51,6 @@ function Dashboard() {
     }, 0);
   }, [orders]);
 
-  // sales chart
   const salesData = useMemo(() => {
     const data = Array.from({ length: 12 }, (_, i) => ({
       month: new Date(0, i).toLocaleString("en", { month: "short" }),
@@ -73,41 +70,37 @@ function Dashboard() {
     return data;
   }, [orders]);
 
-  // top products
   const topProducts = useMemo(() => {
     return [...products]
       .sort((a, b) => Number(b.sold || 0) - Number(a.sold || 0))
       .slice(0, 4);
   }, [products]);
 
-  // revenue)
   const kpis = useMemo(
     () => [
       {
-        label: "Total Revenue",
+        label: "Revenu total",
         value: `${totalRevenue.toLocaleString()} MAD`,
         icon: DollarSign,
       },
       {
-        label: "Total Orders",
+        label: "Total des commandes",
         value: orders.length,
         icon: ShoppingBag,
       },
       {
-        label: "Total Users",
+        label: "Utilisateurs totaux",
         value: users.length,
         icon: UsersIcon,
       },
       {
-        label: "Total Products",
+        label: "Produits totaux",
         value: products.length,
         icon: Package,
       },
     ],
     [totalRevenue, orders.length, users.length, products.length],
   );
-
-  /* ================= HELPERS ================= */
 
   const getStatusColor = (status) => {
     const s = status?.toLowerCase();
@@ -116,8 +109,6 @@ function Dashboard() {
     if (s === "delivered") return "success";
     return "default";
   };
-
-  /* ================= LOADING ================= */
 
   if (loading) {
     return (
@@ -131,18 +122,18 @@ function Dashboard() {
         }}
       >
         <CircularProgress />
-        <Typography>Loading...</Typography>
+        <Typography>Chargement...</Typography>
       </Box>
     );
   }
 
-  /* ================= UI ================= */
   return (
     <>
       <PageHeader
-        title="Dashboard"
-        description="Welcome back, Adam. Here's what's happening today."
+        title="Tableau de bord"
+        description="Bienvenue. Voici un aperçu de ce qui se passe aujourd’hui."
       />
+
       <Box sx={{ width: "100%" }}>
         {/* KPI Cards */}
         <Grid container spacing={2} sx={{ mb: 3 }}>
@@ -178,18 +169,7 @@ function Dashboard() {
                         {k.value}
                       </Typography>
                     </Box>
-                    <Box
-                      sx={{
-                        width: 40,
-                        height: 40,
-                        borderRadius: 2,
-                        bgcolor: alpha(theme.palette.action.hover, 0.8),
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        color: "text.primary",
-                      }}
-                    >
+                    <Box>
                       <k.icon sx={{ fontSize: 20 }} />
                     </Box>
                   </Box>
@@ -198,6 +178,7 @@ function Dashboard() {
             </Grid>
           ))}
         </Grid>
+
         {/* Charts and Top Products */}
         <Grid container spacing={3} sx={{ mb: 3 }}>
           <Grid size={{ xs: 12, lg: 8 }}>
@@ -209,7 +190,7 @@ function Dashboard() {
               }}
             >
               <CardHeader
-                title="Sales Overview"
+                title="Aperçu des ventes"
                 titleTypographyProps={{ variant: "h6", fontWeight: 600 }}
               />
               <CardContent>
@@ -239,11 +220,13 @@ function Dashboard() {
                           />
                         </linearGradient>
                       </defs>
+
                       <CartesianGrid
                         strokeDasharray="3 3"
                         stroke={theme.palette.divider}
                         vertical={false}
                       />
+
                       <XAxis
                         dataKey="month"
                         stroke={theme.palette.text.secondary}
@@ -251,6 +234,7 @@ function Dashboard() {
                         tickLine={false}
                         axisLine={false}
                       />
+
                       <YAxis
                         stroke={theme.palette.text.secondary}
                         fontSize={12}
@@ -260,6 +244,7 @@ function Dashboard() {
                           `${value.toLocaleString()} MAD`
                         }
                       />
+
                       <Tooltip
                         contentStyle={{
                           borderRadius: 12,
@@ -269,9 +254,10 @@ function Dashboard() {
                         }}
                         formatter={(value) => [
                           `${value.toLocaleString()} MAD`,
-                          "Revenue",
+                          "Revenu",
                         ]}
                       />
+
                       <Area
                         type="monotone"
                         dataKey="revenue"
@@ -295,7 +281,7 @@ function Dashboard() {
               }}
             >
               <CardHeader
-                title="Top Selling Products"
+                title="Meilleurs produits vendus"
                 titleTypographyProps={{ variant: "h6", fontWeight: 600 }}
               />
               <CardContent sx={{ pt: 0 }}>
@@ -315,14 +301,14 @@ function Dashboard() {
                     }}
                   >
                     <Box sx={{ flex: 1, minWidth: 0 }}>
-                      <Typography variant="h6" color="text.primary">
+                      <Typography variant="h6">
                         {product.name}
                       </Typography>
-                      <Typography variant="h6" color="text.primary">
+                      <Typography variant="h6">
                         {product.category}
                       </Typography>
                     </Box>
-                    <Typography variant="h6" color="text.primary">
+                    <Typography variant="h6">
                       {product.sold}
                     </Typography>
                   </Box>
@@ -331,7 +317,8 @@ function Dashboard() {
             </Card>
           </Grid>
         </Grid>
-        {/* Recent Orders Table */}
+
+        {/* Recent Orders */}
         <Card
           sx={{
             border: 1,
@@ -340,7 +327,7 @@ function Dashboard() {
           }}
         >
           <CardHeader
-            title="Recent Orders"
+            title="Commandes récentes"
             titleTypographyProps={{ variant: "h6", fontWeight: 600 }}
             action={
               <Link
@@ -348,60 +335,46 @@ function Dashboard() {
                 underline="hover"
                 sx={{ fontSize: "0.75rem", fontWeight: 500 }}
               >
-                View all
+                Voir tout
               </Link>
             }
           />
+
           <CardContent>
-            <TableContainer component={Paper} elevation={0} sx={{ border: 0 }}>
+            <TableContainer component={Paper} elevation={0}>
               <Table>
                 <TableHead>
                   <TableRow>
-                    <TableCell sx={{ fontWeight: 600 }}>Order</TableCell>
-                    <TableCell sx={{ fontWeight: 600 }}>Customer</TableCell>
+                    <TableCell sx={{ fontWeight: 600 }}>Commande</TableCell>
+                    <TableCell sx={{ fontWeight: 600 }}>Client</TableCell>
                     <TableCell sx={{ fontWeight: 600 }}>Date</TableCell>
-                    <TableCell sx={{ fontWeight: 600 }}>Status</TableCell>
+                    <TableCell sx={{ fontWeight: 600 }}>Statut</TableCell>
                     <TableCell sx={{ fontWeight: 600, textAlign: "right" }}>
                       Total
                     </TableCell>
                   </TableRow>
                 </TableHead>
+
                 <TableBody>
                   {orders.slice(0, 6).map((order) => (
                     <TableRow key={order.id}>
+                      <TableCell>{order.id}</TableCell>
                       <TableCell>
-                        <Typography variant="body2" sx={{ fontWeight: 500 }}>
-                          {order.id}
-                        </Typography>
-                      </TableCell>
-                      <TableCell>
-                        <Typography variant="body2">
-                          {order.user?.name || "Unknown"}
-                        </Typography>
-                        <Typography variant="caption" color="text.secondary">
+                        <Typography>{order.user?.name || "Inconnu"}</Typography>
+                        <Typography variant="caption">
                           {order.user?.email || "-"}
                         </Typography>
                       </TableCell>
-                      <TableCell>
-                        <Typography variant="body2" color="text.secondary">
-                          {order.date}
-                        </Typography>
-                      </TableCell>
+                      <TableCell>{order.date}</TableCell>
                       <TableCell>
                         <Chip
                           label={order.status}
                           size="small"
                           color={getStatusColor(order.status)}
-                          sx={{ textTransform: "capitalize" }}
                         />
                       </TableCell>
-                      <TableCell>
-                        <Typography
-                          variant="body2"
-                          sx={{ textAlign: "right", fontWeight: 600 }}
-                        >
-                          {order.total} MAD
-                        </Typography>
+                      <TableCell sx={{ textAlign: "right", fontWeight: 600 }}>
+                        {order.total} MAD
                       </TableCell>
                     </TableRow>
                   ))}

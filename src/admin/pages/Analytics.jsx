@@ -16,7 +16,7 @@ import { Box, Card, Grid, Typography, useTheme } from "@mui/material";
 import PageHeader from "../components/PageHeader";
 import { useAdmin } from "../hooks/useAdmin";
 
-const COLORS = ["#f97316", "#10b981", "#3b82f6" ];
+const COLORS = ["#f97316", "#10b981", "#3b82f6"];
 
 export default function AnalyticsPage() {
   const theme = useTheme();
@@ -25,9 +25,9 @@ export default function AnalyticsPage() {
   return (
     <>
       <PageHeader
-        title="Analytics"
-        description="Performance insights for your store."
-      /> 
+        title="Analytique"
+        description="Aperçu des performances de votre boutique."
+      />
 
       <Grid container spacing={3} sx={{ mt: 0.5 }}>
         {/* Revenue Line Chart */}
@@ -35,7 +35,7 @@ export default function AnalyticsPage() {
           <Card sx={{ boxShadow: "0 2px 8px rgba(0,0,0,0.05)" }}>
             <Box sx={{ p: 2, pb: 1 }}>
               <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
-                Revenue over time
+                Revenus dans le temps
               </Typography>
             </Box>
             <Box sx={{ p: 2, pt: 0, height: 300 }}>
@@ -85,7 +85,7 @@ export default function AnalyticsPage() {
           <Card sx={{ boxShadow: "0 2px 8px rgba(0,0,0,0.05)" }}>
             <Box sx={{ p: 2, pb: 1 }}>
               <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
-                Orders over time
+                Commandes dans le temps
               </Typography>
             </Box>
             <Box sx={{ p: 2, pt: 0, height: 300 }}>
@@ -128,12 +128,12 @@ export default function AnalyticsPage() {
           </Card>
         </Grid>
 
-        {/* Sales by Category - Full width */}
+        {/* Sales by Category */}
         <Grid size={{ xs: 12 }}>
           <Card sx={{ boxShadow: "0 2px 8px rgba(0,0,0,0.05)" }}>
             <Box sx={{ p: 2, pb: 1 }}>
               <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
-                Sales by Category
+                Ventes par catégorie
               </Typography>
             </Box>
             <Box sx={{ p: 2, pt: 0 }}>
@@ -166,10 +166,9 @@ export default function AnalyticsPage() {
                     </ResponsiveContainer>
                   </Box>
                 </Grid>
+
                 <Grid size={{ xs: 12, md: 6 }}>
-                  <Box
-                    sx={{ display: "flex", flexDirection: "column", gap: 2 }}
-                  >
+                  <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
                     {categoryData.map((c, i) => (
                       <Box
                         key={c.name}
@@ -182,9 +181,7 @@ export default function AnalyticsPage() {
                           p: 2,
                         }}
                       >
-                        <Box
-                          sx={{ display: "flex", alignItems: "center", gap: 2 }}
-                        >
+                        <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
                           <Box
                             sx={{
                               width: 12,
@@ -197,6 +194,7 @@ export default function AnalyticsPage() {
                             {c.name}
                           </Typography>
                         </Box>
+
                         <Typography variant="body2" sx={{ fontWeight: 600 }}>
                           {c.value}%
                         </Typography>

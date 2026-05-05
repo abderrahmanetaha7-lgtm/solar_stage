@@ -58,8 +58,8 @@ export default function SettingsPage() {
   return (
     <>
       <PageHeader
-        title="Settings"
-        description="Configure your store and preferences."
+        title="Paramètres"
+        description="Configurez votre boutique et vos préférences."
       />
 
       <Grid container spacing={3}>
@@ -67,13 +67,13 @@ export default function SettingsPage() {
         <Grid size={{ xs: 12, lg: 8 }}>
           <Card sx={{ p: 3, boxShadow: "0 2px 8px rgba(0,0,0,0.05)" }}>
             <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 2 }}>
-              Store Information
+              Informations de la boutique
             </Typography>
 
             <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
               <TextField
                 name="store"
-                label="Store name"
+                label="Nom de la boutique"
                 value={form.store}
                 onChange={handleChange}
                 fullWidth
@@ -84,7 +84,7 @@ export default function SettingsPage() {
                 <Grid size={{ xs: 12, sm: 6 }}>
                   <TextField
                     name="email"
-                    label="Support email"
+                    label="Email de support"
                     value={form.email}
                     onChange={handleChange}
                     fullWidth
@@ -95,7 +95,7 @@ export default function SettingsPage() {
                 <Grid size={{ xs: 12, sm: 6 }}>
                   <TextField
                     name="phone"
-                    label="Phone"
+                    label="Téléphone"
                     value={form.phone}
                     onChange={handleChange}
                     fullWidth
@@ -142,11 +142,11 @@ export default function SettingsPage() {
               </Box>
 
               <Typography variant="body2" fontWeight={500}>
-                Upload your logo
+                Télécharger votre logo
               </Typography>
 
               <Typography variant="caption" color="text.secondary" mb={2}>
-                PNG or SVG, max 2MB
+                PNG ou SVG, max 2MB
               </Typography>
 
               <Button
@@ -155,7 +155,7 @@ export default function SettingsPage() {
                 component="label"
                 startIcon={<CloudUploadIcon />}
               >
-                Choose file
+                Choisir un fichier
                 <input
                   hidden
                   type="file"
@@ -172,7 +172,7 @@ export default function SettingsPage() {
 
       {/* ACTIONS */}
       <Box sx={{ display: "flex", justifyContent: "flex-end", gap: 2, mt: 4 }}>
-        <Button variant="outlined">Cancel</Button>
+        <Button variant="outlined">Annuler</Button>
 
         <Button
           onClick={handleSave}
@@ -184,7 +184,7 @@ export default function SettingsPage() {
             },
           }}
         >
-          Save changes
+          Enregistrer les modifications
         </Button>
       </Box>
     </>

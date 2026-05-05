@@ -24,21 +24,21 @@ function getStatusStyle(status) {
       border: "rgba(76, 175, 80, 0.2)",
       dot: "#4caf50",
       text: "#2e7d32",
-      label: "In Stock",
+      label: "En stock",
     },
     low: {
       bg: "rgba(255, 152, 0, 0.15)",
       border: "rgba(255, 152, 0, 0.3)",
       dot: "#ff9800",
       text: "#ed6c02",
-      label: "Low Stock",
+      label: "Stock faible",
     },
     out: {
       bg: "rgba(211, 47, 47, 0.1)",
       border: "rgba(211, 47, 47, 0.2)",
       dot: "#d32f2f",
       text: "#d32f2f",
-      label: "Out of Stock",
+      label: "Rupture de stock",
     },
   };
 
@@ -57,8 +57,8 @@ export default function InventoryPage() {
     <>
       {/* HEADER */}
       <PageHeader
-        title="Inventory"
-        description="Live stock levels from backend."
+        title="Inventaire"
+        description="Suivi des niveaux de stock en temps réel."
       />
 
       {/* ALERT */}
@@ -77,10 +77,10 @@ export default function InventoryPage() {
           <WarningAmberIcon sx={{ color: "#ed6c02" }} />
           <Box>
             <Typography fontWeight={600} color="#ed6c02">
-              Stock attention required
+              Attention au stock
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              {lowOrOut.length} products flagged by backend.
+              {lowOrOut.length} produits signalés par le backend.
             </Typography>
           </Box>
         </Box>
@@ -92,10 +92,10 @@ export default function InventoryPage() {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>Product</TableCell>
+                <TableCell>Produit</TableCell>
                 <TableCell>SKU</TableCell>
-                <TableCell>Quantity</TableCell>
-                <TableCell>Status</TableCell>
+                <TableCell>Quantité</TableCell>
+                <TableCell>Statut</TableCell>
               </TableRow>
             </TableHead>
 

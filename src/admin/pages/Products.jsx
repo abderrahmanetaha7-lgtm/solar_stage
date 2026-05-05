@@ -31,9 +31,9 @@ import { useAdmin } from "../hooks/useAdmin";
 
 /* ================= STATUS AUTO CALC ================= */
 const getStatus = (stock) => {
-  if (stock <= 0) return { color: "error", label: "Out of Stock" };
-  if (stock <= 5) return { color: "warning", label: "Low Stock" };
-  return { color: "success", label: "In Stock" };
+  if (stock <= 0) return { color: "error", label: "Rupture de stock" };
+  if (stock <= 5) return { color: "warning", label: "Stock faible" };
+  return { color: "success", label: "En stock" };
 };
 
 function ProductsPage() {
@@ -53,18 +53,18 @@ function ProductsPage() {
     <>
       {/* HEADER */}
       <PageHeader
-        title="Products"
-        description="Manage your product catalog"
+        title="Produits"
+        description="Gérez votre catalogue de produits"
         actions={
           <Button
             variant="contained"
             startIcon={<PlusIcon />}
             onClick={() => navigate("/admin/add-product")}
             sx={{
-              background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+              background: "primary.main",
             }}
           >
-            Add Product
+            Ajouter un produit
           </Button>
         }
       />
@@ -74,7 +74,7 @@ function ProductsPage() {
         <TextField
           fullWidth
           size="small"
-          placeholder="Search products..."
+          placeholder="Rechercher des produits..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           InputProps={{
@@ -94,11 +94,11 @@ function ProductsPage() {
             {/* HEADER */}
             <TableHead>
               <TableRow>
-                <TableCell>Product</TableCell>
-                <TableCell>Category</TableCell>
-                <TableCell>Price</TableCell>
+                <TableCell>Produit</TableCell>
+                <TableCell>Catégorie</TableCell>
+                <TableCell>Prix</TableCell>
                 <TableCell>Stock</TableCell>
-                <TableCell>Status</TableCell>
+                <TableCell>Statut</TableCell>
                 <TableCell align="right">Actions</TableCell>
               </TableRow>
             </TableHead>
@@ -167,7 +167,7 @@ function ProductsPage() {
                           onClick={async () => {
                             if (
                               window.confirm(
-                                "Are you sure you want to delete this product?"
+                                "Êtes-vous sûr de vouloir supprimer ce produit ?"
                               )
                             ) {
                               await removeProduct(product.id);

@@ -25,7 +25,7 @@ export default function UsersPage() {
   /* ================= NORMALIZATION ================= */
   const normalizedUsers = useMemo(() => {
     return users.map((u) => {
-      const name = u.name || "Unknown";
+      const name = u.name || "Inconnu";
 
       return {
         id: u.id,
@@ -53,21 +53,21 @@ export default function UsersPage() {
 
   /* ================= DELETE ================= */
   const handleDelete = async (user) => {
-    if (!window.confirm("Are you sure?")) return;
+    if (!window.confirm("Êtes-vous sûr ?")) return;
 
     try {
       await deleteUser(user.id);
-      console.log("Deleted:", user.id);
+      console.log("Supprimé :", user.id);
     } catch (err) {
-      console.error("Delete error:", err);
+      console.error("Erreur de suppression :", err);
     }
   };
 
   return (
     <>
       <PageHeader
-        title="Users"
-        description="Manage users from Laravel backend"
+        title="Utilisateurs"
+        description="Gérer les utilisateurs du système"
       />
 
       <Card sx={{ p: 2 }}>
@@ -76,9 +76,9 @@ export default function UsersPage() {
 
             <TableHead>
               <TableRow>
-                <TableCell>User</TableCell>
+                <TableCell>Utilisateur</TableCell>
                 <TableCell>Email</TableCell>
-                <TableCell>Joined</TableCell>
+                <TableCell>Inscrit le</TableCell>
                 <TableCell align="right">Actions</TableCell>
               </TableRow>
             </TableHead>

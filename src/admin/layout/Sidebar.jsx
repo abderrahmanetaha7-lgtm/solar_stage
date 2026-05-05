@@ -24,13 +24,13 @@ import {
 const drawerWidth = 240;
 
 const items = [
-  { title: "Dashboard", url: "/admin", icon: <Dashboard /> },
-  { title: "Products", url: "/admin/products", icon: <Inventory /> },
-  { title: "Orders", url: "/admin/orders", icon: <ShoppingCart /> },
-  { title: "Users", url: "/admin/users", icon: <People /> },
-  { title: "Inventory", url: "/admin/inventory", icon: <Storage /> },
-  { title: "Analytics", url: "/admin/analytics", icon: <BarChart /> },
-  { title: "Settings", url: "/admin/settings", icon: <Settings /> },
+  { title: "Tableau de bord", url: "/admin", icon: <Dashboard /> },
+  { title: "Produits", url: "/admin/products", icon: <Inventory /> },
+  { title: "Commandes", url: "/admin/orders", icon: <ShoppingCart /> },
+  { title: "Utilisateurs", url: "/admin/users", icon: <People /> },
+  { title: "Inventaire", url: "/admin/inventory", icon: <Storage /> },
+  { title: "Analytique", url: "/admin/analytics", icon: <BarChart /> },
+  { title: "Paramètres", url: "/admin/settings", icon: <Settings /> },
 ];
 
 export default function Sidebar({ open, setOpen, isMobile }) {
@@ -62,7 +62,7 @@ export default function Sidebar({ open, setOpen, isMobile }) {
                   borderRadius: 2,
                   mb: 0.5,
                   "&.Mui-selected": {
-                    backgroundColor: "#1f2430",
+                    backgroundColor: "primary.main",
                   },
                 }}
               >
@@ -89,7 +89,7 @@ export default function Sidebar({ open, setOpen, isMobile }) {
         flexShrink: 0,
         "& .MuiDrawer-paper": {
           width: drawerWidth,
-          backgroundColor: "#0f1115",
+          backgroundColor: "#353535",
           color: "#fff",
           borderRight: "1px solid #1f2430",
         },

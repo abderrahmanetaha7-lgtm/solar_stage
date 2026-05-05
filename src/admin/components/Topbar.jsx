@@ -13,12 +13,12 @@ import {
   alpha,
   styled,
 } from "@mui/material";
-import MenuOpenIcon from "@mui/icons-material/MenuOpen";
-import {
-  Search as SearchIcon,
-  Notifications as BellIcon,
-} from "@mui/icons-material";
+import LightModeOutlinedIcon from "@mui/icons-material/LightModeOutlined";
+import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
 
+import MenuOpenIcon from "@mui/icons-material/MenuOpen";
+import { useData } from "../../context/AuthContext";
+ 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
   borderRadius: theme.shape.borderRadius,
@@ -33,16 +33,6 @@ const Search = styled("div")(({ theme }) => ({
     marginLeft: theme.spacing(3),
     width: "auto",
   },
-}));
-
-const SearchIconWrapper = styled("div")(({ theme }) => ({
-  padding: theme.spacing(0, 2),
-  height: "100%",
-  position: "absolute",
-  pointerEvents: "none",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
 }));
 
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
@@ -61,6 +51,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 export function Topbar({ openMenu, toggleSidebar }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
+  const { mode, toggleTheme } = useData();
 
   const handleMenuClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -106,23 +97,15 @@ export function Topbar({ openMenu, toggleSidebar }) {
             }}
           />
         </Box>
-        <Search sx={{ flex: 1, maxWidth: 400 }}>
-          <SearchIconWrapper>
-            <SearchIcon sx={{ color: "text.secondary" }} />
-          </SearchIconWrapper>
-          <StyledInputBase
-            placeholder="Search products, orders, users..."
-            inputProps={{ "aria-label": "search" }}
-            sx={{
-              backgroundColor: (theme) =>
-                alpha(theme.palette.text.primary, 0.05),
-              borderRadius: 2,
-              width: "100%",
-            }}
-          />
-        </Search>
 
         <Box sx={{ ml: "auto", display: "flex", alignItems: "center", gap: 1 }}>
+           <IconButton onClick={toggleTheme} sx={{ color: "text.primary" }}>
+            {mode === "dark" ? (
+              <LightModeOutlinedIcon />
+            ) : (
+              <DarkModeOutlinedIcon />
+            )}
+          </IconButton>
           <Box
             onClick={handleMenuClick}
             sx={{

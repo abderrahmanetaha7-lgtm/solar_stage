@@ -40,7 +40,7 @@ export default function OrdersPage() {
 
       return {
         id: o.id,
-        customerName: o.user?.name || o.customer || "Unknown",
+        customerName: o.user?.name || o.customer || "Inconnu",
         customerEmail: o.user?.email || o.email || "-",
         date: o.created_at || o.date || null,
         total,
@@ -98,11 +98,11 @@ export default function OrdersPage() {
     <>
       {/* HEADER */}
       <PageHeader
-        title="Orders"
-        description="Track and manage customer orders"
+        title="Commandes"
+        description="Suivre et gérer les commandes clients"
         actions={
           <Button variant="outlined" startIcon={<DownloadIcon />}>
-            Export
+            Exporter
           </Button>
         }
       />
@@ -116,7 +116,7 @@ export default function OrdersPage() {
             fullWidth
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder="Search by order ID or customer..."
+            placeholder="Rechercher par ID de commande ou client..."
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
@@ -134,11 +134,11 @@ export default function OrdersPage() {
             {/* HEAD */}
             <TableHead>
               <TableRow>
-                <TableCell>Order ID</TableCell>
-                <TableCell>Customer</TableCell>
-                <TableCell>Items</TableCell>
+                <TableCell>ID de commande</TableCell>
+                <TableCell>Client</TableCell>
+                <TableCell>Articles</TableCell>
                 <TableCell>Date</TableCell>
-                <TableCell>Status</TableCell>
+                <TableCell>Statut</TableCell>
                 <TableCell align="right">Total</TableCell>
               </TableRow>
             </TableHead>
@@ -234,7 +234,7 @@ export default function OrdersPage() {
               ) : (
                 <TableRow>
                   <TableCell colSpan={6} align="center">
-                    No orders found
+                    Aucune commande trouvée
                   </TableCell>
                 </TableRow>
               )}
