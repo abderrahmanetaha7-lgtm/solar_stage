@@ -1,7 +1,6 @@
 import { Box, Typography, Button, Container, Paper } from "@mui/material";
 import { ShoppingBagOutlined as ShoppingBagIcon } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
-import { t } from "i18next";
 import { useTranslation } from "react-i18next";
 
 export default function EmptyOrders() {

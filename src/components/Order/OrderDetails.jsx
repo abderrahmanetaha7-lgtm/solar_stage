@@ -36,8 +36,7 @@ import {
   CheckCircle as CheckCircleIcon,
   Pending as PendingIcon,
 } from "@mui/icons-material";
-import { useParams, useNavigate } from "react-router-dom";
-import { t } from "i18next";
+import { useParams, useNavigate } from "react-router-dom"; 
 import { useTranslation } from "react-i18next";
 
 export default function OrderDetails() {

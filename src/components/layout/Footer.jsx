@@ -33,7 +33,7 @@ const Footer = () => {
           }}
         >
           {/* Logo & description */}
-          <Grid xs={12} md="auto">
+          <Grid size={{xs:12, md:"auto"}}>
             <Stack direction="row" spacing={1.5} sx={{ alignItems: "center" }} mb={2}>
               <Box sx={{m:0}}>
                 <img src={logo} alt="Logo" style={{ height: 85 }} />
@@ -46,7 +46,7 @@ const Footer = () => {
           </Grid>
 
           {/* Products links */}
-          <Grid xs={6} md="auto">
+          <Grid size={{xs:6, md:"auto"}}>
             <Typography
               sx={{
                 mb: 2,
@@ -71,7 +71,7 @@ const Footer = () => {
           </Grid>
 
           {/* Company links */}
-          <Grid xs={6} md="auto">
+          <Grid size={{xs:6, md:"auto"}}>
             <Typography
               sx={{
                 mb: 2,
@@ -96,7 +96,7 @@ const Footer = () => {
           </Grid>
 
           {/* Contact info */}
-          <Grid xs={12} md="auto" sx={{ textAlign: { md: "left" } }}>
+          <Grid size={{xs:12, md:"auto"}} sx={{ textAlign: { md: "left" } }}>
             <Typography
               sx={{
                 mb: 2,

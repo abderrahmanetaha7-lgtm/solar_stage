@@ -3,7 +3,8 @@ import "./App.css";
 import AppRoutes from "./routes/AppRoutes";
 import { ThemeProvider, CssBaseline, Typography } from "@mui/material";
 import { useTranslation } from "react-i18next";
-import { CartProvider } from "./context/CartContext";
+import AdminRoutes from "./routes/AdminRoutes";
+import {AdminProvider} from "./admin/Context/AdminContext";
 
 function App() {
   const { i18n } = useTranslation();
@@ -15,9 +16,10 @@ function App() {
 
   return (
     <>
-    <CartProvider>
+      <AdminProvider>
+        <AdminRoutes />
+      </AdminProvider>
       <AppRoutes />
-    </CartProvider>
     </>
   );
 }
