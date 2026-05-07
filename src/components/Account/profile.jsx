@@ -7,7 +7,7 @@ import {
   Typography,
   Divider,
 } from "@mui/material";
-import { useAuth } from "../../context/AuthContextToken";
+import { useAuth } from "../../context/AuthContext";
 import { useTranslation } from "react-i18next";
 import { useState } from "react";
 import EditProfileDialog from "./EditProfileDialog";

@@ -10,38 +10,36 @@ import {
 // import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import { useProducts } from "../../context/ProductContext";
+import { useSelector } from "react-redux";
+
 import ProductCard from "../Products/ProductCard";
 
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
-
+import { useMemo } from "react";
 
 const FeaturedProducts = () => {
-  const { t,i18n } = useTranslation();
+  const { t, i18n } = useTranslation();
   const navigate = useNavigate(); // Hook for programmatic navigation
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm")); // Check if screen is mobile size
   const isTablet = useMediaQuery(theme.breakpoints.between("sm", "md")); // Check if screen is tablet size
 
-  const { products, loading } = useProducts(); // Get products data and loading state from context
+  const { products = [], loading } = useSelector(
+    (state) => state.products || [],
+  );
 
-  // Determine number of grid columns based on screen size
   const getGridColumns = () => {
     if (isMobile) return 1; // 1 column on mobile
     if (isTablet) return 2; // 2 columns on tablet
     return 4; // 4 columns on desktop
   };
 
-  // Handle adding product to cart
-  const handleAddToCart = (productId) => {
-    console.log(`Product ${productId} added to cart`); // Log action (replace with actual cart logic)
-  };
-
-  // Get the 4 most recently added products
-  const latestProducts = [...products]
-    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)) // Sort by creation date (newest first)
-    .slice(0, 4); // Take only first 4 products
+  const latestProducts = useMemo(() => {
+    return [...products]
+      .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+      .slice(0, 4);
+  }, [products]);
 
   // Show loading skeletons while products are being fetched
   if (loading) {
@@ -125,11 +123,7 @@ const FeaturedProducts = () => {
         }}
       >
         {latestProducts.map((product) => (
-          <ProductCard
-            key={product.id}
-            product={product}
-            onAddToCart={handleAddToCart}
-          />
+          <ProductCard key={product.id} product={product} />
         ))}
       </Box>
 
@@ -140,12 +134,8 @@ const FeaturedProducts = () => {
           variant="outlined"
           size="large"
           endIcon={
-              i18n.language === "ar" ? (
-                <ArrowBackIcon />
-              ) : (
-                <ArrowForwardIcon />
-              )
-            }
+            i18n.language === "ar" ? <ArrowBackIcon /> : <ArrowForwardIcon />
+          }
           sx={{
             borderRadius: 3,
             px: 4,
@@ -160,7 +150,7 @@ const FeaturedProducts = () => {
             },
           }}
         >
-          {t("home.products.buttons.view_all")} 
+          {t("home.products.buttons.view_all")}
         </Button>
       </Box>
     </Container>

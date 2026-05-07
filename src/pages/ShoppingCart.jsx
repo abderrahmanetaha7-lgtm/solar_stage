@@ -17,7 +17,7 @@ import {
   DialogActions,
   CircularProgress,
 } from "@mui/material";
-import { useCart } from "../context/CartContext";
+
 import { useNavigate } from "react-router-dom";
 import Add from "@mui/icons-material/Add";
 import Remove from "@mui/icons-material/Remove";
@@ -25,13 +25,22 @@ import Delete from "@mui/icons-material/Delete";
 import ShoppingCartOutlined from "@mui/icons-material/ShoppingCartOutlined";
 import { useTranslation } from "react-i18next";
 
+import { useDispatch, useSelector } from "react-redux";
+
+import {
+  clearCart,
+  removeFromCart,
+  updateQuantity,
+} from "../features/cart/cartSlice";
+
 const ShoppingCart = ({ onCheckout }) => {
   const { t } = useTranslation();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const navigate = useNavigate();
 
-  const { cartItems, updateQuantity, removeFromCart, clearCart } = useCart();
+  const cart = useSelector((state) => state.cart.cart);
+  const dispatch = useDispatch();
 
   const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false);
   const [itemToDelete, setItemToDelete] = React.useState(null);
@@ -39,53 +48,60 @@ const ShoppingCart = ({ onCheckout }) => {
   const [imageErrors, setImageErrors] = React.useState({});
 
   const sousTotal = React.useMemo(() => {
-    return cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
-  }, [cartItems]);
+    return cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  }, [cart]);
 
   const taxe = React.useMemo(() => sousTotal * 0.008, [sousTotal]);
   const total = React.useMemo(() => sousTotal + taxe, [sousTotal, taxe]);
 
   const totalArticles = React.useMemo(() => {
-    return cartItems.reduce((sum, item) => sum + item.quantity, 0);
-  }, [cartItems]);
+    return cart.reduce((sum, item) => sum + item.quantity, 0);
+  }, [cart]);
 
-  const handleIncrement = React.useCallback(
-    (itemId) => {
-      updateQuantity(itemId, "inc");
-    },
-    [updateQuantity],
-  );
+  const handleIncrement = (item) => {
+    dispatch(
+      updateQuantity({
+        id: item.id,
+        quantity: item.quantity + 1,
+      }),
+    );
+  };
 
-  const handleDecrement = React.useCallback(
-    (itemId) => {
-      updateQuantity(itemId, "dec");
-    },
-    [updateQuantity],
-  );
+  const handleDecrement = (item) => {
+    if (item.quantity <= 1) return;
+
+    dispatch(
+      updateQuantity({
+        id: item.id,
+        quantity: item.quantity - 1,
+      }),
+    );
+  };
 
   const handleDeleteClick = (item) => {
     setItemToDelete(item);
     setDeleteDialogOpen(true);
   };
 
-  const handleDeleteConfirm = React.useCallback(() => {
+  const handleDeleteConfirm = () => {
     if (itemToDelete) {
-      removeFromCart(itemToDelete.id);
+      dispatch(removeFromCart(itemToDelete.id));
     }
+
     setDeleteDialogOpen(false);
     setItemToDelete(null);
-  }, [itemToDelete, removeFromCart]);
+  };
 
   const handleDeleteCancel = () => {
     setDeleteDialogOpen(false);
     setItemToDelete(null);
   };
 
-  const handleClearCart = React.useCallback(() => {
+  const handleClearCart = () => {
     if (window.confirm(t("cart.confirmClear"))) {
-      clearCart();
+      dispatch(clearCart());
     }
-  }, [clearCart, t]);
+  };
 
   const handleImageError = (itemId) => {
     setImageErrors((prev) => ({
@@ -100,10 +116,10 @@ const ShoppingCart = ({ onCheckout }) => {
       await new Promise((resolve) => setTimeout(resolve, 500));
 
       if (onCheckout) {
-        await onCheckout(cartItems);
+        await onCheckout(cart);
       } else {
-        localStorage.setItem("cart", JSON.stringify(cartItems));
-        navigate("/checkout", { state: { cartItems } });
+        localStorage.setItem("cart", JSON.stringify(cart));
+        navigate("/checkout", { state: { cart } });
       }
     } catch (error) {
       console.error("Checkout failed:", error);
@@ -127,7 +143,7 @@ const ShoppingCart = ({ onCheckout }) => {
     return "https://via.placeholder.com/500x300?text=No+Image";
   };
 
-  if (cartItems.length === 0) {
+  if (cart.length === 0) {
     return (
       <Container maxWidth="lg" sx={{ py: 6, mt: 3 }}>
         <Box
@@ -196,7 +212,7 @@ const ShoppingCart = ({ onCheckout }) => {
       <Grid container spacing={4}>
         <Grid size={{ xs: 12, md: 8 }}>
           <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-            {cartItems.map((item) => {
+            {cart.map((item) => {
               const sousTotalArticle = item.price * item.quantity;
               const imageUrl = getImageUrl(item);
 
@@ -286,7 +302,7 @@ const ShoppingCart = ({ onCheckout }) => {
                   >
                     <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                       <IconButton
-                        onClick={() => handleDecrement(item.id)}
+                        onClick={() => handleDecrement(item)}
                         disabled={item.quantity <= 1}
                         aria-label={t("cart.decrementAriaLabel", {
                           name: item.name,
@@ -310,7 +326,7 @@ const ShoppingCart = ({ onCheckout }) => {
                       </Typography>
 
                       <IconButton
-                        onClick={() => handleIncrement(item.id)}
+                        onClick={() => handleIncrement(item)}
                         disabled={item.quantity >= (item.maxQuantity || 10)}
                         aria-label={t("cart.incrementAriaLabel", {
                           name: item.name,

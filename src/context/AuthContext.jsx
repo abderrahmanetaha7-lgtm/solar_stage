@@ -1,140 +1,67 @@
-import { createContext, useState, useMemo, useContext, useEffect } from "react";
-import { getTheme } from "../theme";
-import { ThemeProvider } from "@mui/material";
-import i18n from "../i18n";
+import { createContext, useContext, useEffect, useState } from "react";
+import { getCSRF, loginApi, registerApi, logoutApi, userApi } from "../api/authApi";
 
-import { CacheProvider } from "@emotion/react";
-import createCache from "@emotion/cache";
-import rtlPlugin from "stylis-plugin-rtl";
-import { prefixer } from "stylis";
+const AuthContext = createContext();
 
-const ThemeContext = createContext();
+export function AuthProvider({ children }) {
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-export default function ThemeContextProvider({ children }) {
-  const [mode, setMode] = useState("dark");
-
-  // ⭐ FAVORITES
-  const [favorites, setFavorites] = useState(() => {
-    return JSON.parse(localStorage.getItem("favorites")) || [];
-  });
-
-  // ⭐ CART
-  const [cart, setCart] = useState(() => {
-    return JSON.parse(localStorage.getItem("cart")) || [];
-  });
-
-  // SAVE
-  useEffect(() => {
-    localStorage.setItem("favorites", JSON.stringify(favorites));
-  }, [favorites]);
-
-  useEffect(() => {
-    localStorage.setItem("cart", JSON.stringify(cart));
-  }, [cart]);
-
-  // FAVORITES LOGIC
-  const toggleFavorite = (product) => {
-    setFavorites((prev) => {
-      const exists = prev.find((item) => item.id === product.id);
-      return exists
-        ? prev.filter((item) => item.id !== product.id)
-        : [...prev, product];
-    });
+  /* ================= LOAD USER ================= */
+  const loadUser = async () => {
+    try {
+      const res = await userApi();
+      setUser(res.data);
+    } catch (err) {
+      setUser(null);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const isFavorite = (id) => {
-    return favorites.some((item) => item.id === id);
+  /* ================= LOGIN ================= */
+  const login = async (email, password) => {
+    await getCSRF(); 
+
+    await loginApi({ email, password });
+
+    await loadUser();
   };
 
-  // ⭐ CART LOGIC
-  const addToCart = (product) => {
-    setCart((prev) => {
-      const exist = prev.find((item) => item.id === product.id);
+  /* ================= REGISTER ================= */
+  const register = async (data) => {
+    await getCSRF();
 
-      if (exist) {
-        return prev.map((item) =>
-          item.id === product.id
-            ? { ...item, quantity: item.quantity + 1 }
-            : item
-        );
-      }
+    await registerApi(data);
 
-      return [...prev, { ...product, quantity: 1 }];
-    });
+    await loadUser();
   };
 
-  const removeFromCart = (id) => {
-    setCart((prev) => prev.filter((item) => item.id !== id));
+  /* ================= LOGOUT ================= */
+  const logout = async () => {
+    await logoutApi();
+    setUser(null);
   };
-
-  const updateQuantity = (id, quantity) => {
-    setCart((prev) =>
-      prev.map((item) =>
-        item.id === id ? { ...item, quantity } : item
-      )
-    );
-  };
-
-  // LANG + THEME
-  const [lang, setLang] = useState(i18n.language);
 
   useEffect(() => {
-    const handleChange = (lng) => setLang(lng);
-    i18n.on("languageChanged", handleChange);
-    return () => i18n.off("languageChanged", handleChange);
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    loadUser();
   }, []);
 
-  const isRTL = lang === "ar";
-
-  const theme = useMemo(
-    () => getTheme(mode, i18n.language),
-    [mode, i18n.language]
-  );
-
-  const cacheRtl = useMemo(
-    () =>
-      createCache({
-        key: "muirtl",
-        stylisPlugins: [prefixer, rtlPlugin],
-      }),
-    []
-  );
-
-  const cacheLtr = useMemo(
-    () =>
-      createCache({
-        key: "mui",
-      }),
-    []
-  );
-
-  const toggleTheme = () => {
-    setMode((prev) => (prev === "dark" ? "light" : "dark"));
-  };
-
   return (
-    <ThemeContext.Provider
+    <AuthContext.Provider
       value={{
-        mode,
-        toggleTheme,
-
-        favorites,
-        toggleFavorite,
-        isFavorite,
-
-        // ⭐ CART
-        cart,
-        addToCart,
-        removeFromCart,
-        updateQuantity,
+        user,
+        loading,
+        login,
+        register,
+        logout,
       }}
     >
-      <CacheProvider value={isRTL ? cacheRtl : cacheLtr}>
-        <ThemeProvider theme={theme}>{children}</ThemeProvider>
-      </CacheProvider>
-    </ThemeContext.Provider>
+      {children}
+    </AuthContext.Provider>
   );
 }
 
 // eslint-disable-next-line react-refresh/only-export-components
-export const useData = () => useContext(ThemeContext);
+export const useAuth = () => useContext(AuthContext);

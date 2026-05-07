@@ -11,7 +11,7 @@ import {
   TextField,
 } from "@mui/material";
 
-import { useAuth } from "../../context/AuthContextToken";
+import { useAuth } from "../../context/AuthContext";
 import { useTranslation } from "react-i18next";
 
 export default function EditProfileDialog({ open, onClose }) {
@@ -88,12 +88,11 @@ export default function EditProfileDialog({ open, onClose }) {
           {/* PROFILE IMAGE */}
 
           <Stack
-            
             spacing={2}
             sx={{
               width: "100%",
-              display:"flex",
-              alignItems:"center"
+              display: "flex",
+              alignItems: "center",
             }}
           >
             <Avatar

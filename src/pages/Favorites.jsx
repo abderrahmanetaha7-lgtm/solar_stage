@@ -1,12 +1,13 @@
 import React from "react";
 import { Box, Typography, Grid, useMediaQuery, useTheme } from "@mui/material";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
-import { useData } from "../context/AuthContext";
+import { useSelector } from "react-redux";
+
 import ProductCard from "../components/Products/ProductCard";
 import { useTranslation } from "react-i18next";
 
-export default function Favorites({ handleAddToCart }) {
-  const { favorites } = useData();
+export default function Favorites() {
+  const favorites = useSelector((state) => state.favorites.favorites);
   const { t } = useTranslation();
 
   const hasFavorites = favorites.length > 0;
@@ -25,8 +26,8 @@ export default function Favorites({ handleAddToCart }) {
     <Box sx={{ minHeight: "100vh", p: 3 }}>
       <Box sx={{ display: "flex", justifyContent: "space-between", mt: 7 }}>
         <Typography variant="h5" fontWeight="bold">
-          {t("favorite.title")} 
-        </Typography> 
+          {t("favorite.title")}
+        </Typography>
       </Box>
       {!hasFavorites ? (
         <Box
@@ -57,11 +58,7 @@ export default function Favorites({ handleAddToCart }) {
             }}
           >
             {favorites.map((product) => (
-              <ProductCard
-                key={product.id}
-                product={product}
-                onAddToCart={handleAddToCart}
-              />
+              <ProductCard key={product.id} product={product} />
             ))}
           </Box>
         </>

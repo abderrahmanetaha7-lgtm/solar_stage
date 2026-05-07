@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import {
   Box,
   Card,
@@ -16,14 +16,28 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import FlashOnIcon from "@mui/icons-material/FlashOn";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { useTranslation } from "react-i18next";
-import { useData } from "../../context/AuthContext";
-import { useCart } from "../../context/CartContext";
+import { useDispatch, useSelector } from "react-redux";
+import { toggleFavorite } from "../../features/favorites/favoritesSlice";
+import { addToCart } from "../../features/cart/cartSlice";
 
 const ProductCard = ({ product }) => {
-  const { toggleFavorite, isFavorite } = useData();
-  const { addToCart } = useCart();
+  const dispatch = useDispatch();
 
-  const favorite = isFavorite(product.id);
+  const favorites = useSelector((state) => state.favorites?.favorites || []);
+
+  const favoriteIds = useMemo(
+    () => new Set(favorites.map((f) => f.id)),
+    [favorites],
+  );
+  const favorite = favoriteIds(product.id);
+
+  const handleToggleFavorite = () => {
+    dispatch(toggleFavorite(product));
+  };
+
+  const handleAddToCart = () => {
+    dispatch(addToCart(product));
+  };
 
   const { t } = useTranslation();
   const [imageError, setImageError] = useState(false);
@@ -41,14 +55,16 @@ const ProductCard = ({ product }) => {
     description = "Aucune description disponible",
   } = product;
 
+  if (!product) return null;
+
   const fallbackImage =
     "https://via.placeholder.com/500x300?text=Image+Not+Found";
 
   const imageSrc = imageError
     ? fallbackImage
     : Array.isArray(image)
-    ? image[0]
-    : image;
+      ? image[0]
+      : image;
 
   const formattedPrice =
     typeof price === "number" ? price.toLocaleString() : price;
@@ -61,8 +77,7 @@ const ProductCard = ({ product }) => {
       ? "1px solid rgba(255, 255, 255, 0.2)"
       : "1px solid rgba(0, 0, 0, 0.08)";
 
-  const getFavoriteIconColor = () =>
-    isDarkMode ? "#e0e0e0" : "#666666";
+  const getFavoriteIconColor = () => (isDarkMode ? "#e0e0e0" : "#666666");
 
   return (
     <Card
@@ -132,7 +147,7 @@ const ProductCard = ({ product }) => {
         />
 
         <IconButton
-          onClick={() => toggleFavorite(product)}
+          onClick={handleToggleFavorite}
           sx={{
             position: "absolute",
             top: 12,
@@ -247,10 +262,7 @@ const ProductCard = ({ product }) => {
           <Button
             variant="contained"
             startIcon={<ShoppingCartIcon />}
-            onClick={(e) => {
-              e.stopPropagation();
-              addToCart(product);
-            }}
+            onClick={handleAddToCart}
           >
             {t("productsPage.add")}
           </Button>

@@ -20,18 +20,52 @@ import { useNavigate } from "react-router-dom";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import ForgotPassword from "../components/ForgotPassword";
-import { useAuth } from "../context/AuthContextToken";
+import { useAuth } from "../context/AuthContext";
 
 export default function Login() {
   const { t, i18n } = useTranslation();
-  const Navigate = useNavigate();
+  const navigate = useNavigate();
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [remember, setRemember] = useState("");
+  const { login } = useAuth();
+
+  const [loginForm, setLoginForm] = useState({
+    email: "",
+    password: "",
+    remember: false,
+  });
 
   const [showPassword, setShowPassword] = useState(false);
   const [showResetPwd, setShowResetPwd] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+
+    setLoginForm((prev) => ({
+      ...prev,
+      [name]: type === "checkbox" ? checked : value,
+    }));
+  };
+
+  const handleLogin = async () => {
+    if (!loginForm.email || !loginForm.password) {
+      alert("Please fill all fields");
+      return;
+    }
+
+    try {
+      setLoading(true);
+
+      await login(loginForm.email, loginForm.password);
+
+      navigate("/");
+    } catch (err) {
+      console.log(err);
+      alert("Login failed");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleShowResetPwd = () => {
     setShowResetPwd(true);
@@ -39,19 +73,6 @@ export default function Login() {
 
   const handleCloseResetPwd = () => {
     setShowResetPwd(false);
-  };
-
-  const { login } = useAuth();
-  const handleLogin = () => {
-    if (!email || !password) {
-      alert("Fill all fields");
-      return;
-    }
-
-    login(email);
-
-    console.log("Logged in with:", email);
-    Navigate("/");
   };
 
   return (
@@ -63,8 +84,7 @@ export default function Login() {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          px: { xs: 2, sm: 3 },
-          backgroundColor: "#f5f7fb",
+          px: { xs: 2, sm: 3 }, 
         }}
       >
         {/* CARD */}
@@ -82,7 +102,7 @@ export default function Login() {
             startIcon={
               i18n.language === "ar" ? <ArrowForwardIcon /> : <ArrowBackIcon />
             }
-            onClick={() => Navigate(-1)}
+            onClick={() => navigate(-1)}
           >
             {t("signup.common-back")}
           </Button>
@@ -110,8 +130,8 @@ export default function Login() {
                 fullWidth
                 name="email"
                 placeholder={t("login.email_placeholder")}
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                value={loginForm.email}
+                onChange={handleChange}
               />
             </Box>
 
@@ -149,8 +169,8 @@ export default function Login() {
                 name="password"
                 type={showPassword ? "text" : "password"}
                 placeholder={t("login.password_placeholder")}
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                value={loginForm.password}
+                onChange={handleChange}
                 InputProps={{
                   endAdornment: (
                     <InputAdornment position="end">
@@ -168,8 +188,8 @@ export default function Login() {
               control={
                 <Checkbox
                   name="remember"
-                  checked={remember}
-                  onChange={(e) => setRemember(e.target.checked)}
+                  checked={loginForm.remember}
+                  onChange={handleChange}
                 />
               }
               label={t("login.remember_me")}

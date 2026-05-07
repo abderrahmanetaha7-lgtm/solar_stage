@@ -20,13 +20,18 @@ import { useNavigate } from "react-router-dom";
 
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import { useAuth } from "../context/AuthContext";
 
 export default function SignUp() {
   const { t, i18n } = useTranslation();
 
   const navigate = useNavigate();
 
+  const { register } = useAuth();
+
+  /* ================= STATE ================= */
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const [form, setForm] = useState({
     name: "",
@@ -34,6 +39,8 @@ export default function SignUp() {
     password: "",
     confirmPassword: "",
   });
+
+  /* ================= HANDLERS ================= */
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -44,6 +51,37 @@ export default function SignUp() {
     }));
   };
 
+  const handleRegister = async () => {
+    if (!form.name || !form.email || !form.password) {
+      alert("Please fill all fields");
+      return;
+    }
+
+    if (form.password !== form.confirmPassword) {
+      alert("Passwords do not match");
+      return;
+    }
+
+    try {
+      setLoading(true);
+
+      await register({
+        name: form.name,
+        email: form.email,
+        password: form.password,
+      });
+
+      navigate("/"); // redirect after success
+    } catch (err) {
+      console.log(err);
+      alert("Registration failed");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  /* ================= UI ================= */
+
   const strength = form.password.length * 10;
 
   return (
@@ -53,8 +91,7 @@ export default function SignUp() {
           minHeight: "100vh",
           display: "flex",
           alignItems: "center",
-          justifyContent: "center",
-          backgroundColor: "#f5f7fb",
+          justifyContent: "center", 
           px: { xs: 2, sm: 3 },
         }}
       >
@@ -134,7 +171,10 @@ export default function SignUp() {
 
                   {form.password && (
                     <Box mt={1}>
-                      <LinearProgress variant="determinate" value={strength} />
+                      <LinearProgress
+                        variant="determinate"
+                        value={Math.min(strength, 100)}
+                      />
                     </Box>
                   )}
                 </Box>
@@ -156,6 +196,8 @@ export default function SignUp() {
             {/* BUTTON */}
             <Button
               fullWidth
+              onClick={handleRegister}
+              disabled={loading}
               variant="contained"
               sx={{
                 py: 1.5,

@@ -14,10 +14,10 @@ import {
 } from "@mui/material";
 
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import { Link as RouterLink, useLocation } from "react-router-dom";
+import { Link as RouterLink, useLocation, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
-import { useAuth } from "../../../context/AuthContextToken";
+import { useAuth } from "../../../context/AuthContext";
 import LanguageSwitcher from "./LanguageSwitcher";
 import { useState } from "react";
 
@@ -25,6 +25,7 @@ export default function MobileDrawer({ open, toggleDrawer }) {
   const { t } = useTranslation();
   const { user, logout } = useAuth();
   const location = useLocation();
+  const navigate = useNavigate();
 
   const links = [
     { label: "nav.home", path: "/" },
@@ -36,7 +37,15 @@ export default function MobileDrawer({ open, toggleDrawer }) {
 
   const isActive = (path) => location.pathname === path;
 
-  const handleLogout = () => logout();
+  const handleLogout = async () => {
+    try {
+      await logout();
+      navigate(-1);
+      toggleDrawer(false)();
+    } catch (err) {
+      console.log("Logout error:", err);
+    }
+  };
 
   const [anchorEl, setAnchorEl] = useState(null);
   const openMenu = Boolean(anchorEl);
@@ -62,7 +71,7 @@ export default function MobileDrawer({ open, toggleDrawer }) {
           <>
             <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, p: 2 }}>
               <Avatar sx={{ bgcolor: "orange" }}>
-                {user.email.charAt(0).toUpperCase()}
+                {user?.name?.charAt(0).toUpperCase()}
               </Avatar>
 
               <Box sx={{ flex: 1 }}>

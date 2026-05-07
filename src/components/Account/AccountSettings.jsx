@@ -15,7 +15,7 @@ import {
 } from "@mui/material";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-import { useAuth } from "../../context/AuthContextToken";
+import { useAuth } from "../../context/AuthContext";
 import { useTranslation } from "react-i18next";
 import ChangePasswordDialog from "./ChangePasswordDialog";
 import ChangeEmailDialog from "./ChangeEmailDialog";
@@ -36,7 +36,7 @@ export default function AccountSettings() {
   function handleClosePwd() {
     setOpenPassword(false);
   }
-  
+
   //  Email
   function handleopenEmail() {
     setOpenEmail(true);
@@ -44,7 +44,7 @@ export default function AccountSettings() {
   function handleCloseEmail() {
     setOpenEmail(false);
   }
-  
+
   // delete
   function handleOpenDelete() {
     setOpenDelete(true);
@@ -52,7 +52,6 @@ export default function AccountSettings() {
   function handleCloseDelete() {
     setOpenDelete(false);
   }
-  
 
   return (
     <>
@@ -97,7 +96,10 @@ export default function AccountSettings() {
           <Divider sx={{ bgcolor: "#333" }} />
 
           <ListItem disablePadding>
-            <ListItemButton sx={{ color: "#ff4d4f" }} onClick={handleOpenDelete}>
+            <ListItemButton
+              sx={{ color: "#ff4d4f" }}
+              onClick={handleOpenDelete}
+            >
               <ListItemText primary={t("accountSettings.deleteAccount")} />
               <ArrowForwardIosIcon
                 sx={{

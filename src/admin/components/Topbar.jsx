@@ -17,8 +17,7 @@ import LightModeOutlinedIcon from "@mui/icons-material/LightModeOutlined";
 import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
 
 import MenuOpenIcon from "@mui/icons-material/MenuOpen";
-import { useData } from "../../context/AuthContext";
- 
+import { useSelector } from "react-redux";s
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
   borderRadius: theme.shape.borderRadius,
@@ -51,7 +50,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 export function Topbar({ openMenu, toggleSidebar }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
-  const { mode, toggleTheme } = useData();
+  const mode = useSelector((state) => state.theme.mode);
 
   const handleMenuClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -99,7 +98,7 @@ export function Topbar({ openMenu, toggleSidebar }) {
         </Box>
 
         <Box sx={{ ml: "auto", display: "flex", alignItems: "center", gap: 1 }}>
-           <IconButton onClick={toggleTheme} sx={{ color: "text.primary" }}>
+          <IconButton onClick={toggleTheme} sx={{ color: "text.primary" }}>
             {mode === "dark" ? (
               <LightModeOutlinedIcon />
             ) : (

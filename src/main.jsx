@@ -3,27 +3,30 @@ import { createRoot } from "react-dom/client";
 import "./index.css";
 import App from "./App.jsx";
 import { BrowserRouter } from "react-router-dom";
-import ThemeContextProvider from "./context/AuthContext.jsx";
-import { CssBaseline } from "@mui/material";
-import { ProductProvider } from "./context/ProductContext";
+
+import { store } from "./app/store";
+import { Provider } from "react-redux";
+
 import "./i18n";
 import "focus-visible";
-import { AuthToken } from "./context/AuthContextToken.jsx";
-import { CartProvider } from "./context/CartContext";
+
+import LanguageProvider from "./context/LanguageContext.jsx";
+import { AuthProvider } from "./context/AuthContext.jsx";
+
+import AppThemeProvider from "./context/AppThemeProvider.jsx";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <ThemeContextProvider>
-      <BrowserRouter>
-        <AuthToken>
-          <CartProvider>
-            <CssBaseline />
-            <ProductProvider>
+    <Provider store={store}>
+      <LanguageProvider>
+        <AuthProvider>
+          <AppThemeProvider>
+            <BrowserRouter>
               <App />
-            </ProductProvider>
-          </CartProvider>
-        </AuthToken>
-      </BrowserRouter>
-    </ThemeContextProvider>
+            </BrowserRouter>
+          </AppThemeProvider>
+        </AuthProvider>
+      </LanguageProvider>
+    </Provider>
   </StrictMode>,
 );

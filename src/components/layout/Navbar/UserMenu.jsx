@@ -20,9 +20,10 @@ import { useState } from "react";
 import { Link as RouterLink } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
-import { useAuth } from "../../../context/AuthContextToken";
-import { useCart } from "../../../context/CartContext";
-import { useData } from "../../../context/AuthContext";
+import { useSelector, useDispatch } from "react-redux";
+
+import { toggleTheme } from "../../../features/theme/themeSlice";
+import { useAuth } from "../../../context/AuthContext";
 
 export default function UserMenu() {
   const theme = useTheme();
@@ -30,8 +31,15 @@ export default function UserMenu() {
 
   const { t } = useTranslation();
   const { user, logout } = useAuth();
-  const { totalItems } = useCart();
-  const { favorites, mode, toggleTheme } = useData();
+
+  const dispatch = useDispatch();
+
+  const mode = useSelector((state) => state.theme.mode);
+  const cartItems = useSelector((state) => state.cart.cart);
+
+  const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+
+  const favorites = useSelector((state) => state.favorites.favorites);
 
   // 🔹 separate states
   const [anchorElProfile, setAnchorElProfile] = useState(null);
@@ -107,7 +115,10 @@ export default function UserMenu() {
       )}
 
       {/* ================= THEME TOGGLE ================= */}
-      <IconButton onClick={toggleTheme} sx={{ color: "text.primary" }}>
+      <IconButton
+        onClick={() => dispatch(toggleTheme())}
+        sx={{ color: "text.primary" }}
+      >
         {mode === "dark" ? <LightModeOutlinedIcon /> : <DarkModeOutlinedIcon />}
       </IconButton>
 
@@ -141,7 +152,9 @@ export default function UserMenu() {
               {t("profile.Account")}
             </MenuItem>
 
-            <MenuItem component={RouterLink} to="/orders"
+            <MenuItem
+              component={RouterLink}
+              to="/orders"
               onClick={handleProfileClose}
               sx={{ "&:hover": { color: "primary.main" } }}
             >

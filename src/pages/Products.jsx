@@ -17,50 +17,46 @@ import {
 } from "@mui/material";
 
 import { Search, Tune } from "@mui/icons-material";
-import { useProducts } from "../context/ProductContext";
+import { useSelector } from "react-redux";
 import ProductCard from "../components/Products/ProductCard";
 import { useTheme } from "@mui/material/styles";
 import { useTranslation } from "react-i18next";
 
-export default function Products({ handleAddToCart }) {
+export default function Products() {
   const { t } = useTranslation();
 
-  // Get products from global context
-  const { products } = useProducts();
-
+  // Get products from Redux store
+  const products = useSelector((state) => state.products.products);
+  
   // State management for filters
-  const [search, setSearch] = useState(""); // Search query
-  const [category, setCategory] = useState("all"); // Selected category
-  const [priceRange, setPriceRange] = useState([0, 10000]); // Price range [min, max]
-  const [minEfficiency, setMinEfficiency] = useState(0); // Minimum efficiency filter
+  const [search, setSearch] = useState("");
+  const [category, setCategory] = useState("all");
+  const [priceRange, setPriceRange] = useState([0, 10000]);
+  const [minEfficiency, setMinEfficiency] = useState(0);
 
   // Theme and responsive breakpoints
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm")); // Screen < 600px
-  const isTablet = useMediaQuery(theme.breakpoints.between("sm", "md")); // Screen between 600px and 960px
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const isTablet = useMediaQuery(theme.breakpoints.between("sm", "md"));
 
   // Determine number of grid columns based on screen size
   const getGridColumns = () => {
-    if (isMobile) return 1; // 1 column on mobile
-    if (isTablet) return 2; // 2 columns on tablet
-    return 4; // 4 columns on desktop
+    if (isMobile) return 1;
+    if (isTablet) return 2;
+    return 4;
   };
 
   // Memoized filtered products to optimize performance
   const filtered = useMemo(
     () =>
       products.filter((p) => {
-        // Filter by category (skip if "all" is selected)
         if (category !== "all" && p.category !== category) return false;
 
-        // Filter by search query (case-insensitive)
         if (search && !p.name.toLowerCase().includes(search.toLowerCase()))
           return false;
 
-        // Filter by price range
         if (p.price < priceRange[0] || p.price > priceRange[1]) return false;
 
-        // Filter by minimum efficiency
         if (parseFloat(p.efficiency) < minEfficiency) return false;
 
         return true;
@@ -138,11 +134,7 @@ export default function Products({ handleAddToCart }) {
           }}
         >
           {filtered.map((product) => (
-            <ProductCard
-              key={product.id}
-              product={product}
-              onAddToCart={handleAddToCart}
-            />
+            <ProductCard key={product.id} product={product} />
           ))}
         </Box>
 

@@ -121,6 +121,7 @@ export default function Contact() {
                         endIcon={
                           <SendOutlinedIcon
                             sx={{
+                              display: "flex",
                               transform:
                                 i18n.language === "ar"
                                   ? "rotate(180deg)"
@@ -128,7 +129,11 @@ export default function Contact() {
                             }}
                           />
                         }
-                        sx={{ mt: 3, borderRadius: 2 }}
+                        sx={{
+                          justifyContent:"space-between",
+                          mt: 3,
+                          borderRadius: 2,
+                        }}
                         onClick={handleSubmitted}
                       >
                         {t("contactPage.form.button")}

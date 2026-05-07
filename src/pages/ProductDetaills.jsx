@@ -11,16 +11,17 @@ import {
 
 import { ArrowBackIos, ArrowForwardIos } from "@mui/icons-material";
 import { useNavigate, useParams } from "react-router-dom";
-import { useProducts } from "../context/ProductContext";
+import { useDispatch, useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
 import { Link as RouterLink } from "react-router-dom";
 
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 
-export default function ProductDetail({ onAddToCart }) {
+export default function ProductDetail() {
   const navigate = useNavigate();
-  const { products } = useProducts();
+  const dispatch = useDispatch();
+  const { products } = useSelector((state) => state.products || []);
   const { id } = useParams();
   const { t, i18n } = useTranslation();
 
@@ -45,8 +46,8 @@ export default function ProductDetail({ onAddToCart }) {
     <Box sx={{ p: 4, mt: 5 }}>
       {/* BACK BUTTON */}
       <IconButton
-      component={RouterLink}
-      to="/products"
+        component={RouterLink}
+        to="/products"
         sx={{
           borderRadius: 2,
           px: 1.5,
@@ -197,7 +198,7 @@ export default function ProductDetail({ onAddToCart }) {
               <Button
                 variant="contained"
                 size="large"
-                onClick={() => onAddToCart(product.id)}
+                onClick={() => dispatch(addToCart(product))}
                 sx={{
                   px: 4,
                   borderRadius: 3,

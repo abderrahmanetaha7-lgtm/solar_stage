@@ -10,7 +10,7 @@ import {
   TextField,
 } from "@mui/material";
 
-import { useAuth } from "../../context/AuthContextToken";
+import { useAuth } from "../../context/AuthContext";
 import { useTranslation } from "react-i18next";
 
 export default function ChangeEmailDialog({ open, onClose }) {
