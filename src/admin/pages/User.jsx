@@ -1,11 +1,17 @@
 import { useMemo } from "react";
-import EditIcon from "@mui/icons-material/Edit";
+import { useDispatch } from "react-redux";
+
 import DeleteIcon from "@mui/icons-material/Delete";
 
 import {
+  Avatar,
   Box,
-  Button,
   Card,
+  Chip,
+  CircularProgress,
+  FormControl,
+  MenuItem,
+  Select,
   Table,
   TableBody,
   TableCell,
@@ -13,16 +19,37 @@ import {
   TableHead,
   TableRow,
   Typography,
-  Avatar,
 } from "@mui/material";
 
 import PageHeader from "../components/PageHeader";
-import { useAdmin } from "../hooks/useAdmin";
+import { useUsers } from "../../hooks/useUsers";
+
+import { removeUser, editUser } from "../../features/users/userSlice";
 
 export default function UsersPage() {
-  const { users = [], deleteUser } = useAdmin();
+  const { users = [], loading } = useUsers();
+
+  const dispatch = useDispatch();
+
+  if (loading) {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "50vh",
+          gap: 2,
+        }}
+      >
+        <CircularProgress />
+        <Typography>Chargement...</Typography>
+      </Box>
+    );
+  }
 
   /* ================= NORMALIZATION ================= */
+
   const normalizedUsers = useMemo(() => {
     return users.map((u) => {
       const name = u.name || "Inconnu";
@@ -32,6 +59,9 @@ export default function UsersPage() {
         name,
         email: u.email || "-",
         joined: u.created_at || "",
+        role: (u.role || "user").toLowerCase(),
+        status: (u.status || "active").toLowerCase(),
+
         initials: name
           .trim()
           .split(" ")
@@ -45,21 +75,43 @@ export default function UsersPage() {
   }, [users]);
 
   /* ================= FORMAT DATE ================= */
+
   const formatDate = (date) => {
     if (!date) return "-";
+
     const d = new Date(date);
-    return isNaN(d) ? "-" : d.toLocaleDateString("en-GB");
+
+    return isNaN(d) ? "-" : d.toLocaleDateString("fr-FR");
   };
 
   /* ================= DELETE ================= */
-  const handleDelete = async (user) => {
-    if (!window.confirm("Êtes-vous sûr ?")) return;
+
+  const handleDelete = async (userId) => {
+    if (
+      !window.confirm("Êtes-vous sûr de vouloir supprimer cet utilisateur ?")
+    ) {
+      return;
+    }
 
     try {
-      await deleteUser(user.id);
-      console.log("Supprimé :", user.id);
+      await dispatch(removeUser(userId));
     } catch (err) {
-      console.error("Erreur de suppression :", err);
+      console.error(err);
+    }
+  };
+
+  /* ================= ROLE UPDATE ================= */
+
+  const handleRoleChange = async (userId, role) => {
+    try {
+      await dispatch(
+        editUser({
+          id: userId,
+          data: { role },
+        }),
+      );
+    } catch (err) {
+      console.error(err);
     }
   };
 
@@ -73,58 +125,85 @@ export default function UsersPage() {
       <Card sx={{ p: 2 }}>
         <TableContainer>
           <Table>
+            {/* HEAD */}
 
             <TableHead>
               <TableRow>
                 <TableCell>Utilisateur</TableCell>
                 <TableCell>Email</TableCell>
+                <TableCell>Rôle</TableCell>
                 <TableCell>Inscrit le</TableCell>
                 <TableCell align="right">Actions</TableCell>
               </TableRow>
             </TableHead>
 
+            {/* BODY */}
+
             <TableBody>
               {normalizedUsers.map((u) => (
-                <TableRow key={u.id}>
-
+                <TableRow key={u.id} hover>
                   {/* USER */}
+
                   <TableCell>
-                    <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+                    <Box
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 2,
+                      }}
+                    >
                       <Avatar>{u.initials}</Avatar>
-                      <Typography fontWeight={500}>{u.name}</Typography>
+
+                      <Typography fontWeight={600}>{u.name}</Typography>
                     </Box>
                   </TableCell>
 
                   {/* EMAIL */}
+
                   <TableCell>{u.email}</TableCell>
 
+                  {/* ROLE */}
+
+                  <TableCell>
+                    <FormControl size="small">
+                      <Select
+                        value={u.role}
+                        onChange={(e) => handleRoleChange(u.id, e.target.value)}
+                      >
+                        <MenuItem value="user">User</MenuItem>
+
+                        <MenuItem value="admin">Admin</MenuItem>
+
+                        <MenuItem value="moderator">Moderator</MenuItem>
+                      </Select>
+                    </FormControl>
+                  </TableCell>
+
                   {/* DATE */}
+
                   <TableCell>{formatDate(u.joined)}</TableCell>
 
                   {/* ACTIONS */}
+
                   <TableCell align="right">
-                    <Box sx={{ display: "flex", gap: 1, justifyContent: "flex-end" }}>
+                    <Chip
+                      label={u.status}
+                      color={u.status === "active" ? "success" : "error"}
+                      size="small"
+                      sx={{ mr: 1 }}
+                    />
 
-                      {/* EDIT (disabled for now) */}
-                      <Button disabled>
-                        <EditIcon />
-                      </Button>
-
-                      {/* DELETE */}
-                      <Button
-                        onClick={() => handleDelete(u)}
-                        sx={{ color: "error.main" }}
-                      >
-                        <DeleteIcon />
-                      </Button>
-
-                    </Box>
+                    <DeleteIcon
+                      sx={{
+                        cursor: "pointer",
+                        color: "error.main",
+                      }}
+                      onClick={() => handleDelete(u.id)}
+                    />
                   </TableCell>
-
                 </TableRow>
               ))}
             </TableBody>
-
           </Table>
         </TableContainer>
       </Card>

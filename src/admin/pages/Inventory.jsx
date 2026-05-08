@@ -2,6 +2,7 @@ import WarningAmberIcon from "@mui/icons-material/WarningAmber";
 import {
   Box,
   Card,
+  CircularProgress,
   Grid,
   Table,
   TableBody,
@@ -13,45 +14,62 @@ import {
 } from "@mui/material";
 
 import PageHeader from "../components/PageHeader";
-import { useAdmin } from "../hooks/useAdmin";
+import { useProducts } from "../../hooks/useProducts";
 
 /* ================= STATUS STYLE (BASED ON BACKEND) ================= */
 
-function getStatusStyle(status) {
-  const styles = {
-    in: {
-      bg: "rgba(76, 175, 80, 0.1)",
-      border: "rgba(76, 175, 80, 0.2)",
-      dot: "#4caf50",
-      text: "#2e7d32",
-      label: "En stock",
-    },
-    low: {
-      bg: "rgba(255, 152, 0, 0.15)",
-      border: "rgba(255, 152, 0, 0.3)",
-      dot: "#ff9800",
-      text: "#ed6c02",
-      label: "Stock faible",
-    },
-    out: {
+function getStatusStyle(stock) {
+  if (stock <= 0) {
+    return {
       bg: "rgba(211, 47, 47, 0.1)",
       border: "rgba(211, 47, 47, 0.2)",
       dot: "#d32f2f",
       text: "#d32f2f",
       label: "Rupture de stock",
-    },
-  };
+    };
+  }
 
-  return styles[status] || styles.in;
+  if (stock <= 5) {
+    return {
+      bg: "rgba(255, 152, 0, 0.15)",
+      border: "rgba(255, 152, 0, 0.3)",
+      dot: "#ff9800",
+      text: "#ed6c02",
+      label: "Stock faible",
+    };
+  }
+
+  return {
+    bg: "rgba(76, 175, 80, 0.1)",
+    border: "rgba(76, 175, 80, 0.2)",
+    dot: "#4caf50",
+    text: "#2e7d32",
+    label: "En stock",
+  };
 }
 
 export default function InventoryPage() {
-  const { products } = useAdmin();
+  const { products = [], loading } = useProducts();
 
   /* ================= BACKEND DATA ONLY ================= */
-  const lowOrOut = products.filter((p) =>
-    ["low", "out"].includes(p.status)
-  );
+  const lowOrOut = products.filter((p) => p.stockQuantity <= 5);
+
+  if (loading) {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "50vh",
+          gap: 2,
+        }}
+      >
+        <CircularProgress />
+        <Typography>Chargement...</Typography>
+      </Box>
+    );
+  }
 
   return (
     <>
@@ -93,7 +111,7 @@ export default function InventoryPage() {
             <TableHead>
               <TableRow>
                 <TableCell>Produit</TableCell>
-                <TableCell>SKU</TableCell>
+                {/* <TableCell>SKU</TableCell> */}
                 <TableCell>Quantité</TableCell>
                 <TableCell>Statut</TableCell>
               </TableRow>
@@ -101,43 +119,28 @@ export default function InventoryPage() {
 
             <TableBody>
               {products.map((p) => {
-                const statusStyle = getStatusStyle(p.status);
+                const statusStyle = getStatusStyle(p.stockQuantity);
 
                 return (
                   <TableRow key={p.id}>
                     {/* PRODUCT */}
                     <TableCell>
-                      <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-                        <Box
-                          sx={{
-                            width: 36,
-                            height: 36,
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            borderRadius: 1,
-                            bgcolor: "action.selected",
-                            fontSize: "1.2rem",
-                          }}
-                        >
-                          {p.emoji}
-                        </Box>
-
+                      <Box
+                        sx={{ display: "flex", alignItems: "center", gap: 2 }}
+                      >
                         <Typography fontWeight={500}>
-                          {p.name}
+                          {p.productName}
                         </Typography>
                       </Box>
                     </TableCell>
 
                     {/* SKU */}
-                    <TableCell sx={{ color: "text.secondary" }}>
+                    {/* <TableCell sx={{ color: "text.secondary" }}>
                       {p.sku}
-                    </TableCell>
+                    </TableCell> */}
 
                     {/* STOCK */}
-                    <TableCell fontWeight={600}>
-                      {p.stock}
-                    </TableCell>
+                    <TableCell fontWeight={600}>{p.stockQuantity}</TableCell>
 
                     {/* STATUS */}
                     <TableCell>

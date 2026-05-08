@@ -1,5 +1,7 @@
 import FiltreProducts from "../components/Products/FiltreProducts";
 import React, { useMemo, useState } from "react";
+import CircularProgress from "@mui/material/CircularProgress";
+
 import {
   Box,
   Container,
@@ -17,17 +19,17 @@ import {
 } from "@mui/material";
 
 import { Search, Tune } from "@mui/icons-material";
-import { useSelector } from "react-redux";
 import ProductCard from "../components/Products/ProductCard";
 import { useTheme } from "@mui/material/styles";
 import { useTranslation } from "react-i18next";
+import { useProducts } from "./../hooks/useProducts";
 
 export default function Products() {
   const { t } = useTranslation();
 
   // Get products from Redux store
-  const products = useSelector((state) => state.products.products);
-  
+  const { products, loading } = useProducts();
+
   // State management for filters
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("all");
@@ -133,9 +135,23 @@ export default function Products() {
             gap: { xs: 2, sm: 3, md: 4 },
           }}
         >
-          {filtered.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
+          {filtered.map((product) =>
+            loading ? (
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  height: "50vh",
+                  gap: 2,
+                }}
+              >
+                <CircularProgress /> 
+              </Box>
+            ) : (
+              <ProductCard key={product.id} product={product} />
+            ),
+          )}
         </Box>
 
         {/* No Results Message */}

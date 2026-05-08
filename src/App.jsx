@@ -4,7 +4,6 @@ import AppRoutes from "./routes/AppRoutes";
 import { ThemeProvider, CssBaseline, Typography } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import AdminRoutes from "./routes/AdminRoutes";
-import {AdminProvider} from "./admin/Context/AdminContext";
 
 function App() {
   const { i18n } = useTranslation();
@@ -16,9 +15,7 @@ function App() {
 
   return (
     <>
-      <AdminProvider>
-        <AdminRoutes />
-      </AdminProvider>
+      <AdminRoutes />
       <AppRoutes />
     </>
   );

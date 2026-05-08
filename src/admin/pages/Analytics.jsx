@@ -12,15 +12,34 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
+import CircularProgress from "@mui/material/CircularProgress";
+
 import { Box, Card, Grid, Typography, useTheme } from "@mui/material";
 import PageHeader from "../components/PageHeader";
-import { useAdmin } from "../hooks/useAdmin";
-
-const COLORS = ["#f97316", "#10b981", "#3b82f6"];
+import { useAnalytics } from "../../hooks/useAnalytics";
 
 export default function AnalyticsPage() {
+  const COLORS = ["#f97316", "#10b981", "#3b82f6"];
+
   const theme = useTheme();
-  const { categoryData = [], salesData = [] } = useAdmin();
+  const { salesData = [], categoryData = [], loading } = useAnalytics();
+
+  if (loading) {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "50vh",
+          gap: 2,
+        }}
+      >
+        <CircularProgress />
+        <Typography>Chargement...</Typography>
+      </Box>
+    );
+  }
 
   return (
     <>
@@ -168,7 +187,9 @@ export default function AnalyticsPage() {
                 </Grid>
 
                 <Grid size={{ xs: 12, md: 6 }}>
-                  <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+                  <Box
+                    sx={{ display: "flex", flexDirection: "column", gap: 2 }}
+                  >
                     {categoryData.map((c, i) => (
                       <Box
                         key={c.name}
@@ -181,7 +202,9 @@ export default function AnalyticsPage() {
                           p: 2,
                         }}
                       >
-                        <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+                        <Box
+                          sx={{ display: "flex", alignItems: "center", gap: 2 }}
+                        >
                           <Box
                             sx={{
                               width: 12,

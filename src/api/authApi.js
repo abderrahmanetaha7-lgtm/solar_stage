@@ -12,3 +12,10 @@ export const userApi = () => API.get("/api/user");
 
 export const forgotPasswordApi = (data) =>
   API.post("/api/forgot-password", data);
+
+export const updateProfileApi = (data) => API.put("/api/profile", data);
+
+export const changePasswordApi = (data) =>
+  API.put("/api/change-password", data);
+
+export const deleteAccountApi = () => API.delete("/api/delete-account");

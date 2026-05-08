@@ -10,13 +10,13 @@ import {
 // import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
 
 import ProductCard from "../Products/ProductCard";
 
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import { useMemo } from "react";
+import { useProducts } from "../../hooks/useProducts";
 
 const FeaturedProducts = () => {
   const { t, i18n } = useTranslation();
@@ -25,9 +25,8 @@ const FeaturedProducts = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down("sm")); // Check if screen is mobile size
   const isTablet = useMediaQuery(theme.breakpoints.between("sm", "md")); // Check if screen is tablet size
 
-  const { products = [], loading } = useSelector(
-    (state) => state.products || [],
-  );
+    const { products, loading } = useProducts();
+
 
   const getGridColumns = () => {
     if (isMobile) return 1; // 1 column on mobile

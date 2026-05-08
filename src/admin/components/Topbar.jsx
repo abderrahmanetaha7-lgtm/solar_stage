@@ -4,7 +4,6 @@ import {
   Toolbar,
   IconButton,
   InputBase,
-  Badge,
   Avatar,
   Menu,
   MenuItem,
@@ -13,11 +12,15 @@ import {
   alpha,
   styled,
 } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 import LightModeOutlinedIcon from "@mui/icons-material/LightModeOutlined";
 import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
 
 import MenuOpenIcon from "@mui/icons-material/MenuOpen";
-import { useSelector } from "react-redux";s
+import { useDispatch, useSelector } from "react-redux";
+import { toggleTheme } from "../../features/theme/themeSlice";
+import { logout } from "../../features/auth/authSlice";
+
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
   borderRadius: theme.shape.borderRadius,
@@ -50,6 +53,11 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 export function Topbar({ openMenu, toggleSidebar }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
+  const navigate = useNavigate();
+
+  const user = useSelector((state) => state.auth.user);
+
+  const dispatch = useDispatch();
   const mode = useSelector((state) => state.theme.mode);
 
   const handleMenuClick = (event) => {
@@ -60,9 +68,10 @@ export function Topbar({ openMenu, toggleSidebar }) {
     setAnchorEl(null);
   };
 
-  const handleSignOut = () => {
+  const handleSignOut = async () => {
     handleMenuClose();
-    // Add sign out logic here
+    await dispatch(logout());
+    navigate("/login");
   };
 
   return (
@@ -98,7 +107,10 @@ export function Topbar({ openMenu, toggleSidebar }) {
         </Box>
 
         <Box sx={{ ml: "auto", display: "flex", alignItems: "center", gap: 1 }}>
-          <IconButton onClick={toggleTheme} sx={{ color: "text.primary" }}>
+          <IconButton
+            onClick={() => dispatch(toggleTheme())}
+            sx={{ color: "text.primary" }}
+          >
             {mode === "dark" ? (
               <LightModeOutlinedIcon />
             ) : (
@@ -130,7 +142,7 @@ export function Topbar({ openMenu, toggleSidebar }) {
                 fontWeight: 600,
               }}
             >
-              AM
+              {user?.name?.charAt(0).toUpperCase()}
             </Avatar>
             <Box
               sx={{ display: { xs: "none", md: "block" }, textAlign: "left" }}
@@ -139,13 +151,13 @@ export function Topbar({ openMenu, toggleSidebar }) {
                 variant="body2"
                 sx={{ fontWeight: 500, lineHeight: 1.2 }}
               >
-                ahmed
+                {user?.name}
               </Typography>
               <Typography
                 variant="caption"
                 sx={{ color: "text.secondary", lineHeight: 1.2 }}
               >
-                Admin
+                {user?.role}
               </Typography>
             </Box>
           </Box>

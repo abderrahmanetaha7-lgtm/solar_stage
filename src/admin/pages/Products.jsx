@@ -17,6 +17,8 @@ import {
   Typography,
   Stack,
 } from "@mui/material";
+import CircularProgress from "@mui/material/CircularProgress";
+
 
 import { useNavigate } from "react-router-dom";
 import {
@@ -27,7 +29,9 @@ import {
 } from "@mui/icons-material";
 
 import PageHeader from "../components/PageHeader";
-import { useAdmin } from "../hooks/useAdmin";
+import { removeProduct } from "../../features/products/productSlice";
+import { useDispatch } from "react-redux";
+import { useProducts } from "../../hooks/useProducts";
 
 /* ================= STATUS AUTO CALC ================= */
 const getStatus = (stock) => {
@@ -37,7 +41,8 @@ const getStatus = (stock) => {
 };
 
 function ProductsPage() {
-  const { products, removeProduct } = useAdmin();
+  const { products, loading } = useProducts();
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const [searchTerm, setSearchTerm] = useState("");
@@ -46,8 +51,25 @@ function ProductsPage() {
   const filteredProducts = products.filter((product) =>
     (product.productName || "")
       .toLowerCase()
-      .includes(searchTerm.toLowerCase())
+      .includes(searchTerm.toLowerCase()),
   );
+
+  if (loading) {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "50vh",
+          gap: 2,
+        }}
+      >
+        <CircularProgress />
+        <Typography>Chargement...</Typography>
+      </Box>
+    );
+  }
 
   return (
     <>
@@ -123,19 +145,13 @@ function ProductsPage() {
                     </TableCell>
 
                     {/* CATEGORY */}
-                    <TableCell>
-                      {product.category}
-                    </TableCell>
+                    <TableCell>{product.category}</TableCell>
 
                     {/* PRICE */}
-                    <TableCell>
-                      ${product.price}
-                    </TableCell>
+                    <TableCell>${product.price}</TableCell>
 
                     {/* STOCK */}
-                    <TableCell>
-                      {product.stockQuantity}
-                    </TableCell>
+                    <TableCell>{product.stockQuantity}</TableCell>
 
                     {/* STATUS */}
                     <TableCell>
@@ -149,7 +165,6 @@ function ProductsPage() {
                     {/* ACTIONS */}
                     <TableCell align="right">
                       <Stack direction="row" justifyContent="flex-end">
-
                         {/* EDIT */}
                         <IconButton
                           size="small"
@@ -167,16 +182,15 @@ function ProductsPage() {
                           onClick={async () => {
                             if (
                               window.confirm(
-                                "Êtes-vous sûr de vouloir supprimer ce produit ?"
+                                "Êtes-vous sûr de vouloir supprimer ce produit ?",
                               )
                             ) {
-                              await removeProduct(product.id);
+                              await dispatch(removeProduct(product.id));
                             }
                           }}
                         >
                           <TrashIcon fontSize="small" />
                         </IconButton>
-
                       </Stack>
                     </TableCell>
                   </TableRow>

@@ -9,10 +9,10 @@ import {
 } from "@mui/material";
 import PageHeader from "../components/PageHeader";
 import { useEffect, useState } from "react";
-import { useAdmin } from "../hooks/useAdmin";
+import { useSettings } from "../../hooks/useSettings";
 
 export default function SettingsPage() {
-  const { settings, updateSettings } = useAdmin();
+  const { settings, loading, saveSettings } = useSettings();
 
   const [form, setForm] = useState({
     store: "",
@@ -23,27 +23,52 @@ export default function SettingsPage() {
 
   /* ================= LOAD FROM BACKEND ================= */
   useEffect(() => {
-    if (settings) {
-      setForm({
-        store: settings.store || "",
-        email: settings.email || "",
-        phone: settings.phone || "",
-        logo: null,
-      });
-    }
+    if (!settings) return;
+
+    setForm({
+      store: settings.store || "",
+      email: settings.email || "",
+      phone: settings.phone || "",
+      logo: null,
+    });
   }, [settings]);
 
   /* ================= HANDLE CHANGE ================= */
   const handleChange = (e) => {
+    const { name, value } = e.target;
+
+    setForm((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  /* ================= HANDLE FILE ================= */
+  const handleFileChange = (e) => {
+    const file = e.target.files?.[0];
+
+    setForm((prev) => ({
+      ...prev,
+      logo: file || null,
+    }));
+  };
+
+  /* ================= RESET ================= */
+  const resetForm = () => {
+    if (!settings) return;
+
     setForm({
-      ...form,
-      [e.target.name]: e.target.value,
+      store: settings.store || "",
+      email: settings.email || "",
+      phone: settings.phone || "",
+      logo: null,
     });
   };
 
   /* ================= SAVE ================= */
   const handleSave = async () => {
     const data = new FormData();
+
     data.append("store", form.store);
     data.append("email", form.email);
     data.append("phone", form.phone);
@@ -52,7 +77,7 @@ export default function SettingsPage() {
       data.append("logo", form.logo);
     }
 
-    await updateSettings(data);
+    await saveSettings(data);
   };
 
   return (
@@ -160,9 +185,7 @@ export default function SettingsPage() {
                   hidden
                   type="file"
                   accept="image/*"
-                  onChange={(e) =>
-                    setForm({ ...form, logo: e.target.files[0] })
-                  }
+                  onChange={handleFileChange}
                 />
               </Button>
             </Box>
@@ -172,10 +195,13 @@ export default function SettingsPage() {
 
       {/* ACTIONS */}
       <Box sx={{ display: "flex", justifyContent: "flex-end", gap: 2, mt: 4 }}>
-        <Button variant="outlined">Annuler</Button>
+        <Button variant="outlined" onClick={resetForm}>
+          Annuler
+        </Button>
 
         <Button
           onClick={handleSave}
+          disabled={loading}
           variant="contained"
           sx={{
             background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
@@ -184,7 +210,7 @@ export default function SettingsPage() {
             },
           }}
         >
-          Enregistrer les modifications
+          {loading ? "Enregistrement..." : "Enregistrer les modifications"}
         </Button>
       </Box>
     </>

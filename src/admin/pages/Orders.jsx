@@ -1,5 +1,8 @@
 import DownloadIcon from "@mui/icons-material/Download";
 import SearchIcon from "@mui/icons-material/Search";
+import { MenuItem, Select } from "@mui/material";
+import CircularProgress from "@mui/material/CircularProgress";
+
 import {
   Box,
   Button,
@@ -16,26 +19,44 @@ import {
 } from "@mui/material";
 
 import PageHeader from "../components/PageHeader";
-import { useAdmin } from "../hooks/useAdmin";
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { editOrder } from "../../features/orders/orderSlice";
+import { useOrders } from "../../hooks/useOrders";
 
 export default function OrdersPage() {
-  const { orders = [] } = useAdmin();
+  const dispatch = useDispatch();
+  const { orders = [], loading } = useOrders();
   const navigate = useNavigate();
 
   const [search, setSearch] = useState("");
 
+  if (loading) {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "50vh",
+          gap: 2,
+        }}
+      >
+        <CircularProgress />
+        <Typography>Chargement...</Typography>
+      </Box>
+    );
+  }
+
   /* ================= NORMALIZE DATA ================= */
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const normalizedOrders = useMemo(() => {
     return orders.map((o) => {
       const total = Number(o.total) || 0;
 
       const itemsCount = Array.isArray(o.items)
-        ? o.items.reduce(
-            (sum, item) => sum + Number(item.quantity || 0),
-            0
-          )
+        ? o.items.reduce((sum, item) => sum + Number(item.quantity || 0), 0)
         : Number(o.items || 0);
 
       return {
@@ -109,7 +130,6 @@ export default function OrdersPage() {
 
       {/* CARD */}
       <Card sx={{ p: 2, boxShadow: "var(--shadow-soft)" }}>
-        
         {/* SEARCH */}
         <Box sx={{ mb: 2, maxWidth: "sm" }}>
           <TextField
@@ -130,7 +150,6 @@ export default function OrdersPage() {
         {/* TABLE */}
         <TableContainer>
           <Table>
-            
             {/* HEAD */}
             <TableHead>
               <TableRow>
@@ -154,74 +173,65 @@ export default function OrdersPage() {
                       key={o.id}
                       hover
                       sx={{ cursor: "pointer" }}
-                      onClick={() =>
-                        navigate(`/orders-detail/${o.id}`)
-                      }
+                      onClick={() => navigate(`/orders-detail/${o.id}`)}
                     >
                       {/* ID */}
-                      <TableCell fontWeight={600}>
-                        #{o.id}
-                      </TableCell>
+                      <TableCell fontWeight={600}>#{o.id}</TableCell>
 
                       {/* CUSTOMER */}
                       <TableCell>
                         <Typography variant="body2">
                           {o.customerName}
                         </Typography>
-                        <Typography
-                          variant="caption"
-                          color="text.secondary"
-                        >
+                        <Typography variant="caption" color="text.secondary">
                           {o.customerEmail}
                         </Typography>
                       </TableCell>
 
                       {/* ITEMS */}
-                      <TableCell>
-                        {o.itemsCount}
-                      </TableCell>
+                      <TableCell>{o.itemsCount}</TableCell>
 
                       {/* DATE */}
                       <TableCell sx={{ color: "text.secondary" }}>
-                        {o.date
-                          ? new Date(o.date).toLocaleDateString()
-                          : "-"}
+                        {o.date ? new Date(o.date).toLocaleDateString() : "-"}
                       </TableCell>
 
                       {/* STATUS */}
                       <TableCell>
-                        <Box
+                        <Select
+                          size="small"
+                          value={o.status}
+                          onClick={(e) => e.stopPropagation()}
+                          onChange={(e) => {
+                            dispatch(
+                              editOrder({
+                                id: o.id,
+                                data: {
+                                  status: e.target.value,
+                                },
+                              }),
+                            );
+                          }}
                           sx={{
-                            display: "inline-flex",
-                            alignItems: "center",
-                            gap: "6px",
+                            minWidth: 140,
                             borderRadius: "999px",
-                            border: "1px solid",
-                            px: 1,
-                            py: 0.2,
                             bgcolor: style.bg,
-                            borderColor: style.border,
+                            color: style.color,
+                            fontWeight: 600,
+
+                            "& .MuiOutlinedInput-notchedOutline": {
+                              borderColor: style.border,
+                            },
+
+                            "& .MuiSelect-icon": {
+                              color: style.color,
+                            },
                           }}
                         >
-                          <Box
-                            sx={{
-                              width: 6,
-                              height: 6,
-                              borderRadius: "50%",
-                              bgcolor: style.dot,
-                            }}
-                          />
-                          <Typography
-                            sx={{
-                              fontSize: 12,
-                              fontWeight: 500,
-                              color: style.color,
-                              textTransform: "capitalize",
-                            }}
-                          >
-                            {o.status}
-                          </Typography>
-                        </Box>
+                          <MenuItem value="pending">Pending</MenuItem>
+                          <MenuItem value="confirmed">Confirmed</MenuItem>
+                          <MenuItem value="delivered">Delivered</MenuItem>
+                        </Select>
                       </TableCell>
 
                       {/* TOTAL */}
@@ -239,7 +249,6 @@ export default function OrdersPage() {
                 </TableRow>
               )}
             </TableBody>
-
           </Table>
         </TableContainer>
       </Card>

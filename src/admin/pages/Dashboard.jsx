@@ -16,7 +16,6 @@ import {
   Chip,
   Avatar,
   Link,
-  alpha,
   useTheme,
 } from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
@@ -38,11 +37,17 @@ import {
   YAxis,
 } from "recharts";
 import PageHeader from "../components/PageHeader";
-import { useAdmin } from "../hooks/useAdmin";
+
+import { useProducts } from "../../hooks/useProducts";
+import { useOrders } from "../../hooks/useOrders";
+import { useUsers } from "../../hooks/useUsers";
 
 function Dashboard() {
   const theme = useTheme();
-  const { products = [], orders = [], users = [], loading } = useAdmin();
+
+  const { products, loading } = useProducts();
+  const { orders } = useOrders();
+  const { users } = useUsers();
 
   const totalRevenue = useMemo(() => {
     return orders.reduce((sum, o) => {
@@ -301,16 +306,10 @@ function Dashboard() {
                     }}
                   >
                     <Box sx={{ flex: 1, minWidth: 0 }}>
-                      <Typography variant="h6">
-                        {product.name}
-                      </Typography>
-                      <Typography variant="h6">
-                        {product.category}
-                      </Typography>
+                      <Typography variant="h6">{product.name}</Typography>
+                      <Typography variant="h6">{product.category}</Typography>
                     </Box>
-                    <Typography variant="h6">
-                      {product.sold}
-                    </Typography>
+                    <Typography variant="h6">{product.sold}</Typography>
                   </Box>
                 ))}
               </CardContent>

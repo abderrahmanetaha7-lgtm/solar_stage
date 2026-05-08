@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState } from "react";
 import {
   Box,
   Card,
@@ -25,8 +25,13 @@ import {
   CloudUpload as CloudUploadIcon,
   Delete as DeleteIcon,
 } from "@mui/icons-material";
+import { InputAdornment } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { useAdmin } from "../../hooks/useAdmin";
+import {
+  addProduct,
+  editProduct,
+} from "../../../features/products/productSlice";
+import { useDispatch } from "react-redux";
 
 // Styled components for drag & drop
 const DragDropArea = styled(Paper)(({ theme }) => ({
@@ -55,14 +60,16 @@ const ImagePreview = styled(Paper)(({ theme }) => ({
   },
 }));
 
-const AddOrEditProduct = () => {
-  const { addProduct } = useAdmin();
+const AddOrEditProduct = ({ product = null }) => {
+  const dispatch = useDispatch();
+
+  const isEditMode = Boolean(product);
   const [formData, setFormData] = useState({
-    productName: "",
-    description: "",
-    price: "",
-    stockQuantity: "",
-    category: "",
+    productName: product?.productName || "",
+    description: product?.description || "",
+    price: product?.price || "",
+    stockQuantity: product?.stockQuantity || "",
+    category: product?.category || "",
   });
 
   // Images state
@@ -239,7 +246,7 @@ const AddOrEditProduct = () => {
     if (!validateForm()) {
       setSnackbar({
         open: true,
-        message: "Please fix the validation errors",
+        message: "Veuillez corriger les erreurs de validation",
         severity: "error",
       });
       return;
@@ -261,11 +268,22 @@ const AddOrEditProduct = () => {
         formDataToSend.append(`images[${index}]`, img.file);
       });
 
-      await addProduct(formDataToSend);
+      if (isEditMode) {
+        await dispatch(
+          editProduct({
+            id: product.id,
+            data: formDataToSend,
+          }),
+        ).unwrap();
+      } else {
+        await dispatch(addProduct(formDataToSend)).unwrap();
+      }
 
       setSnackbar({
         open: true,
-        message: "Product created successfully! 🎉",
+        message: isEditMode
+          ? "Produit modifié avec succès !"
+          : "Produit créé avec succès !",
         severity: "success",
       });
 
@@ -309,8 +327,12 @@ const AddOrEditProduct = () => {
     <Container maxWidth="lg" sx={{ py: 4 }}>
       <Card elevation={3}>
         <CardHeader
-          title="Add New Product"
-          subheader="Fill in the product details below"
+          title={isEditMode ? "Modifier le produit" : "Ajouter un produit"}
+          subheader={
+            isEditMode
+              ? "Mettez à jour les informations du produit"
+              : "Remplissez les informations du produit ci-dessous"
+          }
           sx={{
             color: "primary.main",
           }}
@@ -370,7 +392,9 @@ const AddOrEditProduct = () => {
                   helperText={touched.price && errors.price}
                   required
                   InputProps={{
-                    startAdornment: <Typography sx={{ mr: 1 }}>$</Typography>,
+                    startAdornment: (
+                      <InputAdornment position="start">MAD</InputAdornment>
+                    ),
                   }}
                 />
               </Grid>
@@ -569,7 +593,13 @@ const AddOrEditProduct = () => {
                       },
                     }}
                   >
-                    {isSubmitting ? "Creating..." : "Create Product"}
+                    {isSubmitting
+                      ? isEditMode
+                        ? "Modification..."
+                        : "Création..."
+                      : isEditMode
+                        ? "Modifier le produit"
+                        : "Créer le produit"}
                   </Button>
                 </Box>
               </Grid>
