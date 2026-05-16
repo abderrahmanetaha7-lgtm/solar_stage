@@ -20,6 +20,7 @@ import {
   BarChart,
   Settings,
 } from "@mui/icons-material";
+import { useSettings } from "../../hooks/useSettings";
 
 const drawerWidth = 240;
 
@@ -35,13 +36,22 @@ const items = [
 
 export default function Sidebar({ open, setOpen, isMobile }) {
   const location = useLocation();
+  const { settings } = useSettings();
 
   const drawerContent = (
     <>
       {/* HEADER */}
       <Toolbar sx={{ borderBottom: "1px solid #1f2430" }}>
         <Link to="/admin" style={{ display: "flex", alignItems: "center" }}>
-          <img src={logo} alt="logo" style={{ width: 50 }} />
+          <img
+            src={
+              settings?.logo
+                ? `${import.meta.env.VITE_API_URL}/storage/${settings.logo}`
+                : logo
+            }
+            alt="logo"
+            style={{ width: 50 }}
+          />
         </Link>
       </Toolbar>
 

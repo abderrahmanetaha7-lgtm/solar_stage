@@ -6,223 +6,307 @@ import {
   Button,
   Typography,
   Paper,
-  Checkbox,
-  FormControlLabel,
   Stack,
   InputAdornment,
   IconButton,
+  CircularProgress,
+  Divider,
+  Checkbox,
+  FormControlLabel,
 } from "@mui/material";
-import { Visibility, VisibilityOff } from "@mui/icons-material";
+
+import {
+  Visibility,
+  VisibilityOff,
+  Google as GoogleIcon,
+} from "@mui/icons-material";
+import API, { CSRF } from "../api/axios";
+
 import { useTranslation } from "react-i18next";
-import { Link, Link as RouterLink } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
 
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
-import ForgotPassword from "../components/ForgotPassword";
-import { useAuth } from "../context/AuthContext";
+
+import { useDispatch, useSelector } from "react-redux";
+import { login, setUser } from "../features/auth/authSlice";
+
+import { GoogleLogin } from "@react-oauth/google";
 
 export default function Login() {
+  const [googleLoading, setGoogleLoading] = useState(false);
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  const { login } = useAuth();
+  const { loading } = useSelector((state) => state.auth);
 
-  const [loginForm, setLoginForm] = useState({
+  const [form, setForm] = useState({
     email: "",
     password: "",
     remember: false,
   });
 
   const [showPassword, setShowPassword] = useState(false);
-  const [showResetPwd, setShowResetPwd] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
+  // ---------------- HANDLE INPUT ----------------
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
 
-    setLoginForm((prev) => ({
+    setForm((prev) => ({
       ...prev,
       [name]: type === "checkbox" ? checked : value,
     }));
   };
 
+  // ---------------- LOGIN ----------------
   const handleLogin = async () => {
-    if (!loginForm.email || !loginForm.password) {
-      alert("Please fill all fields");
-      return;
-    }
+    setError("");
 
     try {
-      setLoading(true);
+      const res = await dispatch(
+        login({
+          email: form.email,
+          password: form.password,
+          remember: form.remember,
+        }),
+      ).unwrap();
 
-      await login(loginForm.email, loginForm.password);
-
-      navigate("/");
+      navigate(res.isAdmin ? "/admin" : "/");
     } catch (err) {
-      console.log(err);
-      alert("Login failed");
-    } finally {
-      setLoading(false);
+      setError(err?.message || "Invalid email or password");
     }
   };
 
-  const handleShowResetPwd = () => {
-    setShowResetPwd(true);
+  // ---------------- GOOGLE LOGIN (UI ONLY) ----------------
+
+  const handleGoogleSuccess = async (credentialResponse) => {
+    try {
+      setGoogleLoading(true);
+
+      await CSRF.get("/sanctum/csrf-cookie");
+
+      await API.post("/auth/google", {
+        token: credentialResponse.credential,
+      });
+
+      const userRes = await API.get("/user");
+
+      dispatch(setUser(userRes.data));
+
+      navigate("/");
+    } catch (error) {
+      console.error(error.response?.data || error);
+    } finally {
+      setGoogleLoading(false);
+    }
   };
 
-  const handleCloseResetPwd = () => {
-    setShowResetPwd(false);
+  const inputStyle = {
+    "& .MuiOutlinedInput-root": {
+      borderRadius: 2,
+    },
   };
 
   return (
     <Container maxWidth="sm">
-      {/* FULL PAGE WRAPPER */}
+      {googleLoading && (
+        <Box
+          sx={{
+            position: "fixed",
+            inset: 0, 
+            backdropFilter: "blur(2px)",
+            zIndex: 9999,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <CircularProgress />
+        </Box>
+      )}
       <Box
         sx={{
-          minHeight: "100vh",
+          minHeight: "90vh",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          px: { xs: 2, sm: 3 }, 
+          px: 2, 
         }}
       >
-        {/* CARD */}
         <Paper
-          elevation={8}
+          elevation={0}
           sx={{
             width: "100%",
-            p: { xs: 3, sm: 5 },
+            p: 4,
             borderRadius: 4,
           }}
         >
-          {/* HEADER */}
+          {/* BACK */}
           <Button
-            sx={{ textTransform: "none" }}
+            onClick={() => navigate("/")}
             startIcon={
               i18n.language === "ar" ? <ArrowForwardIcon /> : <ArrowBackIcon />
             }
-            onClick={() => navigate(-1)}
+            sx={{ textTransform: "none" }}
           >
             {t("signup.common-back")}
           </Button>
+
+          {/* TITLE */}
           <Typography
-            variant="h4"
-            sx={{
-              textAlign: "center",
-              fontWeight: "bold",
-              fontSize: { xs: "1.8rem", sm: "2.2rem" },
-              mb: 3,
-            }}
+            variant="h5"
+            fontWeight={700}
+            sx={{ textAlign: "center" }}
           >
             {t("login.login_title")}
           </Typography>
 
+          {/* REGISTER */}
+          <Typography variant="body2" sx={{ mb: 1, textAlign: "center" }}>
+            {t("login.no_account")}{" "}
+            <RouterLink
+              to="/register"
+              style={{
+                textDecoration: "none",
+                fontWeight: 600,
+                color: "rgb(57, 97, 241)",
+              }}
+            >
+              {t("login.signup")}
+            </RouterLink>
+          </Typography>
+
           {/* FORM */}
-          <Stack spacing={2.5}>
+          <Stack spacing={2.5} sx={{ mt: 2 }}>
             {/* EMAIL */}
-            <Box>
-              <Typography fontWeight={500} mb={1}>
-                {t("login.email_label")}
-              </Typography>
-
-              <TextField
-                fullWidth
-                name="email"
-                placeholder={t("login.email_placeholder")}
-                value={loginForm.email}
-                onChange={handleChange}
-              />
-            </Box>
-
-            {/* PASSWORD */}
-            <Box>
-              {/* LABEL ROW */}
-              <Box
-                sx={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  mb: 1,
-                }}
-              >
-                <Typography fontWeight={500}>
-                  {t("login.password_label")}
-                </Typography>
-
-                <Typography
-                  onClick={handleShowResetPwd}
-                  variant="body2"
-                  sx={{
-                    color: "#1976d2",
-                    cursor: "pointer",
-                    fontSize: { xs: "0.75rem", sm: "0.875rem" },
-                    "&:hover": { textDecoration: "underline" },
-                  }}
-                >
-                  {t("login.forgot_password")}
-                </Typography>
-              </Box>
-
-              <TextField
-                fullWidth
-                name="password"
-                type={showPassword ? "text" : "password"}
-                placeholder={t("login.password_placeholder")}
-                value={loginForm.password}
-                onChange={handleChange}
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <IconButton onClick={() => setShowPassword((s) => !s)}>
-                        {showPassword ? <VisibilityOff /> : <Visibility />}
-                      </IconButton>
-                    </InputAdornment>
-                  ),
-                }}
-              />
-            </Box>
-
-            {/* REMEMBER ME */}
-            <FormControlLabel
-              control={
-                <Checkbox
-                  name="remember"
-                  checked={loginForm.remember}
-                  onChange={handleChange}
-                />
-              }
-              label={t("login.remember_me")}
+            <TextField
+              name="email"
+              label={t("login.email_label")}
+              value={form.email}
+              onChange={handleChange}
+              fullWidth
+              sx={inputStyle}
             />
 
-            {/* BUTTON */}
+            {/* PASSWORD */}
+            <TextField
+              name="password"
+              label={t("login.password_label")}
+              type={showPassword ? "text" : "password"}
+              value={form.password}
+              onChange={handleChange}
+              fullWidth
+              sx={inputStyle}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton onClick={() => setShowPassword((p) => !p)}>
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
+            />
+
+            {/* REMEMBER + FORGOT */}
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    name="remember"
+                    checked={form.remember}
+                    onChange={handleChange}
+                  />
+                }
+                label={t("login.remember_me") || "Remember me"}
+              />
+
+              <RouterLink
+                to="/forget-password"
+                style={{ fontSize: 14, color: "rgb(57, 97, 241)" }}
+              >
+                {t("login.forgot_password")}
+              </RouterLink>
+            </Box>
+
+            {/* ERROR */}
+            {error && (
+              <Typography color="error" textAlign="center">
+                {error}
+              </Typography>
+            )}
+
+            {/* LOGIN BUTTON */}
             <Button
-              onClick={handleLogin}
               fullWidth
               variant="contained"
+              onClick={handleLogin}
+              disabled={loading}
               sx={{
-                py: 1.4,
-                borderRadius: 2,
-                fontWeight: "bold",
+                py: 1.3,
+                borderRadius: 3,
                 textTransform: "none",
               }}
             >
-              {t("login.login_button")}
+              {loading ? (
+                <CircularProgress size={22} color="inherit" />
+              ) : (
+                t("login.login_button")
+              )}
             </Button>
-
-            {/* SIGN UP */}
-            <Box sx={{ mt: 1, textAlign: "center" }}>
-              <Typography variant="body2">
-                {t("login.no_account")}
-                <Link component={RouterLink} to="/register">
-                  {t("login.signup")}
-                </Link>
-              </Typography>
-            </Box>
           </Stack>
+
+          {/* DIVIDER */}
+          <Box sx={{ display: "flex", alignItems: "center", my: 3 }}>
+            <Divider sx={{ flex: 1 }} />
+            <Typography sx={{ mx: 2, fontSize: 12 }}>
+              {t("login.or")}
+            </Typography>
+            <Divider sx={{ flex: 1 }} />
+          </Box>
+
+          {/* GOOGLE LOGIN */}
+
+          <Box
+            sx={{
+              width: "100%",
+              display: "flex",
+              justifyContent: "center",
+              mt: 1,
+            }}
+          >
+            <Box
+              sx={{
+                transform: "scale(0.92)",
+                transformOrigin: "center",
+                borderRadius: 3,
+                overflow: "hidden",
+                "& > div": {
+                  width: "100% !important",
+                },
+              }}
+            >
+              <GoogleLogin
+                onSuccess={handleGoogleSuccess}
+                onError={() => console.log("Google Login Failed")}
+                theme="filled_black"
+                size="large"
+                shape="pill"
+                text="continue_with"
+                width="320"
+              />
+            </Box>
+          </Box>
         </Paper>
       </Box>
-      <ForgotPassword open={showResetPwd} handleClose={handleCloseResetPwd} />
     </Container>
   );
 }

@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import {
   Box,
   Typography,
@@ -9,15 +8,9 @@ import {
   Divider,
   Button,
   Stack,
-  Avatar,
   Paper,
   IconButton,
-  Breadcrumbs,
-  Link,
   Alert,
-  Stepper,
-  Step,
-  StepLabel,
   Table,
   TableBody,
   TableCell,
@@ -26,54 +19,80 @@ import {
   TableRow,
   useMediaQuery,
   useTheme,
+  CircularProgress,
 } from "@mui/material";
-import {
-  ArrowBack as ArrowBackIcon,
-  LocalShipping as ShippingIcon,
-  Payment as PaymentIcon,
-  Home as HomeIcon,
-  Receipt as ReceiptIcon,
-  CheckCircle as CheckCircleIcon,
-  Pending as PendingIcon,
-} from "@mui/icons-material";
-import { useParams, useNavigate } from "react-router-dom"; 
+
+import { ArrowBack as ArrowBackIcon } from "@mui/icons-material";
+
+import { useParams, useNavigate } from "react-router-dom";
+
 import { useTranslation } from "react-i18next";
 
+import { useMemo } from "react";
+
+import { useOrders } from "../../hooks/useOrders";
+
 export default function OrderDetails() {
+  const { id } = useParams();
+
+  const navigate = useNavigate();
+
+  const { t, i18n } = useTranslation();
+
+  const theme = useTheme();
+
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+
+  const { orders = [], loading } = useOrders();
+
+  /* ================= FIND ORDER ================= */
+
+  const order = useMemo(() => {
+    return orders.find((o) => String(o.id) === String(id));
+  }, [orders, id]);
+
+  /* ================= STATUS ================= */
+
   const statusConfig = {
-    pending: {
+    Pending: {
       label: "status.pending",
       color: "warning",
     },
-    confirmed: {
+
+    Confirmed: {
       label: "status.confirmed",
       color: "info",
     },
-    delivered: {
+
+    Delivered: {
       label: "status.delivered",
       color: "success",
     },
   };
-  const { id } = useParams();
-  const { t,i18n } = useTranslation();
-  const navigate = useNavigate();
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-  const [order, setOrder] = useState(null);
 
-  useEffect(() => {
-    const saved = localStorage.getItem("orders");
-    const orders = saved ? JSON.parse(saved) : [];
-    const found = orders.find((o) => o.id === id);
-    setOrder(found || null);
-  }, [id]);
+  /* ================= NOT FOUND ================= */
 
-  if (!order) {
+  if (!loading && !order) {
     return (
-      <Box sx={{ p: 4, textAlign: "center", mt: 10 }}>
-        <Alert severity="error" sx={{ maxWidth: 500, mx: "auto", mb: 3 }}>
+      <Box
+        sx={{
+          p: 4,
+          textAlign: "center",
+          mt: 10,
+          height:"100ch",
+        }}
+      >
+        <Alert
+          severity="error"
+          sx={{
+            maxWidth: 500,
+            mx: "auto",
+            mb: 3,
+          }}
+        >
           {t("orderDetails.notFound")}
         </Alert>
+
         <Button variant="contained" onClick={() => navigate("/orders")}>
           {t("orderDetails.back")}
         </Button>
@@ -81,20 +100,37 @@ export default function OrderDetails() {
     );
   }
 
-  const status = statusConfig[order.status] || statusConfig.pending;
+  const status = statusConfig[order.status] || statusConfig.Pending;
 
   return (
-    <Box sx={{ minHeight: "100vh", py: { xs: 4, md: 10 } }}>
-      <Box sx={{ width: { xs: "95%", lg: "80%" }, mx: "auto" }}>
+    <Box
+      sx={{
+        minHeight: "100vh",
+        py: {
+          xs: 4,
+          md: 10,
+        },
+      }}
+    >
+      <Box
+        sx={{
+          width: {
+            xs: "95%",
+            lg: "80%",
+          },
+          mx: "auto",
+        }}
+      >
+        {/* HEADER */}
+
         <Box
           sx={{
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
-            mb: 2,
+            mb: 3,
           }}
         >
-          {/* BACK BUTTON */}
           <IconButton
             onClick={() => navigate("/orders")}
             sx={{
@@ -105,12 +141,10 @@ export default function OrderDetails() {
             <ArrowBackIcon />
           </IconButton>
 
-          {/* TITLE (centered visually) */}
           <Typography
             variant={isMobile ? "h5" : "h4"}
             sx={{
               fontWeight: 800,
-              fontSize: isMobile ? "22px" : "30px",
               textAlign: "center",
               flex: 1,
             }}
@@ -118,77 +152,106 @@ export default function OrderDetails() {
             {t("orderDetails.title")}
           </Typography>
 
-          {/* empty space for symmetry */}
           <Box sx={{ width: 40 }} />
         </Box>
+
+        {/* ORDER HEADER */}
 
         <Paper
           elevation={0}
           sx={{
-            p: { xs: 2, md: 3 },
-            borderRadius: 3,
+            p: {
+              xs: 2,
+              md: 3,
+            },
+
+            borderRadius: 4,
+
             mb: 3,
-            mt: 2,
+
+            border: "1px solid",
+
+            borderColor: "divider",
           }}
         >
-          <Stack
-            spacing={2}
+          <Box
             sx={{
-              direction: { xs: "column", sm: "row" },
+              display: "flex",
+
+              flexDirection: {
+                xs: "column",
+                md: "row",
+              },
+
               justifyContent: "space-between",
-              alignItems: { xs: "flex-start", sm: "center" },
-              mt: 2,
+
+              gap: 2,
             }}
           >
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: { xs: "column", sm: "row" },
-                justifyContent: "space-between",
-                width: "100%",
-                gap: 2,
-              }}
-            >
-              <Box>
-                <Typography variant="h6">
-                  {t("orderDetails.orderNumber")} {order.id}
-                </Typography>
+            <Box>
+              <Typography variant="h6" fontWeight={700}>
+                #{order.id}
+              </Typography>
 
-                <Typography variant="body2" sx={{ mt: 1 }}>
-                  {t("orderDetails.placedOn")}{" "}
-                  {new Date(order.orderDate).toLocaleDateString()}
-                </Typography>
-              </Box>
-
-              <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                <Typography>{t("orderDetails.status")}:</Typography>
-                <Chip
-                  label={t(status.label)}
-                  color={status.color}
-                  sx={{ fontWeight: 600 }}
-                />
-              </Box>
+              <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+                {new Date(order.created_at).toLocaleDateString()}
+              </Typography>
             </Box>
-          </Stack>
+
+            <Box>
+              <Chip
+                label={t(status.label)}
+                color={status.color}
+                sx={{
+                  fontWeight: 700,
+                }}
+              />
+            </Box>
+          </Box>
         </Paper>
 
-        <Grid container spacing={3} sx={{ width: "100%" }}>
-          {/* LEFT / TABLE */}
-          <Grid size={{ xs: 12, md: 8 }}>
-            <Card sx={{ borderRadius: 3, overflow: "hidden" }}>
-              <CardContent sx={{ p: { xs: 2, md: 3 } }}>
+        {/* CONTENT */}
+
+        <Grid container spacing={3}>
+          {/* PRODUCTS */}
+
+          <Grid
+            size={{
+              xs: 12,
+              md: 8,
+            }}
+          >
+            <Card
+              sx={{
+                borderRadius: 4,
+              }}
+            >
+              <CardContent
+                sx={{
+                  p: {
+                    xs: 2,
+                    md: 3,
+                  },
+                }}
+              >
                 <Typography variant="h6" fontWeight={700} mb={3}>
                   {t("orderDetails.orderItems")}
                 </Typography>
 
-                <TableContainer sx={{ overflowX: "auto" }}>
+                <TableContainer>
                   <Table>
                     <TableHead>
-                      <TableRow sx={{ bgcolor: "#fafafa" }}>
+                      <TableRow>
                         <TableCell>{t("orderDetails.product")}</TableCell>
+
+                        <TableCell align="center">
+                          {t("orderDetails.quantity")}
+                        </TableCell>
+
                         <TableCell align="right">
                           {t("orderDetails.price")}
                         </TableCell>
+
                         <TableCell align="right">
                           {t("orderDetails.total")}
                         </TableCell>
@@ -196,38 +259,34 @@ export default function OrderDetails() {
                     </TableHead>
 
                     <TableBody>
-                      {order.items.map((item) => (
+                      {order.items?.map((item) => (
                         <TableRow key={item.id}>
                           <TableCell>
-                            <Stack
-                              direction="row"
-                              spacing={2}
-                              alignItems="center"
-                            >
-                              <Avatar
-                                src={item.image}
-                                variant="rounded"
-                                sx={{ width: 50, height: 50 }}
-                              >
-                                {!item.image && <ReceiptIcon />}
-                              </Avatar>
+                            <Box>
+                              <Typography fontWeight={600}>
+                                {item.product_name}
+                              </Typography>
 
-                              <Box>
-                                <Typography fontWeight={600}>
-                                  {item.name}
-                                </Typography>
-                                <Typography variant="caption">
-                                  {t("orderDetails.quantity")}: {item.quantity}
-                                </Typography>
-                              </Box>
-                            </Stack>
+                              <Typography
+                                variant="caption"
+                                color="text.secondary"
+                              >
+                                REF: {item.product_id}
+                              </Typography>
+                            </Box>
                           </TableCell>
 
-                          <TableCell align="right">${item.price}</TableCell>
+                          <TableCell align="center">{item.quantity}</TableCell>
+
+                          <TableCell align="right">
+                            {Number(item.product_price).toLocaleString()}{" "}
+                            {t("currency")}
+                          </TableCell>
 
                           <TableCell align="right">
                             <Typography fontWeight={700}>
-                              ${item.price * item.quantity}
+                              {Number(item.total).toLocaleString()}{" "}
+                              {t("currency")}
                             </Typography>
                           </TableCell>
                         </TableRow>
@@ -239,60 +298,66 @@ export default function OrderDetails() {
             </Card>
           </Grid>
 
-          {/* RIGHT SECTION (responsive group) */}
-          <Grid size={{ xs: 12, md: 4 }}>
+          {/* RIGHT */}
+
+          <Grid
+            size={{
+              xs: 12,
+              md: 4,
+            }}
+          >
             <Grid container spacing={3}>
               {/* SUMMARY */}
-              <Grid size={{ xs: 12, sm: 6, md: 12 }}>
-                <Card sx={{ borderRadius: 3 }}>
+
+              <Grid
+                size={{
+                  xs: 12,
+                }}
+              >
+                <Card
+                  sx={{
+                    borderRadius: 4,
+                  }}
+                >
                   <CardContent>
-                    <Typography variant="h6" fontWeight={700} mb={2}>
+                    <Typography variant="h6" fontWeight={700} mb={3}>
                       {t("orderDetails.orderSummary")}
                     </Typography>
 
-                    <Stack spacing={2}>
-                      <Box
-                        sx={{
-                          display: "flex",
-                          justifyContent: "space-between",
-                        }}
-                      >
-                        <Typography>{t("orderDetails.subtotal")}</Typography>
-                        <Typography>${order.subtotal}</Typography>
-                      </Box>
+                    <Stack spacing={2}> 
 
                       <Box
                         sx={{
                           display: "flex",
-                          justifyContent: "space-between",
-                        }}
-                      >
-                        <Typography>{t("orderDetails.shipping")}</Typography>
-                        <Typography>${order.shipping}</Typography>
-                      </Box>
 
-                      <Box
-                        sx={{
-                          display: "flex",
                           justifyContent: "space-between",
                         }}
                       >
-                        <Typography>{t("orderDetails.tax")}</Typography>
-                        <Typography>${order.tax}</Typography>
-                      </Box>
+                        <Typography color="text.secondary">
+                          {t("orderDetails.shipping")}
+                        </Typography>
+
+                        <Typography fontWeight={600}>
+                          {t("orderDetails.Gratuite")} 
+                        </Typography>
+                      </Box> 
 
                       <Divider />
 
                       <Box
                         sx={{
                           display: "flex",
+
                           justifyContent: "space-between",
                         }}
                       >
                         <Typography fontWeight={700}>
                           {t("orderDetails.total")}
                         </Typography>
-                        <Typography fontWeight={800}>${order.total}</Typography>
+
+                        <Typography fontWeight={800} color="primary.main">
+                          {Number(order.total).toLocaleString()} {t("currency")}
+                        </Typography>
                       </Box>
                     </Stack>
                   </CardContent>
@@ -300,43 +365,66 @@ export default function OrderDetails() {
               </Grid>
 
               {/* CUSTOMER */}
-              <Grid size={{ xs: 12, sm: 6, md: 12 }}>
-                <Card sx={{ borderRadius: 3 }}>
+
+              <Grid
+                size={{
+                  xs: 12,
+                }}
+              >
+                <Card
+                  sx={{
+                    borderRadius: 4,
+                  }}
+                >
                   <CardContent>
-                    <Typography variant="h6" fontWeight={700} mb={2}>
+                    <Typography variant="h6" fontWeight={700} mb={3}>
                       {t("orderDetails.customerInfo")}
                     </Typography>
 
                     <Stack spacing={2}>
                       <Box>
-                        <Typography variant="caption">
+                        <Typography variant="caption" color="text.secondary">
                           {t("orderDetails.fullName")}
                         </Typography>
-                        <Typography>
-                          {order.customer.firstName} {order.customer.lastName}
+
+                        <Typography fontWeight={600}>
+                          {order.first_name} {order.last_name}
                         </Typography>
                       </Box>
 
                       <Box>
-                        <Typography variant="caption">
+                        <Typography variant="caption" color="text.secondary">
                           {t("orderDetails.email")}
                         </Typography>
-                        <Typography>{order.customer.email}</Typography>
+
+                        <Typography fontWeight={600}>{order.email}</Typography>
                       </Box>
 
                       <Box>
-                        <Typography variant="caption">
+                        <Typography variant="caption" color="text.secondary">
                           {t("orderDetails.phone")}
                         </Typography>
-                        <Typography>{order.customer.phone}</Typography>
+
+                        <Typography fontWeight={600}>{order.phone}</Typography>
                       </Box>
 
                       <Box>
-                        <Typography variant="caption">
+                        <Typography variant="caption" color="text.secondary">
                           {t("orderDetails.address")}
                         </Typography>
-                        <Typography>
-                          {order.customer.address}, {order.customer.city}
+
+                        <Typography fontWeight={600}>
+                          {order.address}, {order.city}
+                        </Typography>
+                      </Box>
+
+                      <Box>
+                        <Typography variant="caption" color="text.secondary">
+                          {t("orderDetails.country")}
+                        </Typography>
+
+                        <Typography fontWeight={600}>
+                          {order.country}
                         </Typography>
                       </Box>
                     </Stack>

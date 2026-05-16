@@ -1,64 +1,51 @@
 import React from "react";
+
 import {
   AppBar,
   Toolbar,
   IconButton,
-  InputBase,
   Avatar,
   Menu,
   MenuItem,
   Typography,
   Box,
   alpha,
-  styled,
+  Divider,
 } from "@mui/material";
-import { useNavigate } from "react-router-dom";
-import LightModeOutlinedIcon from "@mui/icons-material/LightModeOutlined";
-import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
 
-import MenuOpenIcon from "@mui/icons-material/MenuOpen";
+import {
+  LightModeOutlined,
+  DarkModeOutlined,
+  MenuOpen,
+  Logout,
+  Language,
+  PersonOutlineOutlined,
+} from "@mui/icons-material";
+
+import { useNavigate } from "react-router-dom";
+
 import { useDispatch, useSelector } from "react-redux";
+
 import { toggleTheme } from "../../features/theme/themeSlice";
+
 import { logout } from "../../features/auth/authSlice";
 
-const Search = styled("div")(({ theme }) => ({
-  position: "relative",
-  borderRadius: theme.shape.borderRadius,
-  backgroundColor: alpha(theme.palette.common.white, 0.15),
-  "&:hover": {
-    backgroundColor: alpha(theme.palette.common.white, 0.25),
-  },
-  marginRight: theme.spacing(2),
-  marginLeft: 0,
-  width: "100%",
-  [theme.breakpoints.up("sm")]: {
-    marginLeft: theme.spacing(3),
-    width: "auto",
-  },
-}));
+export default function Topbar({ openMenu, toggleSidebar }) {
+  const dispatch = useDispatch();
 
-const StyledInputBase = styled(InputBase)(({ theme }) => ({
-  color: "inherit",
-  "& .MuiInputBase-input": {
-    padding: theme.spacing(1, 1, 1, 0),
-    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-    transition: theme.transitions.create("width"),
-    width: "100%",
-    [theme.breakpoints.up("md")]: {
-      width: "20ch",
-    },
-  },
-}));
-
-export function Topbar({ openMenu, toggleSidebar }) {
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const open = Boolean(anchorEl);
   const navigate = useNavigate();
+
+  /* ================= REDUX ================= */
 
   const user = useSelector((state) => state.auth.user);
 
-  const dispatch = useDispatch();
   const mode = useSelector((state) => state.theme.mode);
+
+  /* ================= MENU ================= */
+
+  const [anchorEl, setAnchorEl] = React.useState(null);
+
+  const open = Boolean(anchorEl);
 
   const handleMenuClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -68,11 +55,19 @@ export function Topbar({ openMenu, toggleSidebar }) {
     setAnchorEl(null);
   };
 
-  const handleSignOut = async () => {
+  /* ================= LOGOUT ================= */
+
+  const handleLogout = async () => {
     handleMenuClose();
+
     await dispatch(logout());
+
     navigate("/login");
   };
+
+  /* ================= AVATAR ================= */
+
+  const avatarUrl = user?.avatar_url || "";
 
   return (
     <AppBar
@@ -80,87 +75,162 @@ export function Topbar({ openMenu, toggleSidebar }) {
       elevation={0}
       sx={{
         zIndex: 1300,
-        height: 64,
+        mb:2,
+        height: 60,
+        justifyContent: "center",
         backgroundColor: "background.paper",
-        borderBottom: 1,
+        borderBottom: "1px solid",
         borderColor: "divider",
-        backdropFilter: "blur(8px)",
-        mb: 3,
+        backdropFilter: "blur(12px)",
       }}
     >
-      <Toolbar sx={{ height: 64, minHeight: 64, px: { xs: 2, md: 3 } }}>
+      <Toolbar
+        sx={{
+          px: {
+            xs: 2,
+            md: 3,
+          },
+        }}
+      >
+        {/* ================= LEFT ================= */}
+
         <Box
           sx={{
-            height: 64,
             display: "flex",
             alignItems: "center",
+            gap: 2,
           }}
         >
-          <MenuOpenIcon
-            onClick={toggleSidebar}
+          {/* TOGGLE */}
+
+          <IconButton onClick={toggleSidebar}>
+            <MenuOpen
+              sx={{
+                transition: "0.3s",
+
+                transform: openMenu ? "rotate(0deg)" : "rotate(180deg)",
+              }}
+            />
+          </IconButton>
+
+          {/* LOGO */}
+
+          <Typography
+            variant="h6"
+            fontWeight={800}
             sx={{
-              transform: openMenu ? "rotate(0deg)" : "rotate(180deg)",
-              transition: "transform 0.3s ease",
-              cursor: "pointer",
+              letterSpacing: 1,
+
+              display: {
+                xs: "none",
+                sm: "block",
+              },
             }}
-          />
+          >
+            SOLAR ADMIN
+          </Typography>
         </Box>
 
-        <Box sx={{ ml: "auto", display: "flex", alignItems: "center", gap: 1 }}>
+        {/* ================= RIGHT ================= */}
+
+        <Box
+          sx={{
+            ml: "auto",
+
+            display: "flex",
+            alignItems: "center",
+            gap: 1.5,
+          }}
+        >
+          {/* THEME */}
+
           <IconButton
             onClick={() => dispatch(toggleTheme())}
-            sx={{ color: "text.primary" }}
+            sx={{
+              border: "1px solid",
+              borderColor: "divider",
+            }}
           >
-            {mode === "dark" ? (
-              <LightModeOutlinedIcon />
-            ) : (
-              <DarkModeOutlinedIcon />
-            )}
+            {mode === "dark" ? <LightModeOutlined /> : <DarkModeOutlined />}
           </IconButton>
+
+          {/* PROFILE */}
+
           <Box
             onClick={handleMenuClick}
             sx={{
               display: "flex",
               alignItems: "center",
-              gap: 1,
-              p: 0.5,
-              borderRadius: "50%",
+              gap: 1.5,
+
+              px: 1.2,
+              py: 0.7,
+
+              borderRadius: 3,
+
               cursor: "pointer",
-              transition: "background-color 0.2s",
+
+              transition: "0.2s",
+
               "&:hover": {
                 backgroundColor: (theme) =>
                   alpha(theme.palette.text.primary, 0.05),
               },
             }}
           >
+            {/* AVATAR */}
+
             <Avatar
+              src={avatarUrl}
               sx={{
-                width: 32,
-                height: 32,
+                width: 42,
+                height: 42,
+
                 bgcolor: "primary.main",
-                fontSize: "0.75rem",
-                fontWeight: 600,
+
+                fontWeight: 700,
               }}
             >
-              {user?.name?.charAt(0).toUpperCase()}
+              {!avatarUrl && user?.name?.charAt(0)?.toUpperCase()}
             </Avatar>
+
+            {/* INFO */}
+
             <Box
-              sx={{ display: { xs: "none", md: "block" }, textAlign: "left" }}
+              sx={{
+                display: {
+                  xs: "none",
+                  md: "block",
+                },
+              }}
             >
+              {/* NAME */}
+
               <Typography
                 variant="body2"
-                sx={{ fontWeight: 500, lineHeight: 1.2 }}
+                sx={{
+                  fontWeight: 700,
+                  lineHeight: 1.2,
+                }}
               >
-                {user?.name}
+                {user?.name || "Admin"}
               </Typography>
+
+              {/* ROLE */}
+
               <Typography
                 variant="caption"
-                sx={{ color: "text.secondary", lineHeight: 1.2 }}
+                sx={{
+                  color: "text.secondary",
+                  textTransform: "capitalize",
+                }}
               >
-                {user?.role}
+                {user?.role || "Administrator"}
               </Typography>
             </Box>
           </Box>
+
+          {/* MENU */}
 
           <Menu
             anchorEl={anchorEl}
@@ -177,13 +247,95 @@ export function Topbar({ openMenu, toggleSidebar }) {
             PaperProps={{
               sx: {
                 mt: 1.5,
-                width: 192,
-                borderRadius: 1,
+                width: 230,
+                borderRadius: 3,
+                p: 1,
               },
             }}
           >
-            <MenuItem onClick={handleSignOut} sx={{ color: "error.main" }}>
-              Sign out
+            {/* USER HEADER */}
+
+            <Box
+              sx={{
+                px: 2,
+                py: 1.5,
+
+                display: "flex",
+                alignItems: "center",
+                gap: 1.5,
+              }}
+            >
+              <Avatar
+                src={avatarUrl}
+                sx={{
+                  width: 45,
+                  height: 45,
+                }}
+              >
+                {!avatarUrl && user?.name?.charAt(0)?.toUpperCase()}
+              </Avatar>
+
+              <Box>
+                <Typography variant="body2" fontWeight={700}>
+                  {user?.name}
+                </Typography>
+
+                <Typography variant="caption" color="text.secondary">
+                  {user?.email}
+                </Typography>
+              </Box>
+            </Box>
+
+            <Divider sx={{ my: 1 }} />
+
+            {/* PROFILE */}
+
+            <MenuItem
+              onClick={() => {
+                navigate("/admin/profile");
+
+                handleMenuClose();
+              }}
+              sx={{
+                gap: 1.5,
+                borderRadius: 2,
+              }}
+            >
+              <PersonOutlineOutlined fontSize="small" />
+              Profil
+            </MenuItem>
+
+            {/* WEBSITE */}
+
+            <MenuItem
+              onClick={() => {
+                navigate("/");
+
+                handleMenuClose();
+              }}
+              sx={{
+                gap: 1.5,
+                borderRadius: 2,
+              }}
+            >
+              <Language fontSize="small" />
+              Voir le site
+            </MenuItem>
+
+            <Divider sx={{ my: 1 }} />
+
+            {/* LOGOUT */}
+
+            <MenuItem
+              onClick={handleLogout}
+              sx={{
+                gap: 1.5,
+                borderRadius: 2,
+                color: "error.main",
+              }}
+            >
+              <Logout fontSize="small" />
+              Déconnexion
             </MenuItem>
           </Menu>
         </Box>

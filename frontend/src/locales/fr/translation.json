@@ -1,4 +1,5 @@
 {
+  "currency":"MAD",
   "nav": {
     "home": "Accueil",
     "products": "Produits",
@@ -12,19 +13,17 @@
     "ar":"Arabic"
   },
  "cart": {
-    "title": "Panier ({{count}} articles)",
+    "title": "Panier ({{count}})",
     "emptyTitle": "Votre panier est vide",
     "emptyMessage": "On dirait que vous n'avez pas encore ajouté d'articles à votre panier.",
     "continueShopping": "Continuer les achats",
     "clearCart": "Vider le panier",
     "bulkDiscount": "Remise pour commande en gros",
-    "summary": "Résumé de la commande",
-    "subtotal": "Sous-total ({{count}} articles)",
+    "summary": "Résumé de la commande", 
     "shipping": "Livraison",
-    "free": "Gratuite",
-    "tax": "Taxe (0.8%)",
+    "free": "Gratuite", 
     "total": "Total",
-    "checkout": "Procéder au paiement →",
+    "checkout": "Procéder au paiement",
     "processing": "Traitement...",
     "securePayment": "🔒 Paiement sécurisé · Retours gratuits sous 30 jours",
     "confirmClear": "Êtes-vous sûr de vouloir vider tout votre panier ?",
@@ -38,21 +37,21 @@
     "cancel": "Annuler",
     "delete": "Supprimer"
   },
-   "checkout": {
+  "checkout": {
     "title": "Paiement",
     "steps": {
-      "cart": "Panier",
-      "customerInfo": "Infos Client",
-      "confirmation": "Confirmation"
-    },
+        "cart": "Panier",
+        "customerInfo": "Infos Client",
+        "confirmation": "Confirmation"
+      },
     "emptyCart": "Votre panier est vide",
     "continueShopping": "Continuer les achats",
     "perUnit": "l'unité",
     "summary": "Récapitulatif de la commande",
-    "itemsCount": "{{count}} article(s) dans le panier",
-    "subtotal": "Sous-total",
-    "tax": "TVA (0.8%)",
+    "itemsCount": "{{count}} article(s) dans le panier", 
+
     "shipping": "Livraison",
+     "products": "Produits",
     "free": "Gratuite",
     "total": "Total",
     "continue": "Continuer →",
@@ -87,12 +86,11 @@
   },
    "orderConfirmation": {
     "title": "Commande Confirmée !",
-    "message": "Merci pour votre achat. Votre commande a été reçue et est en cours de traitement.",
+    "message": "Nous avons bien reçu votre commande. Elle sera examinée par notre équipe avant la confirmation finale.",
     "orderNumber": "Commande #{{id}}",
     "at": "à",
     "orderSummary": "Récapitulatif de la commande",
-    "subtotal": "Sous-total",
-    "tax": "TVA (0.8%)",
+    "Gratuite":"Gratuite",
     "shipping": "Livraison",
     "free": "Gratuite",
     "total": "Total",
@@ -148,8 +146,7 @@
       "subtitle": "Découvrez nos dernières solutions d’énergie solaire conçues pour une efficacité maximale et une durabilité optimale",
       "buttons": { 
         "view_all": "Voir tous les produits"
-      },
-      "currency": "DH",
+      }, 
       "categories": {
         "inverters": "Onduleurs",
         "batteries": "Batteries",
@@ -186,13 +183,11 @@
     },
 
     "contact": {
-      "title": "Contact",
-      "email": "moyasol.sol@gmail.com",
-      "phone": "0726553374",
+      "title": "Contact", 
       "location": "Marrakech"
     },
 
-    "copyright": "© 2026 SolarNova. Tous droits réservés. Conçu pour un avenir plus lumineux."
+    "copyright": "© 2026 MOYA SOL. Tous droits réservés. Conçu pour un avenir plus lumineux."
   },
 
   "productsPage": {
@@ -210,7 +205,8 @@
       "all": "Tous les produits",
       "panels": "Panneaux",
       "batteries": "Batteries",
-      "inverters": "Onduleurs"
+      "inverters": "Onduleurs",
+      "accessories": "Accessoires"
     },
 
     "price": {
@@ -303,19 +299,23 @@
         ]
       }
     }
-  },
+  }, 
 
-  "login": {
-    "login_title": "Login",
-    "email_label": "Email",
-    "email_placeholder": "Enter your email",
-    "password_label": "Password",
-    "password_placeholder": "Enter your password",
-    "forgot_password": "Forgot password?",
-    "remember_me": "Remember me",
-    "login_button": "Login",
-    "no_account": "Don't have an account?",
-    "signup": "Sign up"
+    "login": {
+    "login_title": "Connexion",
+    "email_label": "Adresse e-mail",
+    "email_placeholder": "Entrez votre adresse e-mail",
+    "password_label": "Mot de passe",
+    "password_placeholder": "Entrez votre mot de passe",
+    "forgot_password": "Mot de passe oublié ?",
+    "remember_me": "Se souvenir de moi",
+    "login_button": "Se connecter",
+    "no_account": "Vous n'avez pas de compte ?",
+    "signup": "S'inscrire",
+    "common-back": "Retour",
+    "or": "Ou",
+    "login_with_google": "Continuer avec Google",
+    "welcome_back": "Bon retour"
   },
 
   "forgot_password": {
@@ -327,16 +327,38 @@
   },
 
   "signup": {
-    "common-back":"Retour",
-    "title": "Create Account",
-    "full_name": "Full name",
-    "email": "Email",
-    "password": "Password",
-    "confirm_password": "Confirm password",
-    "button": "Create account",
-    "already_account": "Already have an account?",
-    "login": "Login"
-  },
+    "title": "Créer un compte",
+    "common-back": "Retour",
+    "already_account": "Vous avez déjà un compte ?",
+    "login": "Se connecter",
+
+    "full_name": "Nom complet",
+    "name_placeholder": "Entrez votre nom complet",
+    "name_required": "Le nom est requis",
+
+    "email": "Adresse e-mail",
+    "email_placeholder": "Entrez votre adresse e-mail",
+    "email_required": "L'adresse e-mail est requise",
+    "email_invalid": "Adresse e-mail invalide",
+
+    "password": "Mot de passe",
+    "password_placeholder": "Entrez votre mot de passe",
+    "password_required": "Le mot de passe est requis",
+    "password_min_length": "Le mot de passe doit contenir au moins 6 caractères",
+
+    "confirm_password": "Confirmer le mot de passe",
+    "confirm_password_placeholder": "Confirmez votre mot de passe",
+    "password_mismatch": "Les mots de passe ne correspondent pas",
+
+    "terms_required": "Vous devez accepter les conditions",
+
+    "button": "Créer un compte",
+    "or": "Ou",
+
+    "signup_with_google": "Continuer avec Google",
+
+    "registration_error": "Une erreur s'est produite lors de la création du compte"
+},
 
   "favorite":{
     "title":"Mes favoris", 
@@ -422,7 +444,7 @@
 
   "orders": {
     "orderNumber": "Commande n°",
-    "DH": "MAD",
+    
     "title": "Mes commandes",
     "items": "Articles",
     "total": "Total",
@@ -434,7 +456,8 @@
   "status": {
     "pending": "En attente",
     "confirmed": "Confirmée", 
-    "delivered": "Livrée"
+    "delivered": "Livrée",
+    "cancelled": "Annulée"
   },
 
   "emptyOrders": {
@@ -445,6 +468,7 @@
 
 
   "orderDetails": {
+    "country":"Pays",
     "title": "Détails de la commande",
     "orderNumber": "Commande n° ",
     "placedOn": "Passée le ",
@@ -454,10 +478,8 @@
     "price": "Prix",
     "total": "Total",
     "quantity": "Quantité",
-    "orderSummary": "Résumé de la commande",
-    "subtotal": "Sous-total",
-    "shipping": "Livraison",
-    "tax": "Taxe",
+    "orderSummary": "Résumé de la commande", 
+    "shipping": "Livraison", 
     "customerInfo": "Informations client",
     "fullName": "Nom complet",
     "email": "Email",
@@ -465,5 +487,48 @@
     "address": "Adresse",
     "notFound": "Commande introuvable",
     "back": "Retour aux commandes"
+  },
+  "LogoutProfile": {
+    "logoutConfirmTitle": "Confirmation de déconnexion",
+    "logoutConfirmText": "Êtes-vous sûr de vouloir vous déconnecter ?"
+  },
+  "YesNo": {
+    "no": "Non",
+    "yes": "Oui"
+  },
+
+  "orderCancelDialog": {
+    "title": "Annuler la commande",
+    "message": "Êtes-vous sûr de vouloir annuler cette commande ?",
+    "closeButton": "Annuler",
+    "confirmButton": "Annuler la commande"
+  },
+
+  "forgotPassword": {
+    "title": "Mot de passe oublié",
+    "subtitle": "Entrez votre email et nous vous enverrons un lien de réinitialisation du mot de passe.",
+    "emailLabel": "Email",
+    "emailRequired": "L'email est obligatoire",
+    "invalidEmail": "Format d'email invalide",
+    "successMessage": "Lien de réinitialisation envoyé à votre email",
+    "button": "Envoyer le lien de réinitialisation",
+    "backToLogin": "Retour à la connexion",  
+    "successTitle": "Email envoyé avec succès"
+  },
+
+   "resetPassword": {
+    "title": "Réinitialiser le mot de passe",
+    "subtitle": "Entrez votre nouveau mot de passe ci-dessous",
+    "newPassword": "Nouveau mot de passe",
+    "confirmPassword": "Confirmer le mot de passe",
+    "passwordRequired": "Le mot de passe est requis",
+    "passwordMin": "Le mot de passe doit contenir au moins 8 caractères",
+    "confirmRequired": "La confirmation du mot de passe est requise",
+    "passwordsNotMatch": "Les mots de passe ne correspondent pas",
+    "button": "Réinitialiser le mot de passe",
+    "successTitle": "Mot de passe modifié avec succès",
+    "successMessage": "Votre mot de passe a été réinitialisé avec succès, vous serez redirigé vers la page de connexion",
+    "apiError": "Échec de la réinitialisation du mot de passe",
+    "backToLogin": "Retour à la connexion"
   }
 }

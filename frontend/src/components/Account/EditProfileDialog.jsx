@@ -1,58 +1,111 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import {
   Avatar,
   Button,
+  CircularProgress,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
   Stack,
   TextField,
+  Typography,
 } from "@mui/material";
 
-import { useAuth } from "../../context/AuthContext";
+import { useDispatch, useSelector } from "react-redux";
+
 import { useTranslation } from "react-i18next";
 
+import {
+  updateProfileAction,
+  clearProfileState,
+} from "../../features/profile/profileSlice";
+
 export default function EditProfileDialog({ open, onClose }) {
-  const { user } = useAuth();
+  const dispatch = useDispatch();
+
   const { t } = useTranslation();
 
-  const [formData, setFormData] = useState({
-    name: user?.name || "",
-    city: user?.city || "Marrakech",
-    avatar: null,
-  });
+  const user = useSelector((state) => state.auth.user);
+
+  const { loading, success, errors } = useSelector((state) => state.profile);
 
   const [preview, setPreview] = useState(null);
 
+  const [formData, setFormData] = useState({
+    name: "", 
+    avatar: null,
+  });
+
+  /* ================= RESET FORM ================= */
+
+  useEffect(() => {
+    if (user && open) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setFormData({
+        name: user?.name || "", 
+        avatar: null,
+      });
+
+      setPreview(user?.avatar || null);
+    }
+  }, [user, open]);
+
+  /* ================= CLOSE AFTER SUCCESS ================= */
+
+  useEffect(() => {
+    if (success) {
+      setTimeout(() => {
+        dispatch(clearProfileState());
+
+        onClose();
+      }, 1000);
+    }
+  }, [success, dispatch, onClose]);
+
+  /* ================= HANDLE INPUT ================= */
+
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+    const { name, value } = e.target;
+
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
+
+  /* ================= HANDLE IMAGE ================= */
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
 
-    if (file) {
-      setFormData({
-        ...formData,
-        avatar: file,
-      });
+    if (!file) return;
 
-      setPreview(URL.createObjectURL(file));
-    }
+    setFormData((prev) => ({
+      ...prev,
+      avatar: file,
+    }));
+
+    setPreview(URL.createObjectURL(file));
   };
 
+  /* ================= HANDLE SUBMIT ================= */
+
   const handleSave = () => {
-    console.log("Updated Profile:", formData);
+    const data = new FormData();
 
-    // TODO:
-    // Send updated data to API
+    data.append("_method", "PUT");
 
-    onClose();
+    data.append("name", formData.name);
+
+    data.append("email", user?.email); 
+
+    if (formData.avatar) {
+      data.append("avatar", formData.avatar);
+    }
+
+    dispatch(updateProfileAction(data));
   };
 
   return (
@@ -96,14 +149,14 @@ export default function EditProfileDialog({ open, onClose }) {
             }}
           >
             <Avatar
-              src={preview}
+              src={preview || ""}
               sx={{
                 width: { xs: 90, sm: 110 },
                 height: { xs: 90, sm: 110 },
                 fontSize: { xs: 34, sm: 42 },
               }}
             >
-              {!preview && user?.name?.charAt(0).toUpperCase()}
+              {!preview && user?.name?.charAt(0)?.toUpperCase()}
             </Avatar>
 
             <Button
@@ -126,7 +179,7 @@ export default function EditProfileDialog({ open, onClose }) {
             </Button>
           </Stack>
 
-          {/* FULL NAME */}
+          {/* NAME */}
 
           <TextField
             label={t("editProfileDialog.fullName")}
@@ -134,29 +187,23 @@ export default function EditProfileDialog({ open, onClose }) {
             fullWidth
             value={formData.name}
             onChange={handleChange}
+            error={!!errors.name}
+            helperText={errors.name?.[0]}
             variant="filled"
             sx={{
               "& .MuiFilledInput-root": {
                 borderRadius: 3,
               },
             }}
-          />
+          /> 
 
-          {/* CITY */}
+          {/* SUCCESS */}
 
-          <TextField
-            label={t("editProfileDialog.city")}
-            name="city"
-            fullWidth
-            value={formData.city}
-            onChange={handleChange}
-            variant="filled"
-            sx={{
-              "& .MuiFilledInput-root": {
-                borderRadius: 3,
-              },
-            }}
-          />
+          {success && (
+            <Typography color="success.main" textAlign="center">
+              {success}
+            </Typography>
+          )}
         </Stack>
       </DialogContent>
 
@@ -177,6 +224,7 @@ export default function EditProfileDialog({ open, onClose }) {
           variant="outlined"
           color="inherit"
           onClick={onClose}
+          disabled={loading}
           sx={{
             borderRadius: 3,
             textTransform: "none",
@@ -190,13 +238,18 @@ export default function EditProfileDialog({ open, onClose }) {
           fullWidth
           variant="contained"
           onClick={handleSave}
+          disabled={loading}
           sx={{
             borderRadius: 3,
             textTransform: "none",
             height: 45,
           }}
         >
-          {t("editProfileDialog.saveChanges")}
+          {loading ? (
+            <CircularProgress size={22} color="inherit" />
+          ) : (
+            t("editProfileDialog.saveChanges")
+          )}
         </Button>
       </DialogActions>
     </Dialog>

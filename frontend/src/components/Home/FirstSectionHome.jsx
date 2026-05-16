@@ -64,10 +64,15 @@ export default function FirstSectionHome() {
           px: {
             xs: 2,
             sm: 3,
-            md: 5,
+            md: 2,
+          },
+          py:{
+            xs: 1,
+            sm: 1,
+            md: 17,
           },
           width: "100%",
-        }}
+        }} 
       >
         <Box
           sx={{
@@ -103,8 +108,7 @@ export default function FirstSectionHome() {
               fontSize: {
                 xs: "2rem",
                 sm: "2.6rem",
-                md: "3.2rem",
-                lg: "4rem",
+                md: "3.5rem", 
               },
 
               lineHeight: 1.2,
@@ -176,6 +180,7 @@ export default function FirstSectionHome() {
                 )
               }
               sx={{
+                gap: 2, 
                 width: {
                   xs: "100%",
                   sm: "auto",

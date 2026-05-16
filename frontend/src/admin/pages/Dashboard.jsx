@@ -1,4 +1,5 @@
-import React, { useMemo } from "react";
+import React from "react";
+
 import {
   Box,
   Card,
@@ -6,27 +7,17 @@ import {
   CardHeader,
   Grid,
   Typography,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
   Chip,
   Avatar,
-  Link,
+  Stack,
   useTheme,
 } from "@mui/material";
-import CircularProgress from "@mui/material/CircularProgress";
 
-import {
-  TrendingUp as ArrowUpRight,
-  AttachMoney as DollarSign,
-  ShoppingBag,
-  People as UsersIcon,
-  Inventory as Package,
-} from "@mui/icons-material";
+import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
+import ShoppingBagIcon from "@mui/icons-material/ShoppingBag";
+import PeopleIcon from "@mui/icons-material/People";
+import InventoryIcon from "@mui/icons-material/Inventory";
+
 import {
   Area,
   AreaChart,
@@ -36,101 +27,65 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
+
 import PageHeader from "../components/PageHeader";
+import Loading from "../components/Loading";
 
-import { useProducts } from "../../hooks/useProducts";
-import { useOrders } from "../../hooks/useOrders";
-import { useUsers } from "../../hooks/useUsers";
-
+import { useAnalytics } from "../../hooks/useAnalytics";
 function Dashboard() {
+  const {
+    salesData = [],
+    stats = {},
+    topProducts = [],
+    loading: analyticsLoading,
+  } = useAnalytics();
+
+  const formatCompactNumber = (value = 0) => {
+    if (value >= 1000000) {
+      return `${(value / 1000000).toFixed(1)}M`;
+    }
+
+    if (value >= 1000) {
+      return `${(value / 1000).toFixed(1)}K`;
+    }
+
+    return Number(value).toLocaleString();
+  };
   const theme = useTheme();
 
-  const { products, loading } = useProducts();
-  const { orders } = useOrders();
-  const { users } = useUsers();
+  const loading = analyticsLoading;
 
-  const totalRevenue = useMemo(() => {
-    return orders.reduce((sum, o) => {
-      const value = parseFloat(o.total);
-      return sum + (isNaN(value) ? 0 : value);
-    }, 0);
-  }, [orders]);
-
-  const salesData = useMemo(() => {
-    const data = Array.from({ length: 12 }, (_, i) => ({
-      month: new Date(0, i).toLocaleString("en", { month: "short" }),
-      revenue: 0,
-    }));
-
-    orders.forEach((order) => {
-      const date = order.date || order.created_at;
-      if (!date) return;
-
-      const monthIndex = new Date(date).getMonth();
-      const value = parseFloat(order.total);
-
-      data[monthIndex].revenue += isNaN(value) ? 0 : value;
-    });
-
-    return data;
-  }, [orders]);
-
-  const topProducts = useMemo(() => {
-    return [...products]
-      .sort((a, b) => Number(b.sold || 0) - Number(a.sold || 0))
-      .slice(0, 4);
-  }, [products]);
-
-  const kpis = useMemo(
-    () => [
-      {
-        label: "Revenu total",
-        value: `${totalRevenue.toLocaleString()} MAD`,
-        icon: DollarSign,
-      },
-      {
-        label: "Total des commandes",
-        value: orders.length,
-        icon: ShoppingBag,
-      },
-      {
-        label: "Utilisateurs totaux",
-        value: users.length,
-        icon: UsersIcon,
-      },
-      {
-        label: "Produits totaux",
-        value: products.length,
-        icon: Package,
-      },
-    ],
-    [totalRevenue, orders.length, users.length, products.length],
-  );
-
-  const getStatusColor = (status) => {
-    const s = status?.toLowerCase();
-    if (s === "pending") return "warning";
-    if (s === "confirmed") return "info";
-    if (s === "delivered") return "success";
-    return "default";
-  };
+const kpis = [
+  {
+    label: "Revenu total",
+    value: `${formatCompactNumber(stats.totalRevenue || 0)} MAD`,
+    icon: AttachMoneyIcon,
+  },
+  {
+    label: "Total des commandes",
+    value: formatCompactNumber(stats.totalOrders || 0),
+    icon: ShoppingBagIcon,
+  },
+  {
+    label: "Utilisateurs totaux",
+    value: formatCompactNumber(stats.totalUsers || 0),
+    icon: PeopleIcon,
+  },
+  {
+    label: "Produits totaux",
+    value: formatCompactNumber(stats.totalProducts || 0),
+    icon: InventoryIcon,
+  },
+];
 
   if (loading) {
     return (
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "50vh",
-          gap: 2,
-        }}
-      >
-        <CircularProgress />
-        <Typography>Chargement...</Typography>
-      </Box>
+      <Loading/>
     );
   }
+
+  console.log(salesData);
+ 
 
   return (
     <>
@@ -185,203 +140,221 @@ function Dashboard() {
         </Grid>
 
         {/* Charts and Top Products */}
-        <Grid container spacing={3} sx={{ mb: 3 }}>
-          <Grid size={{ xs: 12, lg: 8 }}>
-            <Card
-              sx={{
-                border: 1,
-                borderColor: "divider",
-                boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.05)",
+
+        <Grid size={{ xs: 12, lg: 8 }}>
+          <Card
+            sx={{
+              border: 1,
+              borderColor: "divider",
+              boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.05)",
+            }}
+          >
+            <CardHeader
+              title="Aperçu des ventes"
+              titleTypographyProps={{ variant: "h6", fontWeight: 600 }}
+            />
+            <CardContent>
+              <Box sx={{ height: 280 }}>
+                <ResponsiveContainer width="100%" height="100%">
+                  <AreaChart
+                    data={salesData}
+                    margin={{ left: -10, right: 10, top: 10 }}
+                  >
+                    <defs>
+                      <linearGradient
+                        id="revenueGradient"
+                        x1="0"
+                        y1="0"
+                        x2="0"
+                        y2="1"
+                      >
+                        <stop
+                          offset="0%"
+                          stopColor={theme.palette.primary.main}
+                          stopOpacity={0.45}
+                        />
+                        <stop
+                          offset="100%"
+                          stopColor={theme.palette.primary.main}
+                          stopOpacity={0}
+                        />
+                      </linearGradient>
+                    </defs>
+
+                    <CartesianGrid
+                      strokeDasharray="3 3"
+                      stroke={theme.palette.divider}
+                      vertical={false}
+                    />
+
+                    <XAxis
+                      dataKey="month"
+                      stroke={theme.palette.text.secondary}
+                      fontSize={12}
+                      tickLine={false}
+                      axisLine={false}
+                    />
+
+                    <YAxis
+                      stroke={theme.palette.text.secondary}
+                      fontSize={12}
+                      tickLine={false}
+                      axisLine={false}
+                      tickFormatter={(value) =>
+                        `${formatCompactNumber(value)} MAD`
+                      }
+                    />
+
+                    <Tooltip
+                      contentStyle={{
+                        borderRadius: 12,
+                        border: `1px solid ${theme.palette.divider}`,
+                        backgroundColor: theme.palette.background.paper,
+                        fontSize: 12,
+                      }}
+                      formatter={(value) => [
+                        `${formatCompactNumber(value)} MAD`,
+                        "Revenu",
+                      ]}
+                    />
+
+                    <Area
+                      type="monotone"
+                      dataKey="revenue"
+                      stroke={theme.palette.primary.main}
+                      strokeWidth={2.5}
+                      fill="url(#revenueGradient)"
+                    />
+                  </AreaChart>
+                </ResponsiveContainer>
+              </Box>
+            </CardContent>
+          </Card>
+        </Grid>
+
+        {/* TOP PRODUCTS */}
+        <Grid size={{ xs: 12, lg: 4 }}>
+          <Card
+            sx={{
+              border: 1,
+              borderColor: "divider",
+              boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.05)",
+              height: "100%",
+            }}
+          >
+            <CardHeader
+              title="Meilleurs produits vendus"
+              titleTypographyProps={{
+                variant: "h6",
+                fontWeight: 700,
               }}
-            >
-              <CardHeader
-                title="Aperçu des ventes"
-                titleTypographyProps={{ variant: "h6", fontWeight: 600 }}
-              />
-              <CardContent>
-                <Box sx={{ height: 280 }}>
-                  <ResponsiveContainer width="100%" height="100%">
-                    <AreaChart
-                      data={salesData}
-                      margin={{ left: -10, right: 10, top: 10 }}
-                    >
-                      <defs>
-                        <linearGradient
-                          id="revenueGradient"
-                          x1="0"
-                          y1="0"
-                          x2="0"
-                          y2="1"
-                        >
-                          <stop
-                            offset="0%"
-                            stopColor={theme.palette.primary.main}
-                            stopOpacity={0.45}
-                          />
-                          <stop
-                            offset="100%"
-                            stopColor={theme.palette.primary.main}
-                            stopOpacity={0}
-                          />
-                        </linearGradient>
-                      </defs>
+            />
 
-                      <CartesianGrid
-                        strokeDasharray="3 3"
-                        stroke={theme.palette.divider}
-                        vertical={false}
-                      />
-
-                      <XAxis
-                        dataKey="month"
-                        stroke={theme.palette.text.secondary}
-                        fontSize={12}
-                        tickLine={false}
-                        axisLine={false}
-                      />
-
-                      <YAxis
-                        stroke={theme.palette.text.secondary}
-                        fontSize={12}
-                        tickLine={false}
-                        axisLine={false}
-                        tickFormatter={(value) =>
-                          `${value.toLocaleString()} MAD`
-                        }
-                      />
-
-                      <Tooltip
-                        contentStyle={{
-                          borderRadius: 12,
-                          border: `1px solid ${theme.palette.divider}`,
-                          backgroundColor: theme.palette.background.paper,
-                          fontSize: 12,
-                        }}
-                        formatter={(value) => [
-                          `${value.toLocaleString()} MAD`,
-                          "Revenu",
-                        ]}
-                      />
-
-                      <Area
-                        type="monotone"
-                        dataKey="revenue"
-                        stroke={theme.palette.primary.main}
-                        strokeWidth={2.5}
-                        fill="url(#revenueGradient)"
-                      />
-                    </AreaChart>
-                  </ResponsiveContainer>
-                </Box>
-              </CardContent>
-            </Card>
-          </Grid>
-
-          <Grid size={{ xs: 12, lg: 4 }}>
-            <Card
-              sx={{
-                border: 1,
-                borderColor: "divider",
-                boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.05)",
-              }}
-            >
-              <CardHeader
-                title="Meilleurs produits vendus"
-                titleTypographyProps={{ variant: "h6", fontWeight: 600 }}
-              />
-              <CardContent sx={{ pt: 0 }}>
+            <CardContent sx={{ pt: 0 }}>
+              <Stack spacing={2}>
                 {topProducts.map((product) => (
+                  
                   <Box
                     key={product.id}
                     sx={{
                       display: "flex",
                       alignItems: "center",
+                      justifyContent: "space-between",
                       gap: 2,
-                      p: 1.5,
-                      mb: 1.5,
-                      borderRadius: 2,
-                      border: 1,
+                      p: 2,
+                      borderRadius: 3,
+                      border: "1px solid",
                       borderColor: "divider",
-                      "&:last-child": { mb: 0 },
                     }}
                   >
-                    <Box sx={{ flex: 1, minWidth: 0 }}>
-                      <Typography variant="h6">{product.name}</Typography>
-                      <Typography variant="h6">{product.category}</Typography>
+                    {/* LEFT */}
+                    <Box
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 2,
+                        flex: 1,
+                        minWidth: 0,
+                      }}
+                    >
+                      {/* IMAGE */}
+                      <Avatar
+                        src={
+                          product.images?.[0]?.image
+                            ? `${import.meta.env.VITE_API_URL}/storage/${product.images[0].image}`
+                            : ""
+                        }
+                        variant="rounded"
+                        sx={{
+                          width: 64,
+                          height: 64,
+                          borderRadius: 3,
+                        }}
+                      />
+
+                      {/* INFO */}
+                      <Box
+                        sx={{
+                          minWidth: 0,
+                          flex: 1,
+                        }}
+                      >
+                        <Typography fontWeight={700} noWrap>
+                          {product.name_fr}
+                        </Typography>
+
+                        <Typography
+                          variant="body2"
+                          color="text.secondary"
+                          noWrap
+                        >
+                          {product.category?.name || "Accessoire"}
+                        </Typography>
+
+                        <Stack direction="row" spacing={1} sx={{ mt: 1 }}>
+                          <Chip
+                            size="small"
+                            label={`${product.stock_quantity} stock`}
+                            color={
+                              product.stock_quantity <= 0 ? "error" : "success"
+                            }
+                          />
+
+                          <Chip
+                            size="small"
+                            label={`${Number(
+                              product.price,
+                            ).toLocaleString()} MAD`}
+                          />
+                        </Stack>
+                      </Box>
                     </Box>
-                    <Typography variant="h6">{product.sold}</Typography>
+
+                    {/* RIGHT */}
+                    <Box
+                      sx={{
+                        textAlign: "right",
+                        minWidth: 90,
+                      }}
+                    >
+                      <Typography
+                        variant="h5"
+                        fontWeight={800}
+                        color="primary.main"
+                      >
+                        {formatCompactNumber(product.delivered_quantity || 0)}
+                      </Typography>
+
+                      <Typography variant="caption" color="text.secondary">
+                        ventes
+                      </Typography>
+                    </Box>
                   </Box>
                 ))}
-              </CardContent>
-            </Card>
-          </Grid>
+              </Stack>
+            </CardContent>
+          </Card>
         </Grid>
-
-        {/* Recent Orders */}
-        <Card
-          sx={{
-            border: 1,
-            borderColor: "divider",
-            boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.05)",
-          }}
-        >
-          <CardHeader
-            title="Commandes récentes"
-            titleTypographyProps={{ variant: "h6", fontWeight: 600 }}
-            action={
-              <Link
-                href="/orders"
-                underline="hover"
-                sx={{ fontSize: "0.75rem", fontWeight: 500 }}
-              >
-                Voir tout
-              </Link>
-            }
-          />
-
-          <CardContent>
-            <TableContainer component={Paper} elevation={0}>
-              <Table>
-                <TableHead>
-                  <TableRow>
-                    <TableCell sx={{ fontWeight: 600 }}>Commande</TableCell>
-                    <TableCell sx={{ fontWeight: 600 }}>Client</TableCell>
-                    <TableCell sx={{ fontWeight: 600 }}>Date</TableCell>
-                    <TableCell sx={{ fontWeight: 600 }}>Statut</TableCell>
-                    <TableCell sx={{ fontWeight: 600, textAlign: "right" }}>
-                      Total
-                    </TableCell>
-                  </TableRow>
-                </TableHead>
-
-                <TableBody>
-                  {orders.slice(0, 6).map((order) => (
-                    <TableRow key={order.id}>
-                      <TableCell>{order.id}</TableCell>
-                      <TableCell>
-                        <Typography>{order.user?.name || "Inconnu"}</Typography>
-                        <Typography variant="caption">
-                          {order.user?.email || "-"}
-                        </Typography>
-                      </TableCell>
-                      <TableCell>{order.date}</TableCell>
-                      <TableCell>
-                        <Chip
-                          label={order.status}
-                          size="small"
-                          color={getStatusColor(order.status)}
-                        />
-                      </TableCell>
-                      <TableCell sx={{ textAlign: "right", fontWeight: 600 }}>
-                        {order.total} MAD
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
-          </CardContent>
-        </Card>
       </Box>
     </>
   );

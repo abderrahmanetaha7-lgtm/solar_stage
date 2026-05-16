@@ -1,7 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { getSettings, saveSettings } from "../../api/dataApi";
-
-
+import { getSettings, saveSettings } from "../../api/settingsApi";
 
 /* ================= FETCH ================= */
 

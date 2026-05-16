@@ -1,44 +1,34 @@
-import { Paper, Typography, Box, Divider } from "@mui/material";
+import SummaryCard from "../cart/SummaryCard";
 
 export default function OrderSummary({
-  subtotal,
-  tax,
-  shipping,
   total,
   cartItems,
   t,
+
+  buttonText,
+  onButtonClick,
+  isLoading,
 }) {
+  const totalProducts = cartItems.reduce((sum, item) => sum + item.quantity, 0);
   return (
-    <Paper sx={{ p: 3 }}>
-      <Typography variant="h5">{t("checkout.summary")}</Typography>
-
-      <Box mt={2}>
-        <Typography>{t("checkout.itemsCount", { count: cartItems.length })}</Typography>
-
-        <Divider sx={{ my: 2 }} />
-
-        <Box display="flex" justifyContent="space-between">
-          <Typography>{t("checkout.subtotal")}</Typography>
-          <Typography>${subtotal}</Typography>
-        </Box>
-
-        <Box display="flex" justifyContent="space-between">
-          <Typography>{t("checkout.tax")}</Typography>
-          <Typography>${tax}</Typography>
-        </Box>
-
-        <Box display="flex" justifyContent="space-between">
-          <Typography>{t("checkout.shipping")}</Typography>
-          <Typography>${shipping}</Typography>
-        </Box>
-
-        <Divider sx={{ my: 2 }} />
-
-        <Box display="flex" justifyContent="space-between">
-          <Typography variant="h6">{t("checkout.total")}</Typography>
-          <Typography variant="h6">${total}</Typography>
-        </Box>
-      </Box>
-    </Paper>
+    <SummaryCard
+      title={t("checkout.summary")}
+      rows={[
+        {
+          label: t("checkout.products"),
+          value: totalProducts,
+        },
+        {
+          label: t("checkout.shipping"),
+          value: t("checkout.free"),
+          color: "success.main",
+        },
+      ]}
+      totalLabel={t("checkout.total")}
+      totalValue={`${total.toFixed(2)} ${t("currency")}`}
+      buttonText={buttonText}
+      onButtonClick={onButtonClick}
+      isLoading={isLoading}
+    />
   );
 }

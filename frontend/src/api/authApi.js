@@ -1,21 +1,39 @@
-import API from "./axios";
+import API, { CSRF } from "./axios";
 
-export const getCSRF = () => API.get("/sanctum/csrf-cookie");
+/* ================= CSRF ================= */
 
-export const loginApi = (data) => API.post("/api/login", data);
+export const getCSRF = async () => {
+  return await CSRF.get("/sanctum/csrf-cookie", {});
+};
 
-export const registerApi = (data) => API.post("/api/register", data);
+/* ================= AUTH ================= */
 
-export const logoutApi = () => API.post("/api/logout");
+export const registerApi = async (data) => {
+  return await API.post("/register", data);
+};
 
-export const userApi = () => API.get("/api/user");
+export const loginApi = async (data) => {
+  return await API.post("/login", data);
+};
 
-export const forgotPasswordApi = (data) =>
-  API.post("/api/forgot-password", data);
+export const logoutApi = async () => {
+  return await API.post("/logout");
+};
 
-export const updateProfileApi = (data) => API.put("/api/profile", data);
+export const userApi = async () => {
+  return await API.get("/user");
+};
 
-export const changePasswordApi = (data) =>
-  API.put("/api/change-password", data);
+export const adminApi = async () => {
+  return await API.get("/admin");
+};
 
-export const deleteAccountApi = () => API.delete("/api/delete-account");
+/* ================= PASSWORD RESET ================= */
+
+export const forgotPasswordApi = async (data) => {
+  return await API.post("/forgot-password", data);
+};
+
+export const resetPasswordApi = async (data) => {
+  return await API.post("/reset-password", data);
+};

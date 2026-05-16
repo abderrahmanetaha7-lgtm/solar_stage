@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { deleteUser, getUsers, updateUser } from "../../api/dataApi";
+import { deleteUser, getUsers, updateUser } from "../../api/userApi"; 
  
 
 /* ================= THUNKS ================= */
@@ -54,6 +54,7 @@ export const removeUser = createAsyncThunk(
 const initialState = {
   users: [],
   loading: false,
+  authenticated: false,
   error: null,
 };
 
@@ -74,11 +75,13 @@ const userSlice = createSlice({
       .addCase(fetchUsers.fulfilled, (state, action) => {
         state.loading = false;
         state.users = action.payload;
+        state.authenticated = true;
       })
 
       .addCase(fetchUsers.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+        state.authenticated = false;
       })
 
       /* ===== UPDATE USER ===== */

@@ -79,7 +79,7 @@ const CartItem = ({
           <Typography fontWeight={700}>{item.quantity}</Typography>
           <IconButton
             onClick={() => onIncrement(item.id)}
-            disabled={item.quantity >= item.maxQuantity}
+            disabled={item.quantity >= item.stock_quantity}
             aria-label={`Increase quantity of ${item.name}`}
             sx={{
               bgcolor: "action.hover",

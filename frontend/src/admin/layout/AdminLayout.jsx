@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Box, useMediaQuery } from "@mui/material";
 import Sidebar from "./Sidebar";
 import { Outlet } from "react-router-dom";
-import { Topbar } from "../components/Topbar";
+import Topbar from "../components/Topbar";
 
 export default function AdminLayout() {
   const isMobile = useMediaQuery("(max-width:900px)");
@@ -13,7 +13,13 @@ export default function AdminLayout() {
   };
 
   return (
-    <Box display="flex">
+    <Box
+      display="flex"
+      dir="ltr"
+      sx={{
+        direction: "ltr",
+      }}
+    >
       {/* SIDEBAR */}
       <Sidebar open={open} setOpen={setOpen} isMobile={isMobile} />
 

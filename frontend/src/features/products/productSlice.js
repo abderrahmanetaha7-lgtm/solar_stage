@@ -1,11 +1,10 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-
 import {
   getProducts,
   createProduct,
   updateProduct,
   deleteProduct,
-} from "../../api/dataApi";
+} from "../../api/productApi";
 
 /* ================= FETCH PRODUCTS ================= */
 
@@ -15,29 +14,37 @@ export const fetchProducts = createAsyncThunk(
     const res = await getProducts();
 
     return res.data;
-  }
+  },
 );
 
 /* ================= CREATE PRODUCT ================= */
 
 export const addProduct = createAsyncThunk(
   "products/addProduct",
-  async (data) => {
-    const res = await createProduct(data);
+  async (data, { rejectWithValue }) => {
+    try {
+      const res = await createProduct(data);
 
-    return res.data;
-  }
+      return res.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data || error.message);
+    }
+  },
 );
 
 /* ================= UPDATE PRODUCT ================= */
 
 export const editProduct = createAsyncThunk(
   "products/editProduct",
-  async ({ id, data }) => {
-    const res = await updateProduct(id, data);
+  async ({ id, data }, { rejectWithValue }) => {
+    try {
+      const res = await updateProduct(id, data);
 
-    return res.data;
-  }
+      return res.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data || error.message);
+    }
+  },
 );
 
 /* ================= DELETE PRODUCT ================= */
@@ -48,7 +55,7 @@ export const removeProduct = createAsyncThunk(
     await deleteProduct(id);
 
     return id;
-  }
+  },
 );
 
 const productSlice = createSlice({
@@ -108,9 +115,7 @@ const productSlice = createSlice({
         state.loading = false;
 
         state.products = state.products.map((product) =>
-          product.id === action.payload.id
-            ? action.payload
-            : product
+          product.id === action.payload.id ? action.payload : product,
         );
       })
 
@@ -129,7 +134,7 @@ const productSlice = createSlice({
         state.loading = false;
 
         state.products = state.products.filter(
-          (product) => product.id !== action.payload
+          (product) => product.id !== action.payload,
         );
       })
 

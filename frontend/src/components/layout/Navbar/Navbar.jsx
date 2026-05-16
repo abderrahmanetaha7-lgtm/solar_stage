@@ -10,13 +10,18 @@ import MobileDrawer from "./MobileDrawer";
 import LanguageSwitcher from "./LanguageSwitcher";
 
 import logo from "../../../assets/images/logo.png";
+import { useSettings } from "../../../hooks/useSettings";
 
 export default function Navbar() {
   const theme = useTheme();
+  const {settings} = useSettings();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
   const [openDrawer, setOpenDrawer] = useState(false);
   const toggleDrawer = (state) => () => setOpenDrawer(state);
+  const logoUrl = settings?.logo
+    ? `${import.meta.env.VITE_API_URL}/storage/${settings.logo}`
+    : logo;
 
   return (
     <AppBar sx={{ bgcolor: "background.default", boxShadow: "none" }}>
@@ -31,7 +36,11 @@ export default function Navbar() {
               <MenuIcon />
             </IconButton>
           )}
-          <img src={logo} alt="Logo" style={{ height: 60 }} />
+          <img
+            src={logoUrl}
+            alt="Logo"
+            style={{ height: 60 }}
+          />
         </Box>
 
         {!isMobile && <NavLinks />}
@@ -45,4 +54,4 @@ export default function Navbar() {
       <MobileDrawer open={openDrawer} toggleDrawer={toggleDrawer} />
     </AppBar>
   );
-}
+} 

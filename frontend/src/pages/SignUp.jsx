@@ -6,32 +6,40 @@ import {
   Button,
   Typography,
   Paper,
-  IconButton,
-  InputAdornment,
   Stack,
+  InputAdornment,
+  IconButton,
+  CircularProgress,
+  Divider,
   LinearProgress,
-  Grid,
+  FormHelperText,
 } from "@mui/material";
-import { Visibility, VisibilityOff } from "@mui/icons-material";
-import { useTranslation } from "react-i18next";
-import { Link, Link as RouterLink } from "react-router-dom";
 
-import { useNavigate } from "react-router-dom";
+import {
+  Visibility,
+  VisibilityOff,
+  Google as GoogleIcon,
+} from "@mui/icons-material";
+
+import { useTranslation } from "react-i18next";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
 
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
-import { useAuth } from "../context/AuthContext";
+
+import { useDispatch, useSelector } from "react-redux";
+import { register, setUser } from "../features/auth/authSlice";
+import API, { CSRF } from "../api/axios";
+
+import { GoogleLogin } from "@react-oauth/google";
 
 export default function SignUp() {
   const { t, i18n } = useTranslation();
-
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  const { register } = useAuth();
-
-  /* ================= STATE ================= */
-  const [showPassword, setShowPassword] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const { loading } = useSelector((state) => state.auth);
+  const [googleLoading, setGoogleLoading] = useState(false);
 
   const [form, setForm] = useState({
     name: "",
@@ -40,185 +48,291 @@ export default function SignUp() {
     confirmPassword: "",
   });
 
-  /* ================= HANDLERS ================= */
+  const [show, setShow] = useState({
+    password: false,
+    confirm: false,
+  });
 
+  const [errors, setErrors] = useState({});
+  const [errorMsg, setErrorMsg] = useState("");
+
+  // ---------------- INPUT ----------------
   const handleChange = (e) => {
-    const { name, value } = e.target;
+    setForm({ ...form, [e.target.name]: e.target.value });
 
-    setForm((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    if (errors[e.target.name]) {
+      setErrors({ ...errors, [e.target.name]: "" });
+    }
   };
 
-  const handleRegister = async () => {
-    if (!form.name || !form.email || !form.password) {
-      alert("Please fill all fields");
-      return;
-    }
+  // ---------------- VALIDATION ----------------
+  const validate = () => {
+    const err = {};
 
-    if (form.password !== form.confirmPassword) {
-      alert("Passwords do not match");
+    if (!form.name) err.name = t("signup.name_required");
+    if (!form.email) err.email = t("signup.email_required");
+    if (!form.password) err.password = t("signup.password_required");
+    if (form.password !== form.confirmPassword)
+      err.confirmPassword = t("signup.password_mismatch");
+
+    return err;
+  };
+
+  // ---------------- REGISTER ----------------
+  const handleRegister = async () => {
+    const validation = validate();
+
+    if (Object.keys(validation).length) {
+      setErrors(validation);
       return;
     }
 
     try {
-      setLoading(true);
+      setErrorMsg("");
 
-      await register({
-        name: form.name,
-        email: form.email,
-        password: form.password,
+      await dispatch(
+        register({
+          name: form.name,
+          email: form.email,
+          password: form.password,
+        }),
+      ).unwrap();
+
+      navigate("/");
+    } catch (err) {
+      setErrorMsg(err?.message || t("signup.registration_error"));
+    }
+  };
+  const handleGoogleSuccess = async (credentialResponse) => {
+    try {
+      setGoogleLoading(true);
+
+      await CSRF.get("/sanctum/csrf-cookie");
+
+      await API.post("/auth/google", {
+        token: credentialResponse.credential,
       });
 
-      navigate("/"); // redirect after success
-    } catch (err) {
-      console.log(err);
-      alert("Registration failed");
+      const userRes = await API.get("/user");
+
+      dispatch(setUser(userRes.data));
+
+      navigate("/");
+    } catch (error) {
+      console.error(error.response?.data || error);
     } finally {
-      setLoading(false);
+      setGoogleLoading(false);
     }
   };
 
-  /* ================= UI ================= */
-
-  const strength = form.password.length * 10;
+  // ---------------- PASSWORD STRENGTH ----------------
+  const strength = Math.min((form.password.length / 10) * 100, 100);
 
   return (
     <Container maxWidth="sm">
-      <Box
-        sx={{
-          minHeight: "100vh",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center", 
-          px: { xs: 2, sm: 3 },
-        }}
-      >
-        <Paper
-          elevation={8}
+      {googleLoading && (
+        <Box
           sx={{
-            width: "100%",
-            p: { xs: 3, sm: 5 },
-            borderRadius: 4,
+            position: "fixed",
+            inset: 0,
+            backdropFilter: "blur(2px)",
+            zIndex: 9999,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
           }}
         >
+          <CircularProgress />
+        </Box>
+      )}
+      <Box
+        sx={{
+          minHeight: "90vh",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          px: 2,
+        }}
+      >
+        <Paper sx={{ p: 4, borderRadius: 4, width: "100%" }} elevation={0}>
+          {/* BACK */}
           <Button
-            sx={{ textTransform: "none" }}
+            onClick={() => navigate("/")}
             startIcon={
               i18n.language === "ar" ? <ArrowForwardIcon /> : <ArrowBackIcon />
             }
-            onClick={() => navigate(-1)}
+            sx={{ textTransform: "none" }}
           >
             {t("signup.common-back")}
           </Button>
+
           {/* TITLE */}
           <Typography
-            variant="h4"
-            sx={{
-              textAlign: "center",
-              fontWeight: "bold",
-              fontSize: { xs: "1.8rem", sm: "2.2rem" },
-              mb: 3,
-            }}
+            sx={{ textAlign: "center" }}
+            variant="h5"
+            fontWeight={700}
           >
             {t("signup.title")}
           </Typography>
 
-          <Stack spacing={2.5}>
+          {/* LOGIN LINK */}
+          <Typography sx={{ textAlign: "center", mt: 1 }} variant="body2">
+            {t("signup.already_account")}{" "}
+            <RouterLink
+              to="/login"
+              style={{ fontWeight: 600, color: "rgb(57, 97, 241)" }}
+            >
+              {t("signup.login")}
+            </RouterLink>
+          </Typography>
+
+          {/* FORM */}
+          <Stack spacing={2.5} sx={{ mt: 3 }}>
             {/* NAME */}
             <TextField
-              fullWidth
-              label={t("signup.full_name")}
               name="name"
+              label={t("signup.full_name")}
               value={form.name}
               onChange={handleChange}
+              error={!!errors.name}
+              helperText={errors.name}
+              fullWidth
             />
 
             {/* EMAIL */}
             <TextField
-              fullWidth
-              label={t("signup.email")}
               name="email"
+              label={t("signup.email")}
               value={form.email}
               onChange={handleChange}
+              error={!!errors.email}
+              helperText={errors.email}
+              fullWidth
             />
 
-            {/* PASSWORD + CONFIRM PASSWORD (SAME LINE RESPONSIVE) */}
-            <Grid container spacing={2}>
-              {/* PASSWORD */}
-              <Grid size={{ xs: 12, sm: 6 }}>
-                <Box>
-                  <TextField
-                    fullWidth
-                    label={t("signup.password")}
-                    name="password"
-                    type={showPassword ? "text" : "password"}
-                    value={form.password}
-                    onChange={handleChange}
-                    InputProps={{
-                      endAdornment: (
-                        <InputAdornment position="end">
-                          <IconButton
-                            onClick={() => setShowPassword((s) => !s)}
-                          >
-                            {showPassword ? <VisibilityOff /> : <Visibility />}
-                          </IconButton>
-                        </InputAdornment>
-                      ),
-                    }}
-                  />
+            {/* PASSWORD */}
+            <Box sx={{ display: "flex" }}>
+              <TextField
+                fullWidth
+                name="password"
+                label={t("signup.password")}
+                type={show.password ? "text" : "password"}
+                value={form.password}
+                onChange={handleChange}
+                error={!!errors.password}
+                helperText={errors.password}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton
+                        onClick={() =>
+                          setShow({ ...show, password: !show.password })
+                        }
+                      >
+                        {show.password ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
+              />
 
-                  {form.password && (
-                    <Box mt={1}>
-                      <LinearProgress
-                        variant="determinate"
-                        value={Math.min(strength, 100)}
-                      />
-                    </Box>
-                  )}
-                </Box>
-              </Grid>
-
-              {/* CONFIRM PASSWORD */}
-              <Grid size={{ xs: 12, sm: 6 }}>
-                <TextField
-                  fullWidth
-                  label={t("signup.confirm_password")}
-                  name="confirmPassword"
-                  type="password"
-                  value={form.confirmPassword}
-                  onChange={handleChange}
+              {form.password && (
+                <LinearProgress
+                  variant="determinate"
+                  value={strength}
+                  sx={{
+                    mt: 1,
+                    height: 4,
+                    borderRadius: 2,
+                  }}
                 />
-              </Grid>
-            </Grid>
+              )}
+            </Box>
+
+            {/* CONFIRM PASSWORD */}
+            <TextField
+              fullWidth
+              name="confirmPassword"
+              label={t("signup.confirm_password")}
+              type={show.confirm ? "text" : "password"}
+              value={form.confirmPassword}
+              onChange={handleChange}
+              error={!!errors.confirmPassword}
+              helperText={errors.confirmPassword}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      onClick={() =>
+                        setShow({ ...show, confirm: !show.confirm })
+                      }
+                    >
+                      {show.confirm ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
+            />
+
+            {/* ERROR */}
+            {errorMsg && (
+              <Typography color="error" textAlign="center">
+                {errorMsg}
+              </Typography>
+            )}
 
             {/* BUTTON */}
             <Button
               fullWidth
+              variant="contained"
               onClick={handleRegister}
               disabled={loading}
-              variant="contained"
+              sx={{ py: 1.3, borderRadius: 3, textTransform: "none" }}
+            >
+              {loading ? <CircularProgress size={22} /> : t("signup.button")}
+            </Button>
+          </Stack>
+
+          {/* DIVIDER */}
+          <Box sx={{ display: "flex", alignItems: "center", my: 3 }}>
+            <Divider sx={{ flex: 1 }} />
+            <Typography sx={{ mx: 2, fontSize: 12 }}>
+              {t("signup.or")}
+            </Typography>
+            <Divider sx={{ flex: 1 }} />
+          </Box>
+
+          {/* GOOGLE */}
+          <Box
+            sx={{
+              width: "100%",
+              display: "flex",
+              justifyContent: "center",
+              mt: 1,
+            }}
+          >
+            <Box
               sx={{
-                py: 1.5,
-                borderRadius: 2,
-                fontWeight: "bold",
-                textTransform: "none",
+                transform: "scale(0.92)",
+                transformOrigin: "center",
+                borderRadius: 3,
+                overflow: "hidden",
+                "& > div": {
+                  width: "100% !important",
+                },
               }}
             >
-              {t("signup.button")}
-            </Button>
-
-            {/* LOGIN LINK */}
-            <Box sx={{ textAlign: "center" }}>
-              <Typography variant="body2">
-                {t("signup.already_account")}{" "}
-                <Link component={RouterLink} to="/login">
-                  {t("signup.login")}
-                </Link>
-              </Typography>
+              <GoogleLogin
+                onSuccess={handleGoogleSuccess}
+                onError={() => console.log("Google Login Failed")}
+                theme="filled_black"
+                size="large"
+                shape="pill"
+                text="continue_with"
+                width="320"
+              />
             </Box>
-          </Stack>
+          </Box>
         </Paper>
       </Box>
     </Container>

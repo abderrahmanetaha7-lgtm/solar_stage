@@ -1,105 +1,192 @@
-import * as React from "react";
+import React, { useState } from "react";
 import {
+  Container,
+  Box,
+  Typography,
+  TextField,
   Button,
+  Paper,
+  Avatar,
+  InputAdornment,
+  Link,
   Dialog,
-  DialogActions,
   DialogContent,
-  DialogContentText,
-  DialogTitle,
-  OutlinedInput,
 } from "@mui/material";
 
+import {
+  LockReset as LockResetIcon,
+  Email as EmailIcon,
+  ArrowBack as ArrowBackIcon,
+  CheckCircle as CheckCircleIcon,
+} from "@mui/icons-material";
+
+import { Link as RouterLink } from "react-router-dom";
+
+import { forgotPassword } from "../features/auth/authSlice";
+import { useDispatch, useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
-import { forgotPasswordApi } from "../api/authApi";
 
-export default function ForgotPassword({ open, handleClose }) {
-  const { t } = useTranslation();
+const ForgotPassword = () => {
+  const { t, i18n } = useTranslation();
 
-  /* ================= STATE ================= */
-  const [email, setEmail] = React.useState("");
-  const [loading, setLoading] = React.useState(false);
-  const [success, setSuccess] = React.useState(false);
+  const [email, setEmail] = useState("");
+  const [error, setError] = useState("");
+  const [openSuccess, setOpenSuccess] = useState(false);
 
-  /* ================= HANDLER ================= */
-  const handleSubmit = async () => {
-    if (!email) {
-      alert("Email required");
-      return;
-    }
+  const dispatch = useDispatch();
+  const { loading } = useSelector((state) => state.auth);
+
+  const validate = (value) => {
+    if (!value) return t("forgotPassword.emailRequired");
+    const ok = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+    return ok ? "" : t("forgotPassword.invalidEmail");
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const err = validate(email);
+    setError(err);
+    if (err) return;
 
     try {
-      setLoading(true);
+      const result = await dispatch(forgotPassword({ email }));
 
-      // 🔥 Laravel API call
-      await forgotPasswordApi({ email });
+      if (forgotPassword.fulfilled.match(result)) {
+        setOpenSuccess(true);
 
-      setSuccess(true);
-
-      // reset form
-      setEmail("");
-
-      // auto close after success
-      setTimeout(() => {
-        handleClose();
-        setSuccess(false);
-      }, 1500);
-    } catch (err) {
-      console.log(err);
-      alert("Something went wrong");
-    } finally {
-      setLoading(false);
+        // optional auto close + redirect
+        setTimeout(() => {
+          setOpenSuccess(false);
+        }, 3000);
+      }
+    } catch (error) {
+      console.log(error)
+      setOpenSuccess(false);
     }
   };
 
-  /* ================= UI ================= */
   return (
-    <Dialog open={open} onClose={handleClose}>
-      
-      <DialogTitle>
-        {t("forgot_password.title")}
-      </DialogTitle>
+    <Container maxWidth="sm">
+      <Box
+        sx={{
+          minHeight: "100vh",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          py: 4,
+        }}
+      >
+        <Paper sx={{ p: 4, borderRadius: 3, width: "100%" }} elevation={0}>
+          {/* Header */}
+          <Box sx={{ textAlign: "center", mb: 3 }}>
+            <Avatar sx={{ mx: "auto", mb: 2, bgcolor: "primary.main" }}>
+              <LockResetIcon />
+            </Avatar>
 
-      <DialogContent sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-        
-        <DialogContentText>
-          {t("forgot_password.description")}
-        </DialogContentText>
+            <Typography variant="h5" fontWeight={700}>
+              {t("forgotPassword.title")}
+            </Typography>
 
-        {/* EMAIL INPUT */}
-        <OutlinedInput
-          autoFocus
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder={t("forgot_password.email_placeholder")}
-          type="email"
-          fullWidth
-        />
+            <Typography variant="body2" color="text.secondary">
+              {t("forgotPassword.subtitle")}
+            </Typography>
+          </Box>
 
-        {/* SUCCESS MESSAGE */}
-        {success && (
-          <DialogContentText sx={{ color: "green" }}>
-            Reset link sent successfully ✔
-          </DialogContentText>
-        )}
-      </DialogContent>
+          {/* Form */}
+          <Box component="form" onSubmit={handleSubmit}>
+            <TextField
+              fullWidth
+              label={t("forgotPassword.emailLabel")}
+              value={email}
+              onChange={(e) => {
+                setEmail(e.target.value);
+                setError("");
+              }}
+              error={!!error}
+              helperText={error || " "}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <EmailIcon />
+                  </InputAdornment>
+                ),
+              }}
+              sx={{ mb: 2 }}
+            />
 
-      <DialogActions sx={{ pb: 3, px: 3 }}>
-        
-        {/* CANCEL */}
-        <Button onClick={handleClose}>
-          {t("forgot_password.cancel")}
-        </Button>
+            <Button
+              fullWidth
+              type="submit"
+              variant="contained"
+              disabled={loading}
+              sx={{ py: 1.3, textTransform: "none", borderRadius: 2 }}
+            >
+              {t("forgotPassword.button")}
+            </Button>
 
-        {/* SUBMIT */}
-        <Button
-          variant="contained"
-          onClick={handleSubmit}
-          disabled={loading}
-        >
-          {loading ? "Sending..." : t("forgot_password.continue")}
-        </Button>
+            <Box sx={{ mt: 3, textAlign: "center" }}>
+              <Link
+                component={RouterLink}
+                to="/login"
+                underline="hover"
+                sx={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 1,
+                  cursor: "pointer",
+                }}
+              >
+                <ArrowBackIcon
+                  sx={{
+                    transform:
+                      i18n.language === "ar"
+                        ? "rotate(180deg)"
+                        : "rotate(0deg)",
+                  }}
+                  fontSize="small"
+                />
+                {t("forgotPassword.backToLogin")}
+              </Link>
+            </Box>
+          </Box>
+        </Paper>
+      </Box>
 
-      </DialogActions>
-    </Dialog>
+      {/* ================= SUCCESS DIALOG ================= */}
+      <Dialog
+        open={openSuccess}
+        onClose={() => setOpenSuccess(false)}
+        PaperProps={{
+          sx: {
+            borderRadius: 3,
+            p: 3,
+            textAlign: "center",
+            width: "100%",
+            maxWidth: 420,
+          },
+        }}
+      >
+        <DialogContent>
+          <CheckCircleIcon
+            sx={{
+              fontSize: 70,
+              color: "success.main",
+              mb: 1,
+            }}
+          />
+
+          <Typography variant="h6" fontWeight={700} mb={1}>
+            {t("forgotPassword.successTitle") || "Email Sent"}
+          </Typography>
+
+          <Typography variant="body2" color="text.secondary">
+            {t("forgotPassword.successMessage")}
+          </Typography>
+        </DialogContent>
+      </Dialog>
+    </Container>
   );
-}
+};
+
+export default ForgotPassword;

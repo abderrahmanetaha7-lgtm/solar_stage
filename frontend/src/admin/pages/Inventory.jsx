@@ -1,9 +1,15 @@
-import WarningAmberIcon from "@mui/icons-material/WarningAmber";
+import React from "react";
+
 import {
+  Avatar,
   Box,
+  Button,
   Card,
-  CircularProgress,
+  CardContent,
+  Chip,
   Grid,
+  LinearProgress,
+  Stack,
   Table,
   TableBody,
   TableCell,
@@ -13,170 +19,355 @@ import {
   Typography,
 } from "@mui/material";
 
+import Inventory2OutlinedIcon from "@mui/icons-material/Inventory2Outlined";
+import TrendingDownOutlinedIcon from "@mui/icons-material/TrendingDownOutlined";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import WarningAmberIcon from "@mui/icons-material/WarningAmber";
+ 
+
+import Loading from "../components/Loading";
 import PageHeader from "../components/PageHeader";
+
 import { useProducts } from "../../hooks/useProducts";
 
-/* ================= STATUS STYLE (BASED ON BACKEND) ================= */
+/* ================= PRICE FORMAT ================= */
 
-function getStatusStyle(stock) {
+function formatPrice(price) {
+  const number = Number(price);
+
+  if (number >= 1000000) {
+    return `${(number / 1000000).toFixed(1)}M`;
+  }
+
+  if (number >= 1000) {
+    return `${(number / 1000).toFixed(1)}K`;
+  }
+
+  return number;
+}
+
+/* ================= STATUS ================= */
+
+function getStatus(stock) {
   if (stock <= 0) {
     return {
-      bg: "rgba(211, 47, 47, 0.1)",
-      border: "rgba(211, 47, 47, 0.2)",
-      dot: "#d32f2f",
-      text: "#d32f2f",
-      label: "Rupture de stock",
+      label: "Rupture",
+      color: "error",
     };
   }
 
   if (stock <= 5) {
     return {
-      bg: "rgba(255, 152, 0, 0.15)",
-      border: "rgba(255, 152, 0, 0.3)",
-      dot: "#ff9800",
-      text: "#ed6c02",
-      label: "Stock faible",
+      label: "Faible",
+      color: "warning",
+    };
+  }
+
+  if (stock <= 20) {
+    return {
+      label: "Moyen",
+      color: "info",
     };
   }
 
   return {
-    bg: "rgba(76, 175, 80, 0.1)",
-    border: "rgba(76, 175, 80, 0.2)",
-    dot: "#4caf50",
-    text: "#2e7d32",
-    label: "En stock",
+    label: "Disponible",
+    color: "success",
   };
 }
 
-export default function InventoryPage() {
+export default function InventoryPage() { 
+
   const { products = [], loading } = useProducts();
 
-  /* ================= BACKEND DATA ONLY ================= */
-  const lowOrOut = products.filter((p) => p.stockQuantity <= 5);
+  /* ================= DATA ================= */
+
+  const outOfStock = products.filter((p) => Number(p.stock_quantity) <= 0);
+
+  const lowStock = products.filter(
+    (p) => Number(p.stock_quantity) > 0 && Number(p.stock_quantity) <= 5,
+  );
+
+  const totalProducts = products.length;
 
   if (loading) {
-    return (
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "50vh",
-          gap: 2,
-        }}
-      >
-        <CircularProgress />
-        <Typography>Chargement...</Typography>
-      </Box>
-    );
+    return <Loading />;
   }
 
   return (
     <>
       {/* HEADER */}
+
       <PageHeader
         title="Inventaire"
-        description="Suivi des niveaux de stock en temps réel."
+        description="Gestion et suivi des stocks produits."
       />
 
-      {/* ALERT */}
-      {lowOrOut.length > 0 && (
-        <Box
-          sx={{
-            display: "flex",
-            gap: 2,
-            mb: 3,
-            p: 2,
-            borderRadius: 2,
-            bgcolor: "rgba(255, 152, 0, 0.1)",
-            border: "1px solid rgba(255, 152, 0, 0.3)",
-          }}
-        >
-          <WarningAmberIcon sx={{ color: "#ed6c02" }} />
-          <Box>
-            <Typography fontWeight={600} color="#ed6c02">
-              Attention au stock
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              {lowOrOut.length} produits signalés par le backend.
-            </Typography>
-          </Box>
-        </Box>
-      )}
+      {/* KPI CARDS */}
+
+      <Grid container spacing={2} sx={{ mb: 3 }}>
+        <Grid size={{ xs: 12, md: 4 }}>
+          <Card
+            sx={{
+              borderRadius: 3,
+              border: "1px solid",
+              borderColor: "divider",
+              boxShadow: "none",
+            }}
+          >
+            <CardContent>
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "flex-start",
+                }}
+              >
+                {/* LEFT */}
+
+                <Box>
+                  <Typography variant="body2" color="text.secondary">
+                    Produits
+                  </Typography>
+
+                  <Typography
+                    variant="h4"
+                    fontWeight={700}
+                    color="warning.main"
+                    sx={{ mt: 1 }}
+                  >
+                    {totalProducts}
+                  </Typography>
+                </Box>
+
+                {/* RIGHT ICON */}
+                <Inventory2OutlinedIcon
+                  sx={{
+                    fontSize: 28,
+                  }}
+                  color="primary"
+                />
+              </Box>
+            </CardContent>
+          </Card>
+        </Grid>
+
+        {/* LOW STOCK */}
+        <Grid size={{ xs: 12, md: 4 }}>
+          <Card
+            sx={{
+              borderRadius: 3,
+              border: "1px solid",
+              borderColor: "divider",
+              boxShadow: "none",
+            }}
+          >
+            <CardContent>
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "flex-start",
+                }}
+              >
+                {/* LEFT */}
+
+                <Box>
+                  <Typography variant="body2" color="text.secondary">
+                    Stock faible
+                  </Typography>
+
+                  <Typography
+                    variant="h4"
+                    fontWeight={700}
+                    color="warning.main"
+                    sx={{ mt: 1 }}
+                  >
+                    {lowStock.length}
+                  </Typography>
+                </Box>
+
+                {/* RIGHT ICON */}
+
+                <WarningAmberIcon
+                  sx={{
+                    color: "warning.main",
+                    fontSize: 28,
+                  }}
+                />
+              </Box>
+            </CardContent>
+          </Card>
+        </Grid>
+
+        {/* OUT OF STOCK */}
+
+        <Grid size={{ xs: 12, md: 4 }}>
+          <Card
+            sx={{
+              borderRadius: 3,
+              border: "1px solid",
+              borderColor: "divider",
+              boxShadow: "none",
+            }}
+          >
+            <CardContent>
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "flex-start",
+                }}
+              >
+                {/* LEFT */}
+
+                <Box>
+                  <Typography variant="body2" color="text.secondary">
+                    Rupture de stock
+                  </Typography>
+
+                  <Typography
+                    variant="h4"
+                    fontWeight={700}
+                    color="error.main"
+                    sx={{ mt: 1 }}
+                  >
+                    {outOfStock.length}
+                  </Typography>
+                </Box>
+
+                {/* RIGHT ICON */}
+
+                <TrendingDownOutlinedIcon
+                  sx={{
+                    color: "error.main",
+                    fontSize: 28,
+                  }}
+                />
+              </Box>
+            </CardContent>
+          </Card>
+        </Grid>
+      </Grid>
 
       {/* TABLE */}
-      <Card sx={{ p: 2 }}>
+
+      <Card
+        sx={{
+          borderRadius: 3,
+          overflow: "hidden",
+        }}
+      >
         <TableContainer>
           <Table>
             <TableHead>
               <TableRow>
                 <TableCell>Produit</TableCell>
-                {/* <TableCell>SKU</TableCell> */}
-                <TableCell>Quantité</TableCell>
-                <TableCell>Statut</TableCell>
+
+                <TableCell>Catégorie</TableCell>
+
+                <TableCell align="center">Prix</TableCell>
+
+                <TableCell align="center">Stock</TableCell>
+
+                <TableCell align="center">Niveau</TableCell>
+
+                <TableCell align="center">Statut</TableCell>
               </TableRow>
             </TableHead>
 
             <TableBody>
-              {products.map((p) => {
-                const statusStyle = getStatusStyle(p.stockQuantity);
+              {products.map((product) => {
+                const stock = Number(product.stock_quantity || 0);
+
+                const status = getStatus(stock);
 
                 return (
-                  <TableRow key={p.id}>
+                  <TableRow key={product.id} hover>
                     {/* PRODUCT */}
+
                     <TableCell>
-                      <Box
-                        sx={{ display: "flex", alignItems: "center", gap: 2 }}
-                      >
-                        <Typography fontWeight={500}>
-                          {p.productName}
-                        </Typography>
-                      </Box>
-                    </TableCell>
-
-                    {/* SKU */}
-                    {/* <TableCell sx={{ color: "text.secondary" }}>
-                      {p.sku}
-                    </TableCell> */}
-
-                    {/* STOCK */}
-                    <TableCell fontWeight={600}>{p.stockQuantity}</TableCell>
-
-                    {/* STATUS */}
-                    <TableCell>
-                      <Box
-                        sx={{
-                          display: "inline-flex",
-                          alignItems: "center",
-                          gap: 1,
-                          px: 1.2,
-                          py: 0.5,
-                          borderRadius: 999,
-                          border: "1px solid",
-                          bgcolor: statusStyle.bg,
-                          borderColor: statusStyle.border,
-                        }}
-                      >
-                        <Box
+                      <Stack direction="row" spacing={2} alignItems="center">
+                        <Avatar
+                          src={
+                            product.images?.[0]?.image
+                              ? `${import.meta.env.VITE_API_URL}/storage/${product.images[0].image}`
+                              : ""
+                          }
+                          variant="rounded"
                           sx={{
-                            width: 6,
-                            height: 6,
-                            borderRadius: "50%",
-                            bgcolor: statusStyle.dot,
+                            width: 55,
+                            height: 55,
                           }}
                         />
 
-                        <Typography
+                        <Box>
+                          <Typography fontWeight={700}>
+                            {product.name_fr}
+                          </Typography>
+
+                          <Typography variant="body2" color="text.secondary">
+                            #{product.id}
+                          </Typography>
+                        </Box>
+                      </Stack>
+                    </TableCell>
+
+                    {/* CATEGORY */}
+
+                    <TableCell>{product.category?.name || "—"}</TableCell>
+
+                    {/* PRICE */}
+
+                    <TableCell align="center">
+                      <Typography fontWeight={700}>
+                        {formatPrice(product.price)} MAD
+                      </Typography>
+                    </TableCell>
+
+                    {/* STOCK */}
+
+                    <TableCell align="center">
+                      <Typography
+                        fontWeight={700}
+                        color={stock <= 5 ? "error.main" : "text.primary"}
+                      >
+                        {stock}
+                      </Typography>
+                    </TableCell>
+
+                    {/* LEVEL */}
+
+                    <TableCell align="center">
+                      <Box
+                        sx={{
+                          width: 120,
+                          mx: "auto",
+                        }}
+                      >
+                        <LinearProgress
+                          variant="determinate"
+                          value={stock >= 100 ? 100 : stock}
+                          color={status.color}
                           sx={{
-                            fontSize: 12,
-                            fontWeight: 500,
-                            color: statusStyle.text,
-                            textTransform: "capitalize",
+                            height: 8,
+                            borderRadius: 999,
                           }}
-                        >
-                          {statusStyle.label}
-                        </Typography>
+                        />
                       </Box>
+                    </TableCell>
+
+                    {/* STATUS */}
+
+                    <TableCell align="center">
+                      <Chip
+                        label={status.label}
+                        color={status.color}
+                        variant="outlined"
+                        sx={{
+                          fontWeight: 600,
+                        }}
+                      />
                     </TableCell>
                   </TableRow>
                 );

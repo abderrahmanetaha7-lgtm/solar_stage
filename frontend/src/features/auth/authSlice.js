@@ -6,31 +6,34 @@ import {
   registerApi,
   logoutApi,
   userApi,
-  updateProfileApi,
-  changePasswordApi,
-  deleteAccountApi,
+  forgotPasswordApi,
+  resetPasswordApi,
 } from "../../api/authApi";
 
 /* ================= LOGIN ================= */
 
-export const login = createAsyncThunk(
-  "auth/login",
-  async (data, thunkAPI) => {
-    try {
-      await getCSRF();
+export const login = createAsyncThunk("auth/login", async (data, thunkAPI) => {
+  try {
+    await getCSRF();
 
-      await loginApi(data);
+    await loginApi(data);
 
-      const user = await userApi();
+    const userRes = await userApi();
 
-      return user.data;
-    } catch (error) {
-      return thunkAPI.rejectWithValue(
-        error.response?.data || "Login failed"
-      );
-    }
+    const user = userRes.data.user;
+
+    return {
+      user,
+      isAdmin: user.role === "admin",
+    };
+  } catch (error) {
+    return thunkAPI.rejectWithValue(
+      error.response?.data || {
+        message: "Échec de connexion",
+      },
+    );
   }
-);
+});
 
 /* ================= REGISTER ================= */
 
@@ -42,18 +45,20 @@ export const register = createAsyncThunk(
 
       await registerApi(data);
 
-      const user = await userApi();
+      const res = await userApi();
 
-      return user.data;
+      return res.data.user;
     } catch (error) {
       return thunkAPI.rejectWithValue(
-        error.response?.data || "Register failed"
+        error.response?.data || {
+          message: "Échec d'inscription",
+        },
       );
     }
-  }
+  },
 );
 
-/* ================= FETCH CURRENT USER ================= */
+/* ================= FETCH USER ================= */
 
 export const fetchUser = createAsyncThunk(
   "auth/fetchUser",
@@ -61,94 +66,94 @@ export const fetchUser = createAsyncThunk(
     try {
       const res = await userApi();
 
-      return res.data;
+      return res.data.user;
     } catch (error) {
-      return thunkAPI.rejectWithValue(
-        error.response?.data || "Failed to fetch user"
-      );
+      console.log(error);
+      return thunkAPI.rejectWithValue("Unauthenticated");
     }
-  }
-);
-
-/* ================= UPDATE PROFILE ================= */
-
-export const updateProfile = createAsyncThunk(
-  "auth/updateProfile",
-  async (data, thunkAPI) => {
-    try {
-      const res = await updateProfileApi(data);
-
-      return res.data;
-    } catch (error) {
-      return thunkAPI.rejectWithValue(
-        error.response?.data || "Failed to update profile"
-      );
-    }
-  }
-);
-
-/* ================= CHANGE PASSWORD ================= */
-
-export const changePassword = createAsyncThunk(
-  "auth/changePassword",
-  async (data, thunkAPI) => {
-    try {
-      const res = await changePasswordApi(data);
-
-      return res.data;
-    } catch (error) {
-      return thunkAPI.rejectWithValue(
-        error.response?.data || "Failed to change password"
-      );
-    }
-  }
-);
-
-/* ================= DELETE ACCOUNT ================= */
-
-export const deleteAccount = createAsyncThunk(
-  "auth/deleteAccount",
-  async (_, thunkAPI) => {
-    try {
-      await deleteAccountApi();
-
-      return null;
-    } catch (error) {
-      return thunkAPI.rejectWithValue(
-        error.response?.data || "Failed to delete account"
-      );
-    }
-  }
+  },
 );
 
 /* ================= LOGOUT ================= */
 
-export const logout = createAsyncThunk(
-  "auth/logout",
-  async (_, thunkAPI) => {
-    try {
-      await logoutApi();
+export const logout = createAsyncThunk("auth/logout", async (_, thunkAPI) => {
+  try {
+    await getCSRF();
 
-      return null;
+    await logoutApi();
+
+    return true;
+  } catch (error) {
+    return thunkAPI.rejectWithValue(
+      error.response?.data?.message || "Logout failed",
+    );
+  }
+});
+
+export const forgotPassword = createAsyncThunk(
+  "auth/forgotPassword",
+  async (data, thunkAPI) => {
+    try {
+      await getCSRF();
+
+      await forgotPasswordApi(data);
+
+      return true;
     } catch (error) {
       return thunkAPI.rejectWithValue(
-        error.response?.data || "Logout failed"
+        error.response?.data || { message: "Error sending email" },
       );
     }
-  }
+  },
 );
+
+export const resetPassword = createAsyncThunk(
+  "auth/resetPassword",
+  async (data, thunkAPI) => {
+    try {
+      await getCSRF();
+
+      await resetPasswordApi(data);
+
+      return true;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data || { message: "Reset failed" },
+      );
+    }
+  },
+);
+
+/* ================= SLICE ================= */
 
 const authSlice = createSlice({
   name: "auth",
 
   initialState: {
     user: null,
-    loading: false,
-    error: null,
-    authenticated: false,
-  },
+    admin: null,
 
-  reducers: {},
+    authenticated: false,
+    adminAuthenticated: false,
+
+    loading: false,
+
+    checkingAuth: true,
+
+    error: null,
+  },
+  reducers: {
+    setUser: (state, action) => {
+      state.user = action.payload;
+
+      state.authenticated = true;
+
+      if (action.payload?.role === "admin") {
+        state.admin = action.payload;
+        state.adminAuthenticated = true;
+      }
+    },
+  },
 
   extraReducers: (builder) => {
     builder
@@ -162,8 +167,19 @@ const authSlice = createSlice({
 
       .addCase(login.fulfilled, (state, action) => {
         state.loading = false;
-        state.user = action.payload;
+
+        const { user, isAdmin } = action.payload;
+
+        state.user = user;
         state.authenticated = true;
+
+        if (isAdmin) {
+          state.admin = user;
+          state.adminAuthenticated = true;
+        } else {
+          state.admin = null;
+          state.adminAuthenticated = false;
+        }
       })
 
       .addCase(login.rejected, (state, action) => {
@@ -180,6 +196,7 @@ const authSlice = createSlice({
 
       .addCase(register.fulfilled, (state, action) => {
         state.loading = false;
+
         state.user = action.payload;
         state.authenticated = true;
       })
@@ -192,67 +209,29 @@ const authSlice = createSlice({
       /* ================= FETCH USER ================= */
 
       .addCase(fetchUser.pending, (state) => {
-        state.loading = true;
+        state.checkingAuth = true;
       })
 
       .addCase(fetchUser.fulfilled, (state, action) => {
-        state.loading = false;
         state.user = action.payload;
         state.authenticated = true;
+
+        if (action.payload.role === "admin") {
+          state.admin = action.payload;
+          state.adminAuthenticated = true;
+        }
+
+        state.checkingAuth = false;
       })
 
       .addCase(fetchUser.rejected, (state) => {
-        state.loading = false;
         state.user = null;
+        state.admin = null;
+
         state.authenticated = false;
-      })
+        state.adminAuthenticated = false;
 
-      /* ================= UPDATE PROFILE ================= */
-
-      .addCase(updateProfile.pending, (state) => {
-        state.loading = true;
-      })
-
-      .addCase(updateProfile.fulfilled, (state, action) => {
-        state.loading = false;
-        state.user = action.payload;
-      })
-
-      .addCase(updateProfile.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
-      })
-
-      /* ================= CHANGE PASSWORD ================= */
-
-      .addCase(changePassword.pending, (state) => {
-        state.loading = true;
-      })
-
-      .addCase(changePassword.fulfilled, (state) => {
-        state.loading = false;
-      })
-
-      .addCase(changePassword.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
-      })
-
-      /* ================= DELETE ACCOUNT ================= */
-
-      .addCase(deleteAccount.pending, (state) => {
-        state.loading = true;
-      })
-
-      .addCase(deleteAccount.fulfilled, (state) => {
-        state.loading = false;
-        state.user = null;
-        state.authenticated = false;
-      })
-
-      .addCase(deleteAccount.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
+        state.checkingAuth = false;
       })
 
       /* ================= LOGOUT ================= */
@@ -263,15 +242,49 @@ const authSlice = createSlice({
 
       .addCase(logout.fulfilled, (state) => {
         state.loading = false;
+
         state.user = null;
+        state.admin = null;
+
         state.authenticated = false;
+        state.adminAuthenticated = false;
+
+        state.error = null;
       })
 
-      .addCase(logout.rejected, (state, action) => {
+      .addCase(logout.rejected, (state) => {
+        state.loading = false;
+      })
+
+      // ----------------------
+
+      .addCase(forgotPassword.pending, (state) => {
+        state.loading = true;
+      })
+
+      .addCase(forgotPassword.fulfilled, (state) => {
+        state.loading = false;
+      })
+
+      .addCase(forgotPassword.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+
+      .addCase(resetPassword.pending, (state) => {
+        state.loading = true;
+      })
+
+      .addCase(resetPassword.fulfilled, (state) => {
+        state.loading = false;
+      })
+
+      .addCase(resetPassword.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });
   },
 });
 
+export const { setUser } = authSlice.actions;
 export default authSlice.reducer;

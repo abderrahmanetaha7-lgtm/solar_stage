@@ -6,41 +6,97 @@ import {
   Card,
   CardContent,
   TextField,
-  MenuItem,
   Button,
-  Divider,
-  Link,
   Stack,
   Paper,
   Snackbar,
+  CircularProgress,
+  Alert,
 } from "@mui/material";
+
 import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
 import LocalPhoneOutlinedIcon from "@mui/icons-material/LocalPhoneOutlined";
 import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
-import TaskAltOutlinedIcon from "@mui/icons-material/TaskAltOutlined";
 import SendOutlinedIcon from "@mui/icons-material/SendOutlined";
+
 import { useState } from "react";
+
 import { useTranslation } from "react-i18next";
+
+import { useSettings } from "../hooks/useSettings";
+
+import { sendContactMessage } from "../api/dataApi";
 
 export default function Contact() {
   const { t, i18n } = useTranslation();
 
-  const [submitted, setSubmitted] = useState(false);
-  const [open, setOpen] = useState(false);
+  const { settings, loading: settingsLoading } = useSettings();
 
-  function handleSubmitted() {
-    setSubmitted(true);
-    setOpen(true);
-    setTimeout(() => {
-      setOpen(false);
-    }, 2000);
-  }
+  /* ================= FORM ================= */
+
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    subject: "",
+    message: "",
+  });
+
+  /* ================= STATES ================= */
+
+  const [loading, setLoading] = useState(false);
+
+  const [successOpen, setSuccessOpen] = useState(false);
+
+  const [errors, setErrors] = useState({});
+
+  /* ================= HANDLE CHANGE ================= */
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  /* ================= HANDLE SUBMIT ================= */
+
+  const handleSubmitted = async () => {
+    try {
+      setLoading(true);
+
+      setErrors({});
+
+      await sendContactMessage(formData);
+
+      setSuccessOpen(true);
+
+      setFormData({
+        name: "",
+        email: "",
+        phone: "",
+        subject: "",
+        message: "",
+      });
+
+      setTimeout(() => {
+        setSuccessOpen(false);
+      }, 2500);
+    } catch (error) {
+      setErrors(error.response?.data?.errors || {});
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <>
-      <Box sx={{ py: 8, mt: 0 }}>
+      <Box sx={{ py: 8 }}>
         <Container maxWidth="lg">
-          {/* ===== HEADER ===== */}
+          {/* ================= HEADER ================= */}
+
           <Box
             sx={{
               display: "flex",
@@ -55,187 +111,268 @@ export default function Contact() {
               sx={{
                 textAlign: "center",
                 fontWeight: "bold",
-                fontSize: { xs: "30px", sm: "40px", md: "50px" },
+                fontSize: {
+                  xs: "30px",
+                  sm: "40px",
+                  md: "50px",
+                },
               }}
             >
               {t("contactPage.title")}
             </Typography>
+
             <Typography
-              sx={{ textAlign: "center", color: "text.secondary", mt: 2 }}
+              sx={{
+                textAlign: "center",
+                color: "text.secondary",
+                mt: 2,
+              }}
             >
               {t("contactPage.subtitle")}
             </Typography>
           </Box>
 
-          {/* ===== CONTENT ===== */}
-          <Box sx={{ display: "flex", justifyContent: "center" }}>
-            <Grid container spacing={4}>
-              {/* ===== RIGHT CARD (FORM) ===== */}
-              <Grid size={{ xs: 12, md: 6 }}>
-                <Card sx={{ borderRadius: 3 }}>
-                  <CardContent sx={{ p: 4 }}>
-                    <Stack spacing={3}>
-                      <Grid container spacing={2}>
-                        <Grid size={{ xs: 12, sm: 6 }}>
-                          <TextField
-                            fullWidth
-                            variant="outlined"
-                            placeholder={t("contactPage.form.name")}
-                          />
-                        </Grid>
-                        <Grid size={{ xs: 12, sm: 6 }}>
-                          <TextField
-                            fullWidth
-                            variant="outlined"
-                            placeholder={t("contactPage.form.email")}
-                            type="email"
-                          />
-                        </Grid>
+          {/* ================= CONTENT ================= */}
+
+          <Grid container spacing={4}>
+            {/* ================= FORM ================= */}
+
+            <Grid size={{ xs: 12, md: 6 }}>
+              <Card sx={{ borderRadius: 4 }}>
+                <CardContent sx={{ p: 4 }}>
+                  <Stack spacing={3}>
+                    {/* NAME + EMAIL */}
+
+                    <Grid container spacing={2}>
+                      <Grid size={{ xs: 12, sm: 6 }}>
+                        <TextField
+                          fullWidth
+                          name="name"
+                          value={formData.name}
+                          onChange={handleChange}
+                          placeholder={t("contactPage.form.name")}
+                          error={!!errors.name}
+                          helperText={errors.name?.[0]}
+                        />
                       </Grid>
 
-                      <TextField
-                        fullWidth
-                        variant="outlined"
-                        placeholder={t("contactPage.form.phone")}
-                        sx={{ mt: 2 }}
-                      />
-                      <TextField
-                        fullWidth
-                        variant="outlined"
-                        placeholder={t("contactPage.form.subject")}
-                        sx={{ mt: 2 }}
-                      />
-                      <TextField
-                        fullWidth
-                        variant="outlined"
-                        placeholder={t("contactPage.form.message")}
-                        multiline
-                        rows={5}
-                        sx={{ mt: 2 }}
-                      />
+                      <Grid size={{ xs: 12, sm: 6 }}>
+                        <TextField
+                          fullWidth
+                          type="email"
+                          name="email"
+                          value={formData.email}
+                          onChange={handleChange}
+                          placeholder={t("contactPage.form.email")}
+                          error={!!errors.email}
+                          helperText={errors.email?.[0]}
+                        />
+                      </Grid>
+                    </Grid>
 
-                      <Button
-                        fullWidth
-                        variant="contained"
-                        size="large"
-                        endIcon={
+                    {/* PHONE */}
+
+                    <TextField
+                      fullWidth
+                      name="phone"
+                      value={formData.phone}
+                      onChange={handleChange}
+                      placeholder={t("contactPage.form.phone")}
+                      error={!!errors.phone}
+                      helperText={errors.phone?.[0]}
+                    />
+
+                    {/* SUBJECT */}
+
+                    <TextField
+                      fullWidth
+                      name="subject"
+                      value={formData.subject}
+                      onChange={handleChange}
+                      placeholder={t("contactPage.form.subject")}
+                      error={!!errors.subject}
+                      helperText={errors.subject?.[0]}
+                    />
+
+                    {/* MESSAGE */}
+
+                    <TextField
+                      fullWidth
+                      multiline
+                      rows={5}
+                      name="message"
+                      value={formData.message}
+                      onChange={handleChange}
+                      placeholder={t("contactPage.form.message")}
+                      error={!!errors.message}
+                      helperText={errors.message?.[0]}
+                    />
+
+                    {/* BUTTON */}
+
+                    <Button
+                      fullWidth
+                      variant="contained"
+                      size="large"
+                      disabled={loading}
+                      onClick={handleSubmitted}
+                      endIcon={
+                        !loading && (
                           <SendOutlinedIcon
                             sx={{
-                              display: "flex",
                               transform:
                                 i18n.language === "ar"
                                   ? "rotate(180deg)"
                                   : "rotate(0deg)",
                             }}
                           />
-                        }
-                        sx={{
-                          justifyContent:"space-between",
-                          mt: 3,
-                          borderRadius: 2,
-                        }}
-                        onClick={handleSubmitted}
-                      >
-                        {t("contactPage.form.button")}
-                      </Button>
-                    </Stack>
-                  </CardContent>
-                </Card>
-              </Grid>
-              {/* ===== LEFT CARD ===== */}
-              <Grid size={{ xs: 12, md: 6 }}>
-                <Card sx={{ borderRadius: 3, background: "none" }}>
-                  <CardContent sx={{ p: 2 }}>
-                    {[
-                      {
-                        icon: <EmailOutlinedIcon />,
-                        label: "contactPage.info.email",
-                        value: "moyasol.sol@gmail.com",
-                      },
-                      {
-                        icon: <LocalPhoneOutlinedIcon />,
-                        label: "contactPage.info.phone",
-                        value: "0726553374",
-                      },
-                      {
-                        icon: <LocationOnOutlinedIcon />,
-                        label: "contactPage.info.address",
-                        value: t("contactPage.info.city"),
-                      },
-                    ].map((item, i) => (
-                      <Grid size={{ xs: 12 }} key={i}>
-                        <Paper
-                          sx={{
-                            p: 3,
-                            display: "flex",
-                            gap: 2,
-                            borderRadius: 3,
-                            height: "100%",
-                            mb: 3,
-                            width: "500px",
-                          }}
-                        >
-                          <Box
-                            sx={{
-                              width: 48,
-                              height: 48,
-                              borderRadius: 2,
-                              color: "primary.light",
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "center",
-                              flexShrink: 0,
-                            }}
-                          >
-                            {item.icon}
-                          </Box>
-
-                          <Box>
-                            <Typography fontWeight="medium">
-                              {t(item.label)}
-                            </Typography>
-                            <Typography variant="body2" color="text.secondary">
-                              {item.value}
-                            </Typography>
-                          </Box>
-                        </Paper>
-                      </Grid>
-                    ))}
-                  </CardContent>
-                </Card>
-              </Grid>
+                        )
+                      }
+                      sx={{
+                        justifyContent: "space-between",
+                        borderRadius: 3,
+                        height: 52,
+                      }}
+                    >
+                      {loading ? (
+                        <CircularProgress size={24} color="inherit" />
+                      ) : (
+                        t("contactPage.form.button")
+                      )}
+                    </Button>
+                  </Stack>
+                </CardContent>
+              </Card>
             </Grid>
-          </Box>
+
+            {/* ================= CONTACT INFO ================= */}
+
+            <Grid size={{ xs: 12, md: 6 }}>
+              <Card
+                sx={{
+                  borderRadius: 4,
+                  background: "transparent",
+                  boxShadow: "none",
+                }}
+              >
+                <CardContent sx={{ p: 0 }}>
+                  {[
+                    {
+                      icon: <EmailOutlinedIcon />,
+                      label: t("contactPage.info.email"),
+                      value: settings?.contact_email || "contact@example.com",
+                    },
+                    {
+                      icon: <LocalPhoneOutlinedIcon />,
+                      label: t("contactPage.info.phone"),
+                      value: settings?.phone || "+212600000000",
+                    },
+                    {
+                      icon: <LocationOnOutlinedIcon />,
+                      label: t("contactPage.info.address"),
+                      value: settings?.address || t("contactPage.info.city"),
+                    },
+                  ].map((item, index) => (
+                    <Paper
+                      key={index}
+                      sx={{
+                        p: 3,
+                        mb: 3,
+                        display: "flex",
+                        gap: 2,
+                        borderRadius: 4,
+                        alignItems: "center",
+                      }}
+                    >
+                      <Box
+                        sx={{
+                          width: 52,
+                          height: 52,
+                          borderRadius: 3,
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          bgcolor: "primary.main",
+                          color: "#fff",
+                          flexShrink: 0,
+                        }}
+                      >
+                        {item.icon}
+                      </Box>
+
+                      <Box>
+                        <Typography fontWeight={700}>{item.label}</Typography>
+
+                        <Typography variant="body2" color="text.secondary">
+                          {item.value}
+                        </Typography>
+                      </Box>
+                    </Paper>
+                  ))}
+                </CardContent>
+              </Card>
+            </Grid>
+          </Grid>
+
+          {/* ================= MAP ================= */}
 
           <Paper
             sx={{
-              height: { xs: 250, md: 350 },
-              borderRadius: 3,
+              height: {
+                xs: 250,
+                md: 350,
+              },
+              borderRadius: 4,
               overflow: "hidden",
               mt: 8,
             }}
           >
-            <iframe
-              title="map"
-              width="100%"
-              height="100%"
-              style={{ border: 0 }}
-              loading="lazy"
-              allowFullScreen
-              src="https://www.google.com/maps?q=Marrakech&output=embed"
-            />
+            {settingsLoading ? (
+              <Box
+                sx={{
+                  width: "100%",
+                  height: "100%",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <CircularProgress />
+              </Box>
+            ) : (
+              <iframe
+                title="Google Map"
+                width="100%"
+                height="100%"
+                style={{ border: 0 }}
+                loading="lazy"
+                allowFullScreen
+                src={settings?.google_maps}
+              />
+            )}
           </Paper>
         </Container>
       </Box>
-      {submitted && (
-        <Snackbar
-          sx={{ bgcolor: "green", borderRadius: "15px", mt: 6 }}
-          anchorOrigin={{ vertical: "top", horizontal: "center" }}
-          open={open}
-          message="Message Sent!"
-          key={{ vertical: "top", horizontal: "center" }}
-        />
-      )}
+
+      {/* ================= SUCCESS MESSAGE ================= */}
+
+      <Snackbar
+        open={successOpen}
+        anchorOrigin={{
+          vertical: "top",
+          horizontal: "center",
+        }}
+      >
+        <Alert
+          severity="success"
+          variant="filled"
+          sx={{
+            borderRadius: 3,
+          }}
+        >
+          {t("contactPage.successMessage")}
+        </Alert>
+      </Snackbar>
     </>
   );
 }

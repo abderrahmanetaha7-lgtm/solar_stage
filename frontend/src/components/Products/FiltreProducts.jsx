@@ -11,6 +11,7 @@ import {
   InputLabel,
   FormControl,
   Chip,
+  Collapse,
 } from "@mui/material";
 import { Tune } from "@mui/icons-material";
 import { useTranslation } from "react-i18next";
@@ -23,47 +24,76 @@ export default function FiltreProducts({ value }) {
     setCategory,
     priceRange,
     setPriceRange,
-    minEfficiency,
-    setMinEfficiency,
   } = value || {};
 
   const { t } = useTranslation();
+
   const [showFilters, setShowFilters] = useState(false);
 
   const categories = [
-    { value: "all", label: "productsPage.category.all" },
-    { value: "panels", label: "productsPage.category.panels" },
-    { value: "batteries", label: "productsPage.category.batteries" },
-    { value: "inverters", label: "productsPage.category.inverters" },
+    {
+      value: 0,
+      label: "productsPage.category.all",
+    },
+    {
+      value: 1,
+      label: "productsPage.category.panels",
+    },
+    {
+      value: 2,
+      label: "productsPage.category.batteries",
+    },
+    {
+      value: 3,
+      label: "productsPage.category.inverters",
+    },
+    {
+      value: 4,
+      label: "productsPage.category.accessories",
+    },
   ];
 
   return (
     <>
-      {/* Search + Filter Button */}
+      {/* SEARCH + FILTER BUTTON */}
       <Box
         sx={{
           display: "flex",
           justifyContent: "center",
-          width: { xs: "100%", sm: "80%", md: "60%" },
+          alignItems: "center",
           flexDirection: { xs: "column", sm: "row" },
           gap: 1.5,
-          alignItems: "center",
+          width: {
+            xs: "100%",
+            sm: "85%",
+            md: "65%",
+          },
           mx: "auto",
         }}
       >
         <TextField
+          fullWidth
           variant="outlined"
           placeholder={t("productsPage.search")}
           value={search ?? ""}
           onChange={(e) => setSearch?.(e.target.value)}
-          fullWidth
           sx={{
             "& .MuiOutlinedInput-root": {
-              borderRadius: "50px",
-              height: "44px",
+              height: 46,
+              borderRadius: "999px",
+              backgroundColor: "background.paper",
+
+              "& fieldset": {
+                borderColor: "divider",
+              },
+
+              "&:hover fieldset": {
+                borderColor: "text.primary",
+              },
+
               "&.Mui-focused fieldset": {
                 borderColor: "text.primary",
-                borderWidth: "2px",
+                borderWidth: 2,
               },
             },
           }}
@@ -74,114 +104,108 @@ export default function FiltreProducts({ value }) {
           startIcon={<Tune />}
           onClick={() => setShowFilters((prev) => !prev)}
           sx={{
-            height: "44px",
-            borderRadius: "50px",
-            textTransform: "none",
+            gap:1.2,
+            height: 46,
+            borderRadius: "999px",
             px: 3,
-            width: { xs: "100%", sm: "auto" },
+            textTransform: "none",
+            fontWeight: 600,
+            minWidth: {
+              xs: "100%",
+              sm: "auto",
+            },
           }}
         >
           {t("productsPage.filters")}
         </Button>
       </Box>
 
-      {/* Filters Panel */}
-      {showFilters && (
+      {/* FILTERS PANEL */}
+      <Collapse in={showFilters}>
         <Box
           sx={{
-            border: "1px solid #ddd",
-            borderRadius: 2,
             width: "100%",
-            display: "flex",
-            justifyContent: "center",
             mt: 4,
+            border: "1px solid",
+            borderColor: "divider",
+            borderRadius: 4,
+            px: { xs: 2, md: 4 },
             py: 4,
-            px: 3,
-            minHeight: { xs: 140, sm: 130, md: 120 },
+            transition: "all 0.3s ease",
           }}
         >
-          <Grid
-            container
-            spacing={3}
-            sx={{
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            {/* Category */}
-            <Grid size={{ xs: 12, sm: 4 }}>
+          <Grid container spacing={5}>
+            {/* CATEGORY */}
+            <Grid size={{ xs: 12, md: 6 }}>
               <FormControl fullWidth>
                 <InputLabel>{t("productsPage.category.label")}</InputLabel>
+
                 <Select
-                  value={category ?? "all"}
+                  value={category ?? 0}
                   label={t("productsPage.category.label")}
                   onChange={(e) => setCategory?.(e.target.value)}
+                  sx={{
+                    borderRadius: 3,
+                  }}
                 >
-                  {categories.map((c) => (
-                    <MenuItem key={c.value} value={c.value}>
-                      {t(c.label)}
+                  {categories.map((item) => (
+                    <MenuItem key={item.value} value={item.value}>
+                      {t(item.label)}
                     </MenuItem>
                   ))}
                 </Select>
               </FormControl>
             </Grid>
 
-            {/* Price */}
-            <Grid size={{ xs: 12, sm: 4 }}>
-              <Typography sx={{ mb: 1 }}>
-                {t("productsPage.price.max")} : ${priceRange?.[1] ?? 0}
+            {/* PRICE RANGE */}
+            <Grid size={{ xs: 12, md: 6 }}>
+              <Typography
+                variant="body2"
+                sx={{
+                  mb: 2,
+                  fontWeight: 500,
+                }}
+              >
+                {t("productsPage.price.max")} : ${priceRange?.[0] ?? 0}
+                {" - "}${priceRange?.[1] ?? 100000}
               </Typography>
 
               <Slider
-                value={priceRange?.[1] ?? 0}
+                value={priceRange ?? [0, 100000]}
                 min={0}
-                max={10000}
-                onChange={(e, val) => {
-                  if (Array.isArray(priceRange) && typeof val === "number") {
-                    setPriceRange?.([priceRange[0], val]);
-                  }
-                }}
-              />
-            </Grid>
-
-            {/* Efficiency */}
-            <Grid size={{ xs: 12, sm: 4 }}>
-              <Typography sx={{ mb: 1 }}>
-                {t("productsPage.efficiency.min")} : {minEfficiency ?? 0}%
-              </Typography>
-
-              <Slider
-                value={minEfficiency ?? 0}
-                min={0}
-                max={100}
-                onChange={(e, val) => {
-                  if (typeof val === "number") {
-                    setMinEfficiency?.(val);
-                  }
-                }}
+                max={100000}
+                onChange={(e, value) => setPriceRange?.(value)}
+                valueLabelDisplay="auto"
               />
             </Grid>
           </Grid>
         </Box>
-      )}
+      </Collapse>
 
-      {/* Category Chips */}
+      {/* CATEGORY CHIPS */}
       <Box
         sx={{
-          mt: 3,
+          mt: 4,
+          mb: 5,
           display: "flex",
           justifyContent: "center",
-          gap: 1,
-          mb: 5,
+          alignItems: "center",
+          gap: 1.2,
           flexWrap: "wrap",
         }}
       >
-        {categories.map((c) => (
+        {categories.map((item) => (
           <Chip
-            key={c.value}
-            label={t(c.label)}
-            color={category === c.value ? "primary" : "default"}
-            onClick={() => setCategory?.(c.value)}
+            key={item.value}
+            label={t(item.label)}
+            onClick={() => setCategory?.(item.value)}
+            color={category === item.value ? "primary" : "default"}
+            variant={category === item.value ? "filled" : "outlined"}
+            sx={{
+              fontWeight: 500,
+              borderRadius: "999px",
+              px: 1,
+            }}
           />
         ))}
       </Box>

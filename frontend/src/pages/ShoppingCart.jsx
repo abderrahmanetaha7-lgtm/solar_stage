@@ -1,548 +1,149 @@
-import React from "react";
+// ShoppingCart.jsx
+
+import { useState } from "react";
+
 import {
+  Box,
+  Button,
   Container,
   Grid,
-  Paper,
   Typography,
-  Box,
-  IconButton,
-  Button,
-  Divider,
-  useTheme,
-  useMediaQuery,
   Dialog,
   DialogTitle,
   DialogContent,
   DialogContentText,
   DialogActions,
-  CircularProgress,
 } from "@mui/material";
 
-import { useNavigate } from "react-router-dom";
-import Add from "@mui/icons-material/Add";
-import Remove from "@mui/icons-material/Remove";
-import Delete from "@mui/icons-material/Delete";
-import ShoppingCartOutlined from "@mui/icons-material/ShoppingCartOutlined";
+import CartList from "../components/cart/CartList";
+import CartSummary from "../components/cart/CartSummary";
+import EmptyCart from "../components/cart/EmptyCart";
+
+import useCart from "../hooks/useCart";
+
 import { useTranslation } from "react-i18next";
 
-import { useDispatch, useSelector } from "react-redux";
+export default function ShoppingCart() {
+  const { cartItems, totalArticles, clear } = useCart();
 
-import {
-  clearCart,
-  removeFromCart,
-  updateQuantity,
-} from "../features/cart/cartSlice";
-
-const ShoppingCart = ({ onCheckout }) => {
   const { t } = useTranslation();
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
-  const navigate = useNavigate();
 
-  const cart = useSelector((state) => state.cart.cart);
-  const dispatch = useDispatch();
+  const [openClearDialog, setOpenClearDialog] = useState(false);
 
-  const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false);
-  const [itemToDelete, setItemToDelete] = React.useState(null);
-  const [isLoading, setIsLoading] = React.useState(false);
-  const [imageErrors, setImageErrors] = React.useState({});
-
-  const sousTotal = React.useMemo(() => {
-    return cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
-  }, [cart]);
-
-  const taxe = React.useMemo(() => sousTotal * 0.008, [sousTotal]);
-  const total = React.useMemo(() => sousTotal + taxe, [sousTotal, taxe]);
-
-  const totalArticles = React.useMemo(() => {
-    return cart.reduce((sum, item) => sum + item.quantity, 0);
-  }, [cart]);
-
-  const handleIncrement = (item) => {
-    dispatch(
-      updateQuantity({
-        id: item.id,
-        quantity: item.quantity + 1,
-      }),
-    );
+  const handleOpenClearDialog = () => {
+    setOpenClearDialog(true);
   };
 
-  const handleDecrement = (item) => {
-    if (item.quantity <= 1) return;
-
-    dispatch(
-      updateQuantity({
-        id: item.id,
-        quantity: item.quantity - 1,
-      }),
-    );
+  const handleCloseClearDialog = () => {
+    setOpenClearDialog(false);
   };
 
-  const handleDeleteClick = (item) => {
-    setItemToDelete(item);
-    setDeleteDialogOpen(true);
+  const handleConfirmClear = () => {
+    clear();
+
+    setOpenClearDialog(false);
   };
 
-  const handleDeleteConfirm = () => {
-    if (itemToDelete) {
-      dispatch(removeFromCart(itemToDelete.id));
-    }
-
-    setDeleteDialogOpen(false);
-    setItemToDelete(null);
-  };
-
-  const handleDeleteCancel = () => {
-    setDeleteDialogOpen(false);
-    setItemToDelete(null);
-  };
-
-  const handleClearCart = () => {
-    if (window.confirm(t("cart.confirmClear"))) {
-      dispatch(clearCart());
-    }
-  };
-
-  const handleImageError = (itemId) => {
-    setImageErrors((prev) => ({
-      ...prev,
-      [itemId]: true,
-    }));
-  };
-
-  const handleCheckout = async () => {
-    setIsLoading(true);
-    try {
-      await new Promise((resolve) => setTimeout(resolve, 500));
-
-      if (onCheckout) {
-        await onCheckout(cart);
-      } else {
-        localStorage.setItem("cart", JSON.stringify(cart));
-        navigate("/checkout", { state: { cart } });
-      }
-    } catch (error) {
-      console.error("Checkout failed:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const getImageUrl = (item) => {
-    if (imageErrors[item.id]) {
-      return "https://via.placeholder.com/500x300?text=Image+Not+Found";
-    }
-
-    if (item.image) {
-      if (Array.isArray(item.image)) {
-        return item.image[0];
-      }
-      return item.image;
-    }
-
-    return "https://via.placeholder.com/500x300?text=No+Image";
-  };
-
-  if (cart.length === 0) {
-    return (
-      <Container maxWidth="lg" sx={{ py: 6, mt: 3 }}>
-        <Box
-          sx={{
-            textAlign: "center",
-            py: 8,
-          }}
-        >
-          <ShoppingCartOutlined
-            sx={{
-              fontSize: 80,
-              color: "text.secondary",
-              mb: 2,
-              opacity: 0.5,
-            }}
-          />
-          <Typography variant="h5" fontWeight={700} gutterBottom>
-            {t("cart.emptyTitle")}
-          </Typography>
-          <Typography color="text.secondary" mb={4}>
-            {t("cart.emptyMessage")}
-          </Typography>
-          <Button
-            variant="contained"
-            sx={{
-              py: 1.5,
-              px: 4,
-              borderRadius: "16px",
-              fontWeight: 700,
-              textTransform: "none",
-            }}
-            href="/products"
-          >
-            {t("cart.continueShopping")}
-          </Button>
-        </Box>
-      </Container>
-    );
+  if (!cartItems.length) {
+    return <EmptyCart />;
   }
 
   return (
-    <Container maxWidth="lg" sx={{ py: 6, mt: 3 }}>
-      <Box
+    <>
+      <Container
+        maxWidth="lg"
         sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          mb: 4,
+          py: 8,
+          mt: 3,
+          minHeight: "100vh",
         }}
       >
-        <Typography variant="h4" fontWeight={800}>
-          {t("cart.title", { count: totalArticles })}
-        </Typography>
-        <Button
-          color="inherit"
-          onClick={handleClearCart}
+        {/* HEADER */}
+        <Box
           sx={{
-            textTransform: "none",
-            fontWeight: 600,
+            display: "flex",
+
+            justifyContent: "space-between",
+
+            alignItems: {
+              xs: "flex-start",
+              sm: "center",
+            },
+
+            flexDirection: {
+              xs: "column",
+              sm: "row",
+            },
+
+            gap: 2,
+
+            mb: 4,
           }}
         >
-          {t("cart.clearCart")}
-        </Button>
-      </Box>
-
-      <Grid container spacing={4}>
-        <Grid size={{ xs: 12, md: 8 }}>
-          <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-            {cart.map((item) => {
-              const sousTotalArticle = item.price * item.quantity;
-              const imageUrl = getImageUrl(item);
-
-              return (
-                <Paper
-                  key={item.id}
-                  sx={{
-                    p: 4,
-                    borderRadius: 5,
-                    display: "flex",
-                    flexDirection: isMobile ? "column" : "row",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    gap: 3,
-                    bgcolor: "background.paper",
-                    boxShadow:
-                      theme.palette.mode === "dark"
-                        ? "0 10px 30px rgba(0,0,0,0.6)"
-                        : "0 15px 40px rgba(0,0,0,0.06)",
-                    transition: "all 0.2s ease-in-out",
-                    "&:hover": {
-                      boxShadow:
-                        theme.palette.mode === "dark"
-                          ? "0 15px 40px rgba(0,0,0,0.8)"
-                          : "0 20px 50px rgba(0,0,0,0.1)",
-                    },
-                  }}
-                >
-                  <Box
-                    sx={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: 3,
-                      width: "100%",
-                    }}
-                  >
-                    <Box
-                      component="img"
-                      src={imageUrl}
-                      alt={item.name}
-                      onError={() => handleImageError(item.id)}
-                      sx={{
-                        width: 100,
-                        height: 110,
-                        borderRadius: 4,
-                        objectFit: "cover",
-                        bgcolor: "grey.200",
-                      }}
-                    />
-
-                    <Box>
-                      <Typography variant="h6" fontWeight={700}>
-                        {item.name}
-                      </Typography>
-                      <Typography color="text.secondary" variant="body2">
-                        ${item.price.toLocaleString()}
-                      </Typography>
-                      {item.category && (
-                        <Typography variant="caption" color="text.secondary">
-                          {item.category}
-                        </Typography>
-                      )}
-                      {item.quantity > 5 && (
-                        <Typography
-                          variant="caption"
-                          sx={{
-                            color: "warning.main",
-                            fontWeight: 600,
-                            mt: 0.5,
-                            display: "block",
-                          }}
-                        >
-                          {t("cart.bulkDiscount")}
-                        </Typography>
-                      )}
-                    </Box>
-                  </Box>
-
-                  <Box
-                    sx={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: 3,
-                      width: isMobile ? "100%" : "auto",
-                      justifyContent: isMobile ? "space-between" : "flex-end",
-                    }}
-                  >
-                    <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                      <IconButton
-                        onClick={() => handleDecrement(item)}
-                        disabled={item.quantity <= 1}
-                        aria-label={t("cart.decrementAriaLabel", {
-                          name: item.name,
-                        })}
-                        sx={{
-                          bgcolor: "action.hover",
-                          "&:hover": {
-                            bgcolor: "action.selected",
-                          },
-                        }}
-                      >
-                        <Remove />
-                      </IconButton>
-
-                      <Typography
-                        fontWeight={700}
-                        fontSize={18}
-                        sx={{ minWidth: 30, textAlign: "center" }}
-                      >
-                        {item.quantity}
-                      </Typography>
-
-                      <IconButton
-                        onClick={() => handleIncrement(item)}
-                        disabled={item.quantity >= (item.maxQuantity || 10)}
-                        aria-label={t("cart.incrementAriaLabel", {
-                          name: item.name,
-                        })}
-                        sx={{
-                          bgcolor: "action.hover",
-                          "&:hover": {
-                            bgcolor: "action.selected",
-                          },
-                        }}
-                      >
-                        <Add />
-                      </IconButton>
-                    </Box>
-
-                    <Typography
-                      sx={{
-                        minWidth: 120,
-                        textAlign: "right",
-                        fontWeight: 700,
-                        fontSize: "1.1rem",
-                      }}
-                    >
-                      ${sousTotalArticle.toLocaleString()}
-                    </Typography>
-
-                    <IconButton
-                      color="error"
-                      onClick={() => handleDeleteClick(item)}
-                      aria-label={t("cart.deleteAriaLabel", {
-                        name: item.name,
-                      })}
-                    >
-                      <Delete />
-                    </IconButton>
-                  </Box>
-                </Paper>
-              );
-            })}
-          </Box>
-
-          <Box sx={{ mt: 3, textAlign: "right" }}>
-            <Button
-              color="inherit"
-              sx={{
-                textTransform: "none",
-                fontWeight: 600,
-              }}
-              href="/products"
-            >
-              ← {t("cart.continueShopping")}
-            </Button>
-          </Box>
-        </Grid>
-
-        <Grid size={{ xs: 12, md: 4 }}>
-          <Box
+          <Typography
+            variant="h4"
             sx={{
-              position: "sticky",
-              top: 100,
-              alignSelf: "flex-start",
+              fontWeight: 800,
+
+              fontSize: {
+                xs: "1.5rem",
+                md: "2rem",
+              },
             }}
           >
-            <Paper
-              sx={{
-                p: 4,
-                borderRadius: 5,
-                bgcolor: "background.paper",
-                boxShadow:
-                  theme.palette.mode === "dark"
-                    ? "0 10px 30px rgba(0,0,0,0.6)"
-                    : "0 15px 40px rgba(0,0,0,0.06)",
-                maxHeight: "calc(100vh - 120px)",
-                overflowY: "auto",
-              }}
-            >
-              <Typography
-                variant="h5"
-                fontWeight={900}
-                mb={3}
-                sx={{ marginBottom: "15px" }}
-              >
-                {t("cart.summary")}
-              </Typography>
+            {t("cart.title", {
+              count: totalArticles,
+            })}
+          </Typography>
 
-              <Box
-                sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}
-              >
-                <Typography color="text.secondary">
-                  {t("cart.subtotal", { count: totalArticles })}
-                </Typography>
-                <Typography fontWeight={600}>
-                  ${sousTotal.toLocaleString()}
-                </Typography>
-              </Box>
+          <Button
+            color="error"
+            variant="outlined"
+            onClick={handleOpenClearDialog}
+            sx={{
+              borderRadius: "14px",
+              textTransform: "none",
+              fontWeight: 700,
+            }}
+          >
+            {t("cart.clearCart")}
+          </Button>
+        </Box>
 
-              <Box
-                sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}
-              >
-                <Typography color="text.secondary">
-                  {t("cart.shipping")}
-                </Typography>
-                <Typography color="success.main" fontWeight={600}>
-                  {t("cart.free")}
-                </Typography>
-              </Box>
+        {/* CONTENT */}
+        <Grid container spacing={4}>
+          <Grid size={{ xs: 12, md: 8 }}>
+            <CartList />
+          </Grid>
 
-              <Box
-                sx={{ display: "flex", justifyContent: "space-between", mb: 3 }}
-              >
-                <Typography color="text.secondary">{t("cart.tax")}</Typography>
-                <Typography fontWeight={600}>${taxe.toFixed(2)}</Typography>
-              </Box>
-
-              <Divider sx={{ mb: 3 }} />
-
-              <Box
-                sx={{ display: "flex", justifyContent: "space-between", mb: 3 }}
-              >
-                <Typography variant="h6" fontWeight={700}>
-                  {t("cart.total")}
-                </Typography>
-                <Typography variant="h5" fontWeight={800}>
-                  $
-                  {total.toLocaleString(undefined, {
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2,
-                  })}
-                </Typography>
-              </Box>
-
-              <Button
-                fullWidth
-                variant="contained"
-                onClick={handleCheckout}
-                disabled={isLoading}
-                sx={{
-                  py: 2,
-                  borderRadius: "16px",
-                  fontWeight: 700,
-                  fontSize: "1rem",
-                  textTransform: "none",
-                  background:
-                    theme.palette.mode === "dark"
-                      ? "linear-gradient(135deg, #6EA8FE, #3D7EFF)"
-                      : "linear-gradient(135deg, #4A90E2, #357ABD)",
-                  "&:hover": {
-                    background:
-                      theme.palette.mode === "dark"
-                        ? "linear-gradient(135deg, #8EBFFF, #5E9FFF)"
-                        : "linear-gradient(135deg, #5BA0F2, #468ACD)",
-                  },
-                  "&:disabled": {
-                    background: "grey.400",
-                  },
-                }}
-              >
-                {isLoading ? (
-                  <>
-                    <CircularProgress
-                      size={24}
-                      sx={{ mr: 1, color: "white" }}
-                    />
-                    {t("cart.processing")}
-                  </>
-                ) : (
-                  t("cart.checkout")
-                )}
-              </Button>
-
-              <Typography
-                variant="caption"
-                color="text.secondary"
-                sx={{
-                  display: "block",
-                  textAlign: "center",
-                  mt: 2,
-                }}
-              >
-                {t("cart.securePayment")}
-              </Typography>
-            </Paper>
-          </Box>
+          <Grid size={{ xs: 12, md: 4 }}>
+            <CartSummary />
+          </Grid>
         </Grid>
-      </Grid>
+      </Container>
 
-      <Dialog
-        open={deleteDialogOpen}
-        onClose={handleDeleteCancel}
-        aria-labelledby="delete-dialog-title"
-        aria-describedby="delete-dialog-description"
-      >
-        <DialogTitle id="delete-dialog-title">
-          {t("cart.deleteTitle")}
-        </DialogTitle>
+      {/* CLEAR CART DIALOG */}
+      <Dialog open={openClearDialog} onClose={handleCloseClearDialog}>
+        <DialogTitle>Clear Cart</DialogTitle>
+
         <DialogContent>
-          <DialogContentText id="delete-dialog-description">
-            {t("cart.deleteMessage", { name: itemToDelete?.name })}
+          <DialogContentText>
+            Are you sure you want to clear your cart?
           </DialogContentText>
         </DialogContent>
+
         <DialogActions>
-          <Button onClick={handleDeleteCancel} color="inherit">
-            {t("common.cancel")}
-          </Button>
+          <Button onClick={handleCloseClearDialog}>Cancel</Button>
+
           <Button
-            onClick={handleDeleteConfirm}
             color="error"
             variant="contained"
-            autoFocus
+            onClick={handleConfirmClear}
           >
-            {t("common.delete")}
+            Clear
           </Button>
         </DialogActions>
       </Dialog>
-    </Container>
+    </>
   );
-};
-
-export default ShoppingCart;
+}

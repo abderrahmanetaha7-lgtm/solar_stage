@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useEffect } from "react";
+
 import {
   Container,
   Paper,
@@ -6,24 +7,38 @@ import {
   Box,
   Button,
   Divider,
+  Grid,
+  Stack,
 } from "@mui/material";
+
 import { useLocation, useNavigate } from "react-router-dom";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+
+import CheckCircleRoundedIcon from "@mui/icons-material/CheckCircleRounded";
+
 import { useTranslation } from "react-i18next";
 
-const OrderConfirmation = () => {
+export default function OrderConfirmation() {
   const { t } = useTranslation();
+
   const location = useLocation();
+
   const navigate = useNavigate();
+
   const order = location.state?.order;
 
-  if (!order) {
-    navigate("/products");
-    return null;
-  }
+  useEffect(() => {
+    if (!order) {
+      navigate("/products");
+    }
+  }, [order, navigate]);
+
+  if (!order) return null;
+
+  // ================= FORMAT DATE =================
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
+
     return date.toLocaleDateString(undefined, {
       year: "numeric",
       month: "long",
@@ -31,8 +46,11 @@ const OrderConfirmation = () => {
     });
   };
 
+  // ================= FORMAT TIME =================
+
   const formatTime = (dateString) => {
     const date = new Date(dateString);
+
     return date.toLocaleTimeString(undefined, {
       hour: "2-digit",
       minute: "2-digit",
@@ -40,164 +58,343 @@ const OrderConfirmation = () => {
   };
 
   return (
-    <Container maxWidth="md" sx={{ py: 6, mt: 3 }}>
-      <Paper sx={{ p: 4, textAlign: "center", borderRadius: 4 }}>
-        <CheckCircleIcon
-          sx={{ fontSize: 80, color: "success.main", mb: 2 }}
-        />
+    <Container
+      maxWidth="md"
+      sx={{
+        py: {
+          xs: 3,
+          md: 6,
+        },
+      }}
+    >
+      <Paper
+        elevation={0}
+        sx={{
+          borderRadius: "28px",
 
-        <Typography variant="h4" fontWeight={800} gutterBottom>
-          {t("orderConfirmation.title")} 🎉
-        </Typography>
+          border: "1px solid",
 
-        {/* ✅ FIX paragraph */}
-        <Typography color="text.secondary" component="p" sx={{ mb: 2 }}>
-          {t("orderConfirmation.message")}
-        </Typography>
+          borderColor: "divider",
 
-        <Paper
+          overflow: "hidden",
+
+          bgcolor: "background.paper",
+        }}
+      >
+        {/* ================= HEADER ================= */}
+
+        <Box
           sx={{
-            p: 3,
-            bgcolor: "background.default",
-            mt: 3,
-            textAlign: "left",
+            px: {
+              xs: 2.5,
+              sm: 4,
+            },
+
+            pt: {
+              xs: 4,
+              sm: 5,
+            },
+
+            pb: 4,
+
+            textAlign: "center",
           }}
         >
-          <Typography
-            variant="h6"
-            fontWeight={600}
-            gutterBottom
-            align="center"
+          <Box
+            sx={{
+              width: 74,
+              height: 74,
+
+              borderRadius: "50%",
+
+              bgcolor: "success.main",
+
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+
+              mx: "auto",
+
+              mb: 2.5,
+
+              boxShadow: "0 10px 30px rgba(34,197,94,0.25)",
+            }}
           >
-            {t("orderConfirmation.orderNumber", { id: order.id })}
+            <CheckCircleRoundedIcon
+              sx={{
+                fontSize: 42,
+                color: "#fff",
+              }}
+            />
+          </Box>
+
+          <Typography
+            variant="h4"
+            sx={{
+              fontWeight: 800,
+
+              mb: 1,
+
+              fontSize: {
+                xs: "1.7rem",
+                sm: "2rem",
+              },
+            }}
+          >
+            {t("orderConfirmation.title")}
           </Typography>
 
           <Typography
             color="text.secondary"
-            gutterBottom
-            align="center"
-          >
-            {formatDate(order.orderDate)}{" "}
-            {t("orderConfirmation.at")}{" "}
-            {formatTime(order.orderDate)}
-          </Typography>
-
-          <Divider sx={{ my: 2 }} />
-
-          <Typography variant="subtitle1" fontWeight={600} gutterBottom>
-            📦 {t("orderConfirmation.orderSummary")}
-          </Typography>
-
-          {order.items.map((item) => (
-            <Box
-              key={item.id}
-              sx={{
-                display: "flex",
-                justifyContent: "space-between",
-                mb: 1,
-              }}
-            >
-              <Typography>
-                {item.name} x {item.quantity}
-              </Typography>
-              <Typography>
-                ${(item.price * item.quantity).toLocaleString()}
-              </Typography>
-            </Box>
-          ))}
-
-          <Divider sx={{ my: 2 }} />
-
-          <Box sx={{ display: "flex", justifyContent: "space-between", mb: 1 }}>
-            <Typography>{t("orderConfirmation.subtotal")}</Typography>
-            <Typography>${order.subtotal.toLocaleString()}</Typography>
-          </Box>
-
-          <Box sx={{ display: "flex", justifyContent: "space-between", mb: 1 }}>
-            <Typography>{t("orderConfirmation.tax")}</Typography>
-            <Typography>${order.tax.toFixed(2)}</Typography>
-          </Box>
-
-          <Box sx={{ display: "flex", justifyContent: "space-between", mb: 1 }}>
-            <Typography>{t("orderConfirmation.shipping")}</Typography>
-            <Typography>
-              {order.shipping === 0
-                ? t("orderConfirmation.free")
-                : `$${order.shipping.toFixed(2)}`}
-            </Typography>
-          </Box>
-
-          <Divider sx={{ my: 2 }} />
-
-          <Box
             sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              mb: 2,
+              maxWidth: 420,
+              mx: "auto",
+              lineHeight: 1.7,
             }}
           >
-            <Typography variant="h6" fontWeight={700}>
-              {t("orderConfirmation.total")}
-            </Typography>
-            <Typography
-              variant="h6"
-              fontWeight={700}
-              color="primary"
-            >
-              ${order.total.toFixed(2)}
-            </Typography>
-          </Box>
+            {t("orderConfirmation.message")}
+          </Typography>
+        </Box>
 
-          <Divider sx={{ my: 2 }} />
-
-          <Typography variant="subtitle1" fontWeight={600} gutterBottom>
-            🚚 {t("orderConfirmation.shippingInfo")}
-          </Typography>
-
-          <Typography>
-            {order.customer.firstName} {order.customer.lastName}
-          </Typography>
-          <Typography>{order.customer.address}</Typography>
-          <Typography>
-            {order.customer.city}, {order.customer.postalCode}
-          </Typography>
-          <Typography>{order.customer.country}</Typography>
-
-          <Typography sx={{ mt: 1 }}>
-            📧 {order.customer.email}
-          </Typography>
-          <Typography>
-            📞 {order.customer.phone}
-          </Typography>
-        </Paper>
+        {/* ================= ORDER CARD ================= */}
 
         <Box
           sx={{
-            mt: 4,
-            display: "flex",
-            gap: 2,
-            justifyContent: "center",
+            px: {
+              xs: 2,
+              sm: 4,
+            },
+
+            pb: {
+              xs: 3,
+              sm: 4,
+            },
           }}
         >
-          <Button
-            variant="contained"
-            size="large"
-            onClick={() => navigate("/products")}
-          >
-            {t("orderConfirmation.continueShopping")}
-          </Button>
+          <Paper
+            elevation={0}
+            sx={{
+              p: {
+                xs: 2.5,
+                sm: 3,
+              },
 
-          <Button
-            variant="outlined"
-            size="large"
-            onClick={() => window.print()}
+              borderRadius: "24px",
+
+              border: "1px solid",
+
+              borderColor: "divider",
+
+              bgcolor: "background.default",
+            }}
           >
-            {t("orderConfirmation.printReceipt")}
-          </Button>
+            {/* ORDER ID */}
+            <Box textAlign="center">
+              <Typography
+                variant="body2"
+                color="text.secondary"
+                sx={{
+                  mb: 1,
+                }}
+              >
+                {t("orderConfirmation.orderNumber", {
+                  id: order.id,
+                })}
+              </Typography>
+
+              <Typography
+                sx={{
+                  color: "text.secondary",
+                  fontSize: "0.95rem",
+                }}
+              >
+                {formatDate(order.created_at)} •{" "}
+                {formatTime(order.created_at)}
+              </Typography>
+            </Box>
+
+            <Divider sx={{ my: 3 }} />
+
+            {/* PRODUCTS */}
+            <Stack spacing={2}>
+              {order.items?.map((item) => (
+                <Box
+                  key={item.id}
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    gap: 2,
+                  }}
+                >
+                  <Box sx={{ flex: 1, minWidth: 0 }}>
+                    <Typography
+                      sx={{
+                        fontWeight: 600,
+                        wordBreak: "break-word",
+                        width:{sx:"280px",sm:"390px",md:"460px"},
+                        mb:1
+                      }}
+                    >
+                      {item.product_name}
+                    </Typography>
+
+                    <Typography
+                      variant="body2"
+                      color="text.secondary"
+                    >
+                      {t("orderDetails.quantity")}: {item.quantity}
+                    </Typography>
+                  </Box>
+
+                  <Typography
+                    sx={{
+                      fontWeight: 700,
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    {(item.price * item.quantity).toFixed(2)}{" "}
+                    {t("currency")}
+                  </Typography>
+                </Box>
+              ))}
+            </Stack>
+
+            <Divider sx={{ my: 3 }} />
+
+            {/* TOTAL */}
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <Typography
+                variant="h6"
+                sx={{
+                  fontWeight: 700,
+                }}
+              >
+                {t("orderConfirmation.total")}
+              </Typography>
+
+              <Typography
+                variant="h5"
+                sx={{
+                  fontWeight: 900,
+
+                  color: "primary.main",
+                }}
+              >
+                {Number(order.total).toFixed(2)}{" "}
+                {t("currency")}
+              </Typography>
+            </Box>
+
+            <Divider sx={{ my: 3 }} />
+
+            {/* SHIPPING INFO */}
+            <Grid container spacing={3}>
+              <Grid size={{ xs: 12, sm: 6 }}> 
+                <Typography
+                  sx={{
+                    fontWeight: 700,
+                    mb: 1,
+                    
+                  }}
+                >• {t("orderDetails.fullName")} : {""}
+                  {order.first_name} {order.last_name}
+                </Typography>
+
+                <Typography
+                  color="text.secondary"
+                  sx={{
+                    lineHeight: 1.8,
+                  }}
+                >• {t("orderDetails.address")} : {""}
+                  {order.address}
+                  <br />
+                  • {t("checkout.fields.city")} : {""}
+                  {order.city}
+                  {order.postal_code
+                    ? `, ${order.postal_code}`
+                    : ""}
+                  <br /> 
+                  {order.country}
+                </Typography>
+              </Grid>
+
+              <Grid size={{ xs: 12, sm: 6 }}>
+                <Typography
+                  color="text.secondary"
+                  sx={{
+                    lineHeight: 2,
+                    wordBreak: "break-word",
+                  }}
+                >
+                  • {t("orderDetails.email")} : {""}
+                  {order.email}
+                  <br />
+                  • {t("orderDetails.phone")} : {""}
+                  {order.phone} 
+                </Typography>
+              </Grid>
+            </Grid>
+          </Paper>
+
+          {/* ================= ACTIONS ================= */}
+
+          <Stack
+            direction={{
+              xs: "column",
+              sm: "row",
+            }}
+            spacing={2}
+            sx={{
+              mt: 3,
+            }}
+          >
+            <Button
+              variant="contained"
+              fullWidth
+              size="large"
+              onClick={() => navigate("/products")}
+              sx={{
+                py: 1.5,
+
+                borderRadius: "16px",
+
+                fontWeight: 700,
+
+                textTransform: "none",
+
+                boxShadow: "none",
+              }}
+            >
+              {t("orderConfirmation.continueShopping")}
+            </Button>
+
+            <Button
+              variant="outlined"
+              fullWidth
+              size="large"
+              onClick={() => window.print()}
+              sx={{
+                py: 1.5,
+
+                borderRadius: "16px",
+
+                fontWeight: 700,
+
+                textTransform: "none",
+              }}
+            >
+              {t("orderConfirmation.printReceipt")}
+            </Button>
+          </Stack>
         </Box>
       </Paper>
     </Container>
   );
-};
-
-export default OrderConfirmation;
+}

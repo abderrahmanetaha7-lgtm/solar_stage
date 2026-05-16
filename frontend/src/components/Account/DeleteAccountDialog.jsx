@@ -5,44 +5,62 @@ import {
   DialogContent,
   DialogTitle,
   Typography,
+  CircularProgress,
 } from "@mui/material";
 
 import { useTranslation } from "react-i18next";
 
-export default function DeleteAccountDialog({
-  open,
-  onClose,
-}) {
+import { useDispatch, useSelector } from "react-redux";
+
+import { useEffect } from "react";
+
+import { deleteProfileAction } from "../../features/profile/profileSlice";
+
+import { logout } from "../../features/auth/authSlice";
+
+export default function DeleteAccountDialog({ open, onClose }) {
   const { t } = useTranslation();
 
+  const dispatch = useDispatch();
+
+  const { loading, deleteSuccess } = useSelector((state) => state.profile);
+
+  /* ================= DELETE ACCOUNT ================= */
+
   const handleDelete = () => {
-    console.log("Account deleted");
-
-    // TODO:
-    // delete account API
-
-    onClose();
+    dispatch(deleteProfileAction());
   };
 
+  /* ================= AFTER DELETE ================= */
+
+  useEffect(() => {
+    if (deleteSuccess) {
+      dispatch(logout());
+
+      onClose();
+
+      window.location.href = "/login";
+    }
+  }, [deleteSuccess, dispatch, onClose]);
+
   return (
-    <Dialog
-      open={open}
-      onClose={onClose}
-      fullWidth
-      maxWidth="xs"
-    >
-      <DialogTitle sx={{ color: "red" }}>
+    <Dialog open={open} onClose={onClose} fullWidth maxWidth="xs">
+      {/* TITLE */}
+
+      <DialogTitle sx={{ color: "error.main", fontWeight: 700 }}>
         {t("deleteAccount.title")}
       </DialogTitle>
 
+      {/* CONTENT */}
+
       <DialogContent>
-        <Typography>
-          {t("deleteAccount.message")}
-        </Typography>
+        <Typography>{t("deleteAccount.message")}</Typography>
       </DialogContent>
 
-      <DialogActions>
-        <Button onClick={onClose}>
+      {/* ACTIONS */}
+
+      <DialogActions sx={{ p: 2 }}>
+        <Button onClick={onClose} disabled={loading}>
           {t("common.cancel")}
         </Button>
 
@@ -50,8 +68,13 @@ export default function DeleteAccountDialog({
           color="error"
           variant="contained"
           onClick={handleDelete}
+          disabled={loading}
         >
-          {t("deleteAccount.delete")}
+          {loading ? (
+            <CircularProgress size={20} color="inherit" />
+          ) : (
+            t("deleteAccount.delete")
+          )}
         </Button>
       </DialogActions>
     </Dialog>

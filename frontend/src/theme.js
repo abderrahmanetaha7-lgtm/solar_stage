@@ -31,4 +31,29 @@ export const getTheme = (mode, language) =>
         secondary: "#B0BEC5",
       },
     },
+
+    components: {
+      MuiPaper: {
+        styleOverrides: {
+          root: {
+            backgroundImage: "none",
+          },
+        },
+      },
+      MuiMenu: {
+        styleOverrides: {
+          paper: {
+            backgroundImage: "none",
+          },
+        },
+      },
+
+      MuiCard: {
+        styleOverrides: {
+          root: {
+            backgroundImage: "none",
+          },
+        },
+      },
+    },
   });

@@ -9,6 +9,7 @@ import userReducer from "../features/users/userSlice";
 import analyticReducer from "../features/analytics/analyticsSlice";
 import settingsReducer from "../features/settings/settingsSlice";
 import authReducer from "../features/auth/authSlice";
+import profileReducer from "../features/profile/profileSlice";
 
 export const store = configureStore({
   reducer: {
@@ -20,6 +21,7 @@ export const store = configureStore({
     orders: orderReducer,
     analytics: analyticReducer,
     settings: settingsReducer,
-    users: userReducer,
+    users: userReducer, 
+    profile: profileReducer,
   },
 });

@@ -1,4 +1,5 @@
 {
+  "currency": "درهم", 
   "nav": {
     "home": "الرئيسية",
     "products": "المنتجات",
@@ -12,7 +13,7 @@
     "ar": "العربية"
   },
     "cart": {
-    "title": "سلة التسوق ({{count}} منتجات)",
+    "title": "سلة التسوق ({{count}})",
     "emptyTitle": "سلة التسوق فارغة",
     "emptyMessage": "يبدو أنك لم تقم بإضافة أي منتجات إلى سلة التسوق بعد.",
     "continueShopping": "مواصلة التسوق",
@@ -25,8 +26,7 @@
     "tax": "الضريبة (0.8%)",
     "total": "المجموع",
     "checkout": "متابعة الدفع ←",
-    "processing": "جاري المعالجة...",
-    "securePayment": "🔒 دفع آمن · إرجاع مجاني خلال 30 يومًا",
+    "processing": "جاري المعالجة...", 
     "confirmClear": "هل أنت متأكد من رغبتك في إفراغ سلة التسوق بالكامل؟",
     "deleteTitle": "حذف المنتج",
     "deleteMessage": "هل أنت متأكد من رغبتك في حذف {{name}} من سلة التسوق؟",
@@ -49,9 +49,8 @@
     "continueShopping": "مواصلة التسوق",
     "perUnit": "للقطعة",
     "summary": "ملخص الطلب",
-    "itemsCount": "{{count}} منتج في السلة",
-    "subtotal": "المجموع الفرعي",
-    "tax": "الضريبة (0.8%)",
+    "itemsCount": "{{count}} منتج في السلة", 
+    "products": "المنتجات",
     "shipping": "الشحن",
     "free": "مجاني",
     "total": "المجموع",
@@ -87,7 +86,7 @@
   },
   "orderConfirmation": {
     "title": "تم تأكيد الطلب!",
-    "message": "شكراً لك على الشراء. تم استلام طلبك وهو قيد المعالجة.",
+    "message": "تم استلام طلبك بنجاح. سيقوم فريقنا بمراجعته والتواصل معك قريبًا.",
     "orderNumber": "طلب #{{id}}",
     "at": "في",
     "orderSummary": "ملخص الطلب",
@@ -99,8 +98,7 @@
     "shippingInfo": "معلومات الشحن",
     "continueShopping": "مواصلة التسوق",
     "printReceipt": "طباعة الإيصال"
-  }
-,
+  },
 
   "home": {
     "hero": {
@@ -182,13 +180,11 @@
     },
 
     "contact": {
-      "title": "تواصل معنا",
-      "email": "moyasol.sol@gmail.com",
-      "phone": "0726553374",
+      "title": "تواصل معنا", 
       "location": "مراكش"
     },
 
-    "copyright": "© 2026 SolarNova. جميع الحقوق محفوظة. صُمم من أجل مستقبل أكثر إشراقًا."
+    "copyright": "© 2026 MOYA SOL. جميع الحقوق محفوظة. صُمم من أجل مستقبل أكثر إشراقًا."
   },
 
   "productsPage": {
@@ -198,7 +194,7 @@
 
     "search": "ابحث عن المنتجات...",
     "filters": "تصفية",
-    "currency": "درهم", 
+    
     "add": "أضف",
 
     "category": {
@@ -206,7 +202,8 @@
       "all": "كل المنتجات",
       "panels": "ألواح",
       "batteries": "بطاريات",
-      "inverters": "محولات"
+      "inverters": "محولات",
+      "accessories": "إكسسوارات"
     },
 
     "price": {
@@ -237,7 +234,6 @@
       "address": "العنوان",
       "city":"مراكش"
     }
-
   },
 
   "about": {
@@ -311,7 +307,11 @@
     "remember_me": "تذكرني",
     "login_button": "تسجيل الدخول",
     "no_account": "ليس لديك حساب؟",
-    "signup": "إنشاء حساب"
+    "signup": "إنشاء حساب",
+    "common-back": "رجوع",
+    "or": "أو",
+    "login_with_google": "المتابعة باستخدام Google",
+    "welcome_back": "مرحبًا بعودتك"
   },
 
   "forgot_password": {
@@ -323,15 +323,37 @@
   },
 
   "signup": {
-    "common-back":"رجوع",
     "title": "إنشاء حساب",
+    "common-back": "رجوع",
+    "already_account": "لديك حساب بالفعل؟",
+    "login": "تسجيل الدخول",
+
     "full_name": "الاسم الكامل",
+    "name_placeholder": "أدخل اسمك الكامل",
+    "name_required": "الاسم مطلوب",
+
     "email": "البريد الإلكتروني",
+    "email_placeholder": "أدخل بريدك الإلكتروني",
+    "email_required": "البريد الإلكتروني مطلوب",
+    "email_invalid": "البريد الإلكتروني غير صالح",
+
     "password": "كلمة المرور",
+    "password_placeholder": "أدخل كلمة المرور",
+    "password_required": "كلمة المرور مطلوبة",
+    "password_min_length": "يجب أن تحتوي كلمة المرور على 6 أحرف على الأقل",
+
     "confirm_password": "تأكيد كلمة المرور",
+    "confirm_password_placeholder": "أكد كلمة المرور",
+    "password_mismatch": "كلمتا المرور غير متطابقتين",
+
+    "terms_required": "يجب الموافقة على الشروط",
+
     "button": "إنشاء حساب",
-    "already_account": "هل لديك حساب بالفعل؟",
-    "login": "تسجيل الدخول"
+    "or": "أو",
+
+    "signup_with_google": "المتابعة باستخدام Google",
+
+    "registration_error": "حدث خطأ أثناء إنشاء الحساب"
   },
 
   "favorite": {
@@ -360,8 +382,7 @@
   "product-detail": {
     "efficiency": "الكفاءة",
     "inStock": "متوفر",
-    "outOfStock": "غير متوفر", 
-    "currency": "درهم",
+    "outOfStock": "غير متوفر",  
     "addToCart": "أضف إلى السلة",
     "request": "طلب",
     "back":"الرجوع إلى المنتجات"
@@ -417,8 +438,7 @@
   },
 
   "orders": {
-    "orderNumber": "طلب رقم",
-    "DH": "درهم",
+    "orderNumber": "طلب رقم", 
     "title": "طلباتي",
     "items": "عدد المنتجات",
     "total": "الإجمالي",
@@ -430,7 +450,9 @@
   "status": {
     "pending": "قيد الانتظار",
     "confirmed": "تم التأكيد", 
-    "delivered": "تم التسليم"
+    "delivered": "تم التسليم",
+    "cancelled": "تم الإلغاء"
+
   },
 
   "emptyOrders": {
@@ -440,6 +462,7 @@
   },
 
   "orderDetails": {
+    "country":"البلد",
     "title": "تفاصيل الطلب",
     "orderNumber": "طلب رقم ",
     "placedOn": "تم الطلب ف",
@@ -449,10 +472,9 @@
     "price": "السعر",
     "total": "الإجمالي",
     "quantity": "الكمية",
-    "orderSummary": "ملخص الطلب",
-    "subtotal": "المجموع الفرعي",
-    "shipping": "الشحن",
-    "tax": "الضريبة",
+    "orderSummary": "ملخص الطلب", 
+    "shipping": "الشحن", 
+    "Gratuite":"مجاني",
     "customerInfo": "معلومات العميل",
     "fullName": "الاسم الكامل",
     "email": "البريد الإلكتروني",
@@ -460,5 +482,48 @@
     "address": "العنوان",
     "notFound": "الطلب غير موجود",
     "back": "العودة إلى الطلبات"
+  },
+  "LogoutProfile": {
+    "logoutConfirmTitle": "تأكيد تسجيل الخروج",
+    "logoutConfirmText": "هل أنت متأكد أنك تريد تسجيل الخروج؟"
+  },
+  "YesNo": {
+    "no": "لا",
+    "yes": "نعم"
+  },
+
+  "orderCancelDialog": {
+    "title": "إلغاء الطلب",
+    "message": "هل أنت متأكد أنك تريد إلغاء هذا الطلب؟",
+    "closeButton": "إلغاء",
+    "confirmButton": "إلغاء الطلب"
+  },
+
+  "forgotPassword": {
+    "title": "نسيت كلمة المرور",
+    "subtitle": "أدخل بريدك الإلكتروني وسنرسل لك رابط إعادة تعيين كلمة المرور.",
+    "emailLabel": "البريد الإلكتروني",
+    "emailRequired": "البريد الإلكتروني مطلوب",
+    "invalidEmail": "صيغة البريد الإلكتروني غير صحيحة",
+    "successMessage": "تم إرسال رابط إعادة التعيين إلى بريدك الإلكتروني",
+    "button": "إرسال رابط إعادة التعيين",
+    "backToLogin": "العودة إلى تسجيل الدخول",
+    "successTitle": "تم إرسال البريد الإلكتروني بنجاح"
+  },
+
+   "resetPassword": {
+    "title": "إعادة تعيين كلمة المرور",
+    "subtitle": "أدخل كلمة المرور الجديدة الخاصة بك أدناه",
+    "newPassword": "كلمة المرور الجديدة",
+    "confirmPassword": "تأكيد كلمة المرور",
+    "passwordRequired": "كلمة المرور مطلوبة",
+    "passwordMin": "يجب أن تكون كلمة المرور 8 أحرف على الأقل",
+    "confirmRequired": "تأكيد كلمة المرور مطلوب",
+    "passwordsNotMatch": "كلمتا المرور غير متطابقتين",
+    "button": "إعادة تعيين كلمة المرور",
+    "successTitle": "تم تغيير كلمة المرور بنجاح",
+    "successMessage": "تم إعادة تعيين كلمة المرور بنجاح، سيتم تحويلك إلى صفحة تسجيل الدخول",
+    "apiError": "فشل في إعادة تعيين كلمة المرور",
+    "backToLogin": "العودة إلى تسجيل الدخول"
   }
 } 

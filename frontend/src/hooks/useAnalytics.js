@@ -1,21 +1,25 @@
 import { useEffect } from "react";
+
 import { useDispatch, useSelector } from "react-redux";
+
 import { fetchAnalytics } from "../features/analytics/analyticsSlice";
 
 export const useAnalytics = () => {
   const dispatch = useDispatch();
 
-  const analytics = useSelector(
-    (state) => state.analytics
-  );
-
-  const loading = useSelector(
-    (state) => state.analytics.loading
-  );
+  const { salesData, categoryData, topProducts, stats, loading, error } =
+    useSelector((state) => state.analytics);
 
   useEffect(() => {
     dispatch(fetchAnalytics());
   }, [dispatch]);
 
-  return { ...analytics, loading };
+  return {
+    salesData,
+    categoryData,
+    topProducts,
+    stats,
+    loading,
+    error,
+  };
 };

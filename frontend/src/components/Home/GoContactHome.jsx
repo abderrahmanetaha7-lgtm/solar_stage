@@ -70,6 +70,7 @@ export default function GoContactHome() {
             i18n.language === "ar" ? <ArrowBackIcon /> : <ArrowForwardIcon />
           }
           sx={{
+            gap:2,
             px: 4,
             py: 1.3,
             borderRadius: "999px",

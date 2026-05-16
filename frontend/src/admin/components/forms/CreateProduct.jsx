@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Card,
@@ -31,7 +31,9 @@ import {
   addProduct,
   editProduct,
 } from "../../../features/products/productSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 // Styled components for drag & drop
 const DragDropArea = styled(Paper)(({ theme }) => ({
@@ -60,20 +62,26 @@ const ImagePreview = styled(Paper)(({ theme }) => ({
   },
 }));
 
-const AddOrEditProduct = ({ product = null }) => {
+const AddOrEditProduct = () => {
   const dispatch = useDispatch();
+  const { id } = useParams();
+  const { t } = useTranslation();
+  const { products } = useSelector((state) => state.products);
+  const currentProduct = products.find((p) => p.id === Number(id));
 
-  const isEditMode = Boolean(product);
+  const isEditMode = Boolean(currentProduct);
+
   const [formData, setFormData] = useState({
-    productName: product?.productName || "",
-    description: product?.description || "",
-    price: product?.price || "",
-    stockQuantity: product?.stockQuantity || "",
-    category: product?.category || "",
+    name_ar: "",
+    name_fr: "",
+    description_ar: "",
+    description_fr: "",
+    price: "",
+    stock_quantity: "",
+    category_id: "",
   });
 
   // Images state
-  const [images, setImages] = useState([]);
   const [uploadProgress, setUploadProgress] = useState({});
 
   // Validation state
@@ -88,44 +96,89 @@ const AddOrEditProduct = ({ product = null }) => {
     severity: "success",
   });
 
+  const [images, setImages] = useState([]);
+  
+  useEffect(() => {
+    if (!currentProduct) return;
+
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setFormData({
+      name_ar: currentProduct.name_ar || "",
+      name_fr: currentProduct.name_fr || "",
+      description_ar: currentProduct.description_ar || "",
+      description_fr: currentProduct.description_fr || "",
+      price: currentProduct.price || "",
+      stock_quantity: currentProduct.stock_quantity || "",
+      category_id: currentProduct.category_id || "",
+    });
+    // LOAD EXISTING IMAGES
+    if (currentProduct.images) {
+      const formattedImages = currentProduct.images.map((img) => ({
+        id: img.id,
+        name: img.image,
+        preview: `${import.meta.env.VITE_API_URL}/storage/${img.image}`,
+        existing: true,
+      }));
+
+      setImages(formattedImages);
+    }
+  }, [currentProduct]);
+
   // Categories
   const categories = [
-    { value: "panels", label: "Solar Panels" },
-    { value: "batteries", label: "Batteries" },
-    { value: "inverters", label: "Inverters" },
+    { value: 1, label: "Panneaux" },
+    { value: 2, label: "Batteries" },
+    { value: 3, label: "Onduleurs" },
+    { value: 4, label: "Accessoires" },
   ];
 
   // Validation function
   const validateField = (name, value) => {
     switch (name) {
-      case "productName":
-        return !value?.trim() ? "Product name is required" : "";
-      case "description":
+      case "name_ar":
+        return !value?.trim() ? "Arabic product name is required" : "";
+
+      case "name_fr":
+        return !value?.trim() ? "French product name is required" : "";
+
+      case "description_ar":
         return !value?.trim()
-          ? "Description is required"
+          ? "Arabic description is required"
           : value.trim().length < 20
-            ? "Description must be at least 20 characters"
+            ? "Arabic description must be at least 20 characters"
             : "";
+
+      case "description_fr":
+        return !value?.trim()
+          ? "French description is required"
+          : value.trim().length < 20
+            ? "French description must be at least 20 characters"
+            : "";
+
       case "price":
         return !value
           ? "Price is required"
           : parseFloat(value) <= 0
             ? "Price must be greater than 0"
             : "";
-      case "stockQuantity":
+
+      case "stock_quantity":
         return value === ""
           ? "Stock quantity is required"
           : parseInt(value) < 0
             ? "Stock must be 0 or greater"
             : "";
-      case "category":
+
+      case "category_id":
         return !value ? "Category is required" : "";
+
       default:
         return "";
     }
   };
 
   const validateImages = () => {
+    if (isEditMode) return "";
     return images.length < 3 ? "At least 3 images are required" : "";
   };
 
@@ -144,7 +197,7 @@ const AddOrEditProduct = ({ product = null }) => {
   };
 
   // Handle input changes
-  const handleChange = (e) => {
+  const a = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
 
@@ -257,21 +310,27 @@ const AddOrEditProduct = ({ product = null }) => {
     try {
       const formDataToSend = new FormData();
 
-      formDataToSend.append("productName", formData.productName);
-      formDataToSend.append("description", formData.description);
+      formDataToSend.append("name_ar", formData.name_ar);
+      formDataToSend.append("name_fr", formData.name_fr);
+
+      formDataToSend.append("description_ar", formData.description_ar);
+
+      formDataToSend.append("description_fr", formData.description_fr);
       formDataToSend.append("price", formData.price);
-      formDataToSend.append("stockQuantity", formData.stockQuantity);
-      formDataToSend.append("category", formData.category);
+      formDataToSend.append("stock_quantity", formData.stock_quantity);
+      formDataToSend.append("category_id", formData.category_id);
 
       // images (REAL FILES)
       images.forEach((img, index) => {
-        formDataToSend.append(`images[${index}]`, img.file);
+        if (img.file) {
+          formDataToSend.append(`images[${index}]`, img.file);
+        }
       });
 
       if (isEditMode) {
         await dispatch(
           editProduct({
-            id: product.id,
+            id: currentProduct.id,
             data: formDataToSend,
           }),
         ).unwrap();
@@ -289,20 +348,28 @@ const AddOrEditProduct = ({ product = null }) => {
 
       // reset
       setFormData({
-        productName: "",
-        description: "",
+        name_ar: "",
+        name_fr: "",
+        description_ar: "",
+        description_fr: "",
         price: "",
-        stockQuantity: "",
-        category: "",
+        stock_quantity: "",
+        category_id: "",
       });
 
       setImages([]);
       setErrors({});
       setTouched({});
     } catch (error) {
+      console.log(error);
+
       setSnackbar({
         open: true,
-        message: error?.response?.data?.message || "Error creating product",
+        message:
+          error?.message ||
+          error?.errors?.images?.[0] ||
+          error?.errors?.category_id?.[0] ||
+          "Error creating product",
         severity: "error",
       });
     } finally {
@@ -313,12 +380,14 @@ const AddOrEditProduct = ({ product = null }) => {
   const isFormValid = () => {
     return (
       Object.values(errors).every((e) => !e) &&
-      formData.productName &&
-      formData.description &&
+      formData.name_ar &&
+      formData.name_fr &&
+      formData.description_ar &&
+      formData.description_fr &&
       formData.price &&
-      formData.stockQuantity &&
-      formData.category &&
-      images.length >= 3 &&
+      formData.stock_quantity !== "" &&
+      formData.category_id &&
+      (isEditMode || images.length >= 3) &&
       !isSubmitting
     );
   };
@@ -342,39 +411,78 @@ const AddOrEditProduct = ({ product = null }) => {
           <form onSubmit={handleSubmit}>
             <Grid container spacing={3}>
               {/* Product Name */}
+              {/* Arabic Product Name */}
               <Grid size={{ xs: 12 }}>
                 <TextField
                   fullWidth
-                  label="Product Name"
-                  name="productName"
-                  value={formData.productName}
-                  onChange={handleChange}
+                  label="Product Name (Arabic)"
+                  name="name_ar"
+                  value={formData.name_ar}
+                  onChange={a}
                   onBlur={handleBlur}
-                  error={touched.productName && !!errors.productName}
-                  helperText={touched.productName && errors.productName}
+                  error={touched.name_ar && !!errors.name_ar}
+                  helperText={touched.name_ar && errors.name_ar}
+                  required
+                  dir="rtl"
+                />
+              </Grid>
+
+              {/* French Product Name */}
+              <Grid size={{ xs: 12 }}>
+                <TextField
+                  fullWidth
+                  label="Product Name (French)"
+                  name="name_fr"
+                  value={formData.name_fr}
+                  onChange={a}
+                  onBlur={handleBlur}
+                  error={touched.name_fr && !!errors.name_fr}
+                  helperText={touched.name_fr && errors.name_fr}
                   required
                 />
               </Grid>
 
-              {/* Description */}
+              {/* description */}
+              {/* Arabic Description */}
               <Grid size={{ xs: 12 }}>
                 <TextField
                   fullWidth
-                  label="Description"
-                  name="description"
-                  value={formData.description}
-                  onChange={handleChange}
+                  label="Description (Arabic)"
+                  name="description_ar"
+                  value={formData.description_ar}
+                  onChange={a}
                   onBlur={handleBlur}
-                  error={touched.description && !!errors.description}
+                  error={touched.description_ar && !!errors.description_ar}
                   helperText={
-                    touched.description && errors.description
-                      ? errors.description
-                      : "Provide a detailed description of the product (minimum 20 characters)"
+                    touched.description_ar && errors.description_ar
+                      ? errors.description_ar
+                      : "Provide Arabic description"
                   }
                   required
                   multiline
                   rows={4}
-                  placeholder="Describe the product features, specifications, and benefits..."
+                  dir="rtl"
+                />
+              </Grid>
+
+              {/* French Description */}
+              <Grid size={{ xs: 12 }}>
+                <TextField
+                  fullWidth
+                  label="Description (French)"
+                  name="description_fr"
+                  value={formData.description_fr}
+                  onChange={a}
+                  onBlur={handleBlur}
+                  error={touched.description_fr && !!errors.description_fr}
+                  helperText={
+                    touched.description_fr && errors.description_fr
+                      ? errors.description_fr
+                      : "Provide French description"
+                  }
+                  required
+                  multiline
+                  rows={4}
                 />
               </Grid>
 
@@ -386,14 +494,16 @@ const AddOrEditProduct = ({ product = null }) => {
                   name="price"
                   type="number"
                   value={formData.price}
-                  onChange={handleChange}
+                  onChange={a}
                   onBlur={handleBlur}
                   error={touched.price && !!errors.price}
                   helperText={touched.price && errors.price}
                   required
                   InputProps={{
                     startAdornment: (
-                      <InputAdornment position="start">MAD</InputAdornment>
+                      <InputAdornment position="start">
+                        {t("currency")}
+                      </InputAdornment>
                     ),
                   }}
                 />
@@ -403,14 +513,24 @@ const AddOrEditProduct = ({ product = null }) => {
                 <TextField
                   fullWidth
                   label="Stock Quantity"
-                  name="stockQuantity"
+                  name="stock_quantity"
                   type="number"
-                  value={formData.stockQuantity}
-                  onChange={handleChange}
+                  value={formData.stock_quantity}
+                  onChange={(e) => {
+                    const value = e.target.value;
+
+                    // prevent negative values
+                    if (Number(value) < 0) return;
+
+                    a(e);
+                  }}
                   onBlur={handleBlur}
-                  error={touched.stockQuantity && !!errors.stockQuantity}
-                  helperText={touched.stockQuantity && errors.stockQuantity}
+                  error={touched.stock_quantity && !!errors.stock_quantity}
+                  helperText={touched.stock_quantity && errors.stock_quantity}
                   required
+                  inputProps={{
+                    min: 0,
+                  }}
                 />
               </Grid>
 
@@ -418,14 +538,14 @@ const AddOrEditProduct = ({ product = null }) => {
               <Grid size={{ xs: 12 }}>
                 <FormControl
                   fullWidth
-                  error={touched.category && !!errors.category}
+                  error={touched.category_id && !!errors.category_id}
                   required
                 >
                   <InputLabel>Category</InputLabel>
                   <Select
-                    name="category"
-                    value={formData.category}
-                    onChange={handleChange}
+                    name="category_id"
+                    value={formData.category_id}
+                    onChange={a}
                     onBlur={handleBlur}
                     label="Category"
                   >
@@ -435,8 +555,8 @@ const AddOrEditProduct = ({ product = null }) => {
                       </MenuItem>
                     ))}
                   </Select>
-                  {touched.category && errors.category && (
-                    <FormHelperText>{errors.category}</FormHelperText>
+                  {touched.category_id && errors.category_id && (
+                    <FormHelperText>{errors.category_id}</FormHelperText>
                   )}
                 </FormControl>
               </Grid>
@@ -566,11 +686,13 @@ const AddOrEditProduct = ({ product = null }) => {
                     variant="outlined"
                     onClick={() => {
                       setFormData({
-                        productName: "",
-                        description: "",
+                        name_ar: "",
+                        name_fr: "",
+                        description_ar: "",
+                        description_fr: "",
                         price: "",
-                        stockQuantity: "",
-                        category: "",
+                        stock_quantity: "",
+                        category_id: "",
                       });
                       setImages([]);
                       setErrors({});
@@ -585,12 +707,7 @@ const AddOrEditProduct = ({ product = null }) => {
                     disabled={!isFormValid()}
                     sx={{
                       minWidth: 150,
-                      background:
-                        "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-                      "&:hover": {
-                        background:
-                          "linear-gradient(135deg, #5a67d8 0%, #6b46a0 100%)",
-                      },
+                      background: "primary",
                     }}
                   >
                     {isSubmitting

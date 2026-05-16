@@ -15,14 +15,14 @@ import {
 } from "@mui/material";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-import { useAuth } from "../../context/AuthContext";
+import { useUsers } from "../../hooks/useUsers";
 import { useTranslation } from "react-i18next";
 import ChangePasswordDialog from "./ChangePasswordDialog";
 import ChangeEmailDialog from "./ChangeEmailDialog";
 import DeleteAccountDialog from "./DeleteAccountDialog";
 
 export default function AccountSettings() {
-  const { user } = useAuth();
+  const { user } = useUsers();
   const { t, i18n } = useTranslation();
 
   const [openPassword, setOpenPassword] = useState(false);
@@ -64,7 +64,7 @@ export default function AccountSettings() {
         <List>
           <ListItem disablePadding>
             <ListItemButton onClick={handleopenPwd}>
-              <ListItemText primary={t("accountSettings.changePassword")} />
+              <ListItemText  sx={{display:"flex"}} primary={t("accountSettings.changePassword")}/>
               <ArrowForwardIosIcon
                 sx={{
                   transform:
@@ -79,7 +79,7 @@ export default function AccountSettings() {
 
           <ListItem disablePadding>
             <ListItemButton onClick={handleopenEmail}>
-              <ListItemText
+              <ListItemText  sx={{display:"flex"}}
                 primary={t("accountSettings.changeEmail")}
                 secondary={user?.email}
               />
@@ -97,10 +97,12 @@ export default function AccountSettings() {
 
           <ListItem disablePadding>
             <ListItemButton
-              sx={{ color: "#ff4d4f" }}
+              sx={{
+                color: "#ff4d4f",
+               }}
               onClick={handleOpenDelete}
             >
-              <ListItemText primary={t("accountSettings.deleteAccount")} />
+              <ListItemText  sx={{display:"flex"}} primary={t("accountSettings.deleteAccount")} />
               <ArrowForwardIosIcon
                 sx={{
                   transform:

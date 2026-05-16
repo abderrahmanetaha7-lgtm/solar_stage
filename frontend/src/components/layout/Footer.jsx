@@ -7,10 +7,26 @@ import PhoneIcon from "@mui/icons-material/PhoneOutlined";
 import LocationOnIcon from "@mui/icons-material/LocationOnOutlined";
 import logo from "../../assets/images/logo.png";
 import { useTranslation } from "react-i18next";
+import { useSettings } from "../../hooks/useSettings";
+import { Link as RouterLink } from "react-router-dom";
 
 const Footer = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const theme = useTheme();
+  const { settings } = useSettings();
+  const logoUrl = settings?.logo
+    ? `${import.meta.env.VITE_API_URL}/storage/${settings.logo}`
+    : logo;
+
+  const email = settings?.email || "moyasol.sol@gmail.com";
+
+  const phone = settings?.phone || "0726553374";
+
+  const city =
+    i18n.language === "ar"
+      ? settings?.city_ar || t("footer.contact.location")
+      : settings?.city_fr || t("footer.contact.location");
+
   const isDark = theme.palette.mode === "dark"; // Detect dark mode
 
   return (
@@ -33,10 +49,15 @@ const Footer = () => {
           }}
         >
           {/* Logo & description */}
-          <Grid size={{xs:12, md:"auto"}}>
-            <Stack direction="row" spacing={1.5} sx={{ alignItems: "center" }} mb={2}>
-              <Box sx={{m:0}}>
-                <img src={logo} alt="Logo" style={{ height: 85 }} />
+          <Grid size={{ xs: 12, md: "auto" }}>
+            <Stack
+              direction="row"
+              spacing={1.5}
+              sx={{ alignItems: "center" }}
+              mb={2}
+            >
+              <Box sx={{ m: 0 }}>
+                <img src={logoUrl} alt="Logo" style={{ height: 85 }} />
               </Box>
             </Stack>
 
@@ -46,7 +67,7 @@ const Footer = () => {
           </Grid>
 
           {/* Products links */}
-          <Grid size={{xs:6, md:"auto"}}>
+          <Grid size={{ xs: 6, md: "auto" }}>
             <Typography
               sx={{
                 mb: 2,
@@ -58,20 +79,52 @@ const Footer = () => {
             </Typography>
 
             <Stack spacing={1.5}>
-              <Link href="#" underline="none" sx={{ color: "#3B82F6" }}>
+              <Link
+                component={RouterLink}
+                to="/products?category=panels"
+                underline="none"
+                sx={{
+                  color: "#3B82F6",
+                  "&:hover": {
+                    textDecoration: "underline",
+                  },
+                }}
+              >
                 {t("footer.products.panels")}
               </Link>
-              <Link href="#" underline="none" sx={{ color: "#3B82F6" }}>
+
+              <Link
+                component={RouterLink}
+                to="/products?category=batteries"
+                underline="none"
+                sx={{
+                  color: "#3B82F6",
+                  "&:hover": {
+                    textDecoration: "underline",
+                  },
+                }}
+              >
                 {t("footer.products.batteries")}
               </Link>
-              <Link href="#" underline="none" sx={{ color: "#3B82F6" }}>
+
+              <Link
+                component={RouterLink}
+                to="/products?category=inverters"
+                underline="none"
+                sx={{
+                  color: "#3B82F6",
+                  "&:hover": {
+                    textDecoration: "underline",
+                  },
+                }}
+              >
                 {t("footer.products.inverters")}
               </Link>
             </Stack>
           </Grid>
 
           {/* Company links */}
-          <Grid size={{xs:6, md:"auto"}}>
+          <Grid size={{ xs: 6, md: "auto" }}>
             <Typography
               sx={{
                 mb: 2,
@@ -96,36 +149,48 @@ const Footer = () => {
           </Grid>
 
           {/* Contact info */}
-          <Grid size={{xs:12, md:"auto"}} sx={{ textAlign: { md: "left" } }}>
+          <Grid
+            size={{ xs: 12, md: "auto" }}
+            sx={{ textAlign: { md: "left" } }}
+          >
             <Typography
               sx={{
                 mb: 2,
                 fontWeight: 600,
-                color: isDark ? "#E2E8F0" : "#0F172A",
               }}
             >
               {t("footer.contact.title")}
             </Typography>
 
             <Stack spacing={2} sx={{ alignItems: { md: "flex-start" } }}>
-              <Stack direction="row" spacing={1.5} sx={{ alignItems: "center" }}>
-                <MailOutlineIcon sx={{ fontSize: 18 }} />
+              <Stack
+                direction="row"
+                spacing={1.5}
+                sx={{ alignItems: "center",gap:1 }}
+              >
+                <MailOutlineIcon sx={{ fontSize: 18, m: 2 }} />
                 <Typography variant="body2">
-                  {t("footer.contact.email")}
+                  {email || "moyasol.sol@gmail.com"}
                 </Typography>
               </Stack>
 
-              <Stack direction="row" spacing={1.5} sx={{ alignItems: "center" }}>
-                <PhoneIcon sx={{ fontSize: 18 }} />
-                <Typography variant="body2">
-                  {t("footer.contact.phone")}
-                </Typography>
+              <Stack
+                direction="row"
+                spacing={1.5}
+                sx={{ alignItems: "center",gap:1 }}
+              >
+                <PhoneIcon sx={{ fontSize: 18, m: 2 }} />
+                <Typography variant="body2">{phone || "0726553374"}</Typography>
               </Stack>
 
-              <Stack direction="row" spacing={1.5} sx={{ alignItems: "center" }}>
-                <LocationOnIcon sx={{ fontSize: 18 }} />
+              <Stack
+                direction="row"
+                spacing={1.5}
+                sx={{ alignItems: "center",gap:1 }}
+              >
+                <LocationOnIcon sx={{ fontSize: 18, m: 2 }} />
                 <Typography variant="body2">
-                  {t("footer.contact.location")}
+                  {city || t("footer.contact.location")}
                 </Typography>
               </Stack>
             </Stack>
@@ -143,9 +208,7 @@ const Footer = () => {
             textAlign: "center",
           }}
         >
-          <Typography variant="body2">
-            {t("footer.copyright")}
-          </Typography>
+          <Typography variant="body2">{t("footer.copyright")}</Typography>
         </Box>
       </Container>
     </Box>

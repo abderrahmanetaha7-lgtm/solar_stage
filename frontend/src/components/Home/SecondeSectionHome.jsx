@@ -20,35 +20,32 @@ const features = [
   {
     icon: <BoltIcon sx={{ fontSize: 40, color: "#f5c542" }} />,
     title: "home.features.items.affordable.title",
-    desc: "home.features.items.affordable.description"
+    desc: "home.features.items.affordable.description",
   },
   {
     icon: <BuildIcon sx={{ fontSize: 40, color: "#4caf50" }} />,
     title: "home.features.items.installation.title",
-    desc: "home.features.items.installation.description"
+    desc: "home.features.items.installation.description",
   },
   {
     icon: <VerifiedIcon sx={{ fontSize: 40, color: "#2196f3" }} />,
     title: "home.features.items.quality.title",
-    desc: "home.features.items.quality.description"
-    
+    desc: "home.features.items.quality.description",
   },
   {
     icon: <SavingsIcon sx={{ fontSize: 40, color: "#ff9800" }} />,
     title: "home.features.items.saving.title",
-    desc: "home.features.items.saving.description"
-    
+    desc: "home.features.items.saving.description",
   },
   {
     icon: <SupportAgentIcon sx={{ fontSize: 40, color: "#9c27b0" }} />,
     title: "home.features.items.support.title",
-    desc: "home.features.items.support.description"
-    
+    desc: "home.features.items.support.description",
   },
   {
     icon: <LocalShippingIcon sx={{ fontSize: 40, color: "#00bcd4" }} />,
     title: "home.features.items.delivery.title",
-    desc: "home.features.items.delivery.description"
+    desc: "home.features.items.delivery.description",
   },
 ];
 
@@ -75,12 +72,20 @@ export default function WhyChooseUs() {
             <Grid size={{ xs: 12, sm: 6, md: 4 }} key={index}>
               <Card
                 sx={{
-                  border: "2px solid black",
+                  border: "1px solid transparent",
                   borderRadius: "15px",
                   height: "100%",
-                  boxShadow: 3,
-                  transition: "0.3s",
-                  "&:hover": { transform: "translateY(-5px)", boxShadow: 6 },
+                  boxShadow: 2,
+                  transition: "all 0.3s ease",
+
+                  "&:hover": {
+                    transform: "translateY(-6px)",
+
+                    boxShadow: `
+                        6px 6px 18px rgba(0, 188, 212, 0.25),
+                        10px 10px 30px rgba(0, 188, 212, 0.15)
+                      `,
+                  },
                 }}
               >
                 <CardContent>
