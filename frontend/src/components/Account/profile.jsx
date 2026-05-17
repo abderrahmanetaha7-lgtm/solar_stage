@@ -76,7 +76,7 @@ export default function Profile() {
             {/* AVATAR */}
 
             <Avatar
-              src={user?.avatar_url || ""}
+              src={user?.avatar_url}
               sx={{
                 bgcolor: "orange",
                 width: { xs: 90, sm: 100 },

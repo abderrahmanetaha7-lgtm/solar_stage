@@ -26,11 +26,9 @@ class SettingController extends Controller
             'email' => 'nullable|email',
             'phone' => 'nullable|string|max:100',
             'city_ar' => 'nullable|string|max:50',
-            'city_fr' => 'nullable|string|max:50',
-            'address' => 'nullable|string',
+            'city_fr' => 'nullable|string|max:50', 
             'google_maps' => 'nullable|string',
             'description' => 'nullable|string',
-
             'logo' => 'nullable|image|max:2048',
             'favicon' => 'nullable|image|max:1024',
         ]);

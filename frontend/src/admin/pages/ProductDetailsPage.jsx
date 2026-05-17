@@ -369,7 +369,7 @@ export default function ProductDetailsPage() {
             </Typography>
 
             <Typography fontWeight={700} sx={{ mt: 1 }}>
-              {product.category?.name || "—"}
+              {product.category?.name_fr || "—"}
             </Typography>
           </Grid>
 

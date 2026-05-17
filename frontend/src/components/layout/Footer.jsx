@@ -170,7 +170,7 @@ const Footer = () => {
               >
                 <MailOutlineIcon sx={{ fontSize: 18, m: 2 }} />
                 <Typography variant="body2">
-                  {email || "moyasol.sol@gmail.com"}
+                  {email}
                 </Typography>
               </Stack>
 
@@ -180,7 +180,7 @@ const Footer = () => {
                 sx={{ alignItems: "center",gap:1 }}
               >
                 <PhoneIcon sx={{ fontSize: 18, m: 2 }} />
-                <Typography variant="body2">{phone || "0726553374"}</Typography>
+                <Typography variant="body2">{phone}</Typography>
               </Stack>
 
               <Stack
@@ -190,7 +190,7 @@ const Footer = () => {
               >
                 <LocationOnIcon sx={{ fontSize: 18, m: 2 }} />
                 <Typography variant="body2">
-                  {city || t("footer.contact.location")}
+                  {city}
                 </Typography>
               </Stack>
             </Stack>

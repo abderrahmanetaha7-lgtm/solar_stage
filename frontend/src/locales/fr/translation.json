@@ -234,7 +234,7 @@
     "info": {
       "email": "Email",
       "phone": "Téléphone",
-      "address": "Adresse",
+      "address": "ville",
       "city":"Marrakech"
     }
   },

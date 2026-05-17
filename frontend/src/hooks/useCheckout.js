@@ -10,6 +10,7 @@ import { addOrder } from "../features/orders/orderSlice";
 
 import useCart from "./useCart";
 import { clearCart } from "../features/cart/cartSlice";
+import { fetchProducts } from "../features/products/productSlice";
 
 export default function useCheckout() {
   const { t } = useTranslation();
@@ -153,7 +154,7 @@ export default function useCheckout() {
           order: response.order,
         },
       });
-      dispatch(clearCart());
+      dispatch(clearCart()); 
     } catch (error) {
       showError(error?.message || "Failed to create order");
     } finally {

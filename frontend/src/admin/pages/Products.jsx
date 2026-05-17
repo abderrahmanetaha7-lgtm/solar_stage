@@ -230,7 +230,7 @@ function ProductsPage() {
 
                     {/* CATEGORY */}
 
-                    <TableCell>{product.category?.name}</TableCell>
+                    <TableCell>{product.category?.name_fr}</TableCell>
 
                     {/* PRICE */}
 

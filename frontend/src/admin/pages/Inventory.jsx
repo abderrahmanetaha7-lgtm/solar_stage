@@ -315,7 +315,7 @@ export default function InventoryPage() {
 
                     {/* CATEGORY */}
 
-                    <TableCell>{product.category?.name || "—"}</TableCell>
+                    <TableCell>{product.category?.name_fr || "—"}</TableCell>
 
                     {/* PRICE */}
 

@@ -308,7 +308,7 @@ const kpis = [
                           color="text.secondary"
                           noWrap
                         >
-                          {product.category?.name || "Accessoire"}
+                          {product.category?.name_fr || "Accessoire"}
                         </Typography>
 
                         <Stack direction="row" spacing={1} sx={{ mt: 1 }}>

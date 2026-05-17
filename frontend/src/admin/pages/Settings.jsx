@@ -201,17 +201,7 @@ export default function SettingsPage() {
                     size="small"
                   />
                 </Grid>
-
-                <Grid size={{ xs: 12, sm: 6 }}>
-                  <TextField
-                    name="address"
-                    label="Adresse"
-                    value={form.address}
-                    onChange={handleChange}
-                    fullWidth
-                    size="small"
-                  />
-                </Grid>
+ 
               </Grid>
 
               <TextField

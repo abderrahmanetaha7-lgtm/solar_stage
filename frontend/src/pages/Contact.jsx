@@ -50,6 +50,15 @@ export default function Contact() {
 
   const [errors, setErrors] = useState({});
 
+  const contactEmail = settings?.email || "moyasol.sol@gmail.com";
+
+  const contactPhone = settings?.phone || "0726553374";
+
+  const contactCity =
+    i18n.language === "ar"
+      ? settings?.city_ar || t("footer.contact.location")
+      : settings?.city_fr || t("footer.contact.location");
+
   /* ================= HANDLE CHANGE ================= */
 
   const handleChange = (e) => {
@@ -260,17 +269,17 @@ export default function Contact() {
                     {
                       icon: <EmailOutlinedIcon />,
                       label: t("contactPage.info.email"),
-                      value: settings?.contact_email || "contact@example.com",
+                      value: contactEmail,
                     },
                     {
                       icon: <LocalPhoneOutlinedIcon />,
                       label: t("contactPage.info.phone"),
-                      value: settings?.phone || "+212600000000",
+                      value: contactPhone,
                     },
                     {
                       icon: <LocationOnOutlinedIcon />,
                       label: t("contactPage.info.address"),
-                      value: settings?.address || t("contactPage.info.city"),
+                      value: contactCity,
                     },
                   ].map((item, index) => (
                     <Paper
@@ -347,7 +356,7 @@ export default function Contact() {
                 style={{ border: 0 }}
                 loading="lazy"
                 allowFullScreen
-                src={settings?.google_maps}
+                src={settings?.google_maps || "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d86056.64437702732!2d-8.090255461150452!3d31.634594988683734!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xdafee8d96179e51%3A0x5950b6534f87adb8!2sMarrakesh!5e1!3m2!1sen!2sma!4v1779028641802!5m2!1sen!2sma"}
               />
             )}
           </Paper>
