@@ -28,7 +28,8 @@ class User extends Authenticatable
         'password',
         'role',
         'status',
-        'avatar', 
+        'avatar',
+        'google_id',
     ];
 
     /**
@@ -80,6 +81,10 @@ class User extends Authenticatable
     {
         if (!$this->avatar) {
             return null;
+        }
+
+        if (str_starts_with($this->avatar, 'http')) {
+            return $this->avatar;
         }
 
         return asset('storage/' . $this->avatar);

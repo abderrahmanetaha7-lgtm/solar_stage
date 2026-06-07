@@ -166,8 +166,8 @@ export default function FiltreProducts({ value }) {
                   fontWeight: 500,
                 }}
               >
-                {t("productsPage.price.max")} : ${priceRange?.[0] ?? 0}
-                {" - "}${priceRange?.[1] ?? 100000}
+                {t("productsPage.price.max")} : <br/> {priceRange?.[0] ?? 0} {t("productsPage.currency")}
+                {" - "}{priceRange?.[1] ?? 100000} {t("productsPage.currency")}
               </Typography>
 
               <Slider

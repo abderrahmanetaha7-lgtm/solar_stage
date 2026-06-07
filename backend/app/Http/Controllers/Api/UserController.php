@@ -18,6 +18,15 @@ class UserController extends Controller
         );
     }
 
+    /* ================= SHOW USER ================= */
+
+    public function show(string $id)
+    {
+        $user = User::findOrFail($id);
+
+        return response()->json($user);
+    }
+
     /* ================= UPDATE USER ================= */
 
     public function update(Request $request, string $id)
@@ -25,10 +34,10 @@ class UserController extends Controller
         $user = User::findOrFail($id);
 
         $validated = $request->validate([
-            'role' => 'nullable|string',
-            'status' => 'nullable|string',
+            'role' => 'nullable|string|in:admin,user',
+            'status' => 'nullable|string|in:active,suspended',
             'name' => 'nullable|string|max:255',
-            'email' => 'nullable|email',
+            'email' => 'nullable|email|unique:users,email,' . $id,
         ]);
 
         $user->update($validated);

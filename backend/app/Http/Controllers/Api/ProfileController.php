@@ -3,12 +3,17 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Services\ImageOptimizer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 
 class ProfileController extends Controller
 {
+    public function __construct(
+        private readonly ImageOptimizer $imageOptimizer
+    ) {}
+
     /* ================= UPDATE PROFILE ================= */
 
     public function update(Request $request)
@@ -20,7 +25,6 @@ class ProfileController extends Controller
             'name' => 'required|string|max:255',
 
             'email' => 'required|email|unique:users,email,' . $user->id,
- 
 
             'current_password' => 'nullable|required_with:new_password|string',
 
@@ -29,8 +33,6 @@ class ProfileController extends Controller
             'avatar' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
 
         ]);
-
-        /* ================= CHECK PASSWORD ================= */
 
         if ($request->filled('new_password')) {
 
@@ -64,31 +66,28 @@ class ProfileController extends Controller
             );
         }
 
-        /* ================= UPLOAD AVATAR ================= */
-
         if ($request->hasFile('avatar')) {
 
-            // DELETE OLD IMAGE
-
-            if ($user->avatar) {
+            if ($user->avatar && !str_starts_with($user->avatar, 'http')) {
 
                 Storage::disk('public')->delete(
                     $user->avatar
                 );
             }
 
-            $path = $request
-                ->file('avatar')
-                ->store('avatars', 'public');
+            $path = $this->imageOptimizer->optimizeAndStore(
+                $request->file('avatar'),
+                'avatars',
+                ImageOptimizer::AVATAR_MAX_SIZE,
+                ImageOptimizer::AVATAR_MAX_SIZE
+            );
 
             $user->avatar = $path;
         }
 
-        /* ================= UPDATE INFO ================= */
-
         $user->name = $validated['name'];
 
-        $user->email = $validated['email']; 
+        $user->email = $validated['email'];
 
         $user->save();
 
@@ -102,15 +101,13 @@ class ProfileController extends Controller
 
                 'name' => $user->name,
 
-                'email' => $user->email, 
+                'email' => $user->email,
 
                 'role' => $user->role,
 
                 'avatar' => $user->avatar,
 
-                'avatar_url' => $user->avatar
-                    ? asset('storage/' . $user->avatar)
-                    : null,
+                'avatar_url' => $user->avatar_url,
             ]
         ]);
     }
@@ -121,20 +118,14 @@ class ProfileController extends Controller
     {
         $user = $request->user();
 
-        /* DELETE AVATAR */
-
-        if ($user->avatar) {
+        if ($user->avatar && !str_starts_with($user->avatar, 'http')) {
 
             Storage::disk('public')->delete(
                 $user->avatar
             );
         }
 
-        /* DELETE TOKENS */
-
         $user->tokens()->delete();
-
-        /* DELETE USER */
 
         $user->delete();
 

@@ -1,5 +1,6 @@
 import React from "react";
 import imgHome from "../../assets/images/imgHome.png";
+import { motion } from "framer-motion";
 
 import { Box, Container, Typography, Button } from "@mui/material";
 
@@ -75,6 +76,10 @@ export default function FirstSectionHome() {
         }} 
       >
         <Box
+          component={motion.div}
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
           sx={{
             width: "100%",
             maxWidth: {

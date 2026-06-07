@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { motion } from "framer-motion";
 import {
   Box,
   Typography,
@@ -15,14 +16,14 @@ import {
 } from "@mui/material";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-import { useUsers } from "../../hooks/useUsers";
+import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
 import ChangePasswordDialog from "./ChangePasswordDialog";
 import ChangeEmailDialog from "./ChangeEmailDialog";
 import DeleteAccountDialog from "./DeleteAccountDialog";
 
 export default function AccountSettings() {
-  const { user } = useUsers();
+  const user = useSelector((state) => state.auth.user);
   const { t, i18n } = useTranslation();
 
   const [openPassword, setOpenPassword] = useState(false);
@@ -56,7 +57,13 @@ export default function AccountSettings() {
   return (
     <>
       {/* ACCOUNT SECURITY */}
-      <Paper sx={{ p: 2, borderRadius: 3 }}>
+      <Paper
+        component={motion.div}
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.45, delay: 0.1 }}
+        sx={{ p: 2, borderRadius: 3 }}
+      >
         <Typography variant="h6" sx={{ mb: 2 }}>
           {t("accountSettings.title")}
         </Typography>

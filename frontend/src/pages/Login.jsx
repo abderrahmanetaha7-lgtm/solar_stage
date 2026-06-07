@@ -93,9 +93,10 @@ export default function Login() {
 
       const userRes = await API.get("/user");
 
-      dispatch(setUser(userRes.data));
+      dispatch(setUser(userRes.data.user));
 
-      navigate("/");
+      const isAdmin = userRes.data.user?.role === "admin";
+      navigate(isAdmin ? "/admin" : "/");
     } catch (error) {
       console.error(error.response?.data || error);
     } finally {

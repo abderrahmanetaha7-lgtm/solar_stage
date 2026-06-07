@@ -1,4 +1,5 @@
 import React, { useMemo, useState } from "react";
+import { motion } from "framer-motion";
 import {
   Box,
   Card,
@@ -94,22 +95,16 @@ const ProductCard = ({ product }) => {
 
   const getFavoriteIconColor = () => (isDarkMode ? "#e0e0e0" : "#666666");
 
+  const MotionCard = motion.create(Card);
+
   return (
-    <Card
+    <MotionCard
+      whileHover={{ y: -8, transition: { duration: 0.25 } }}
       sx={{
         borderRadius: 4,
         boxShadow: isDarkMode
           ? "0 8px 24px rgba(0,0,0,0.3)"
           : "0 8px 24px rgba(0,0,0,0.08)",
-        transition: "all 0.3s ease-in-out",
-
-        "&:hover": {
-          transform: "translateY(-8px)",
-
-          boxShadow: isDarkMode
-            ? "0 16px 32px rgba(12, 8, 8, 0.4)"
-            : "0 16px 32px rgba(0,0,0,0.12)",
-        },
 
         height: "100%",
         display: "flex",
@@ -131,7 +126,10 @@ const ProductCard = ({ product }) => {
         }}
       >
         <Box
-          component="img"
+          component={motion.img}
+          initial={{ scale: 1.05 }}
+          whileHover={{ scale: 1.08 }}
+          transition={{ duration: 0.4 }}
           src={imageSrc}
           alt={name}
           onError={() => setImageError(true)}
@@ -328,7 +326,7 @@ const ProductCard = ({ product }) => {
           </Button>
         </Box>
       </CardContent>
-    </Card>
+    </MotionCard>
   );
 };
 

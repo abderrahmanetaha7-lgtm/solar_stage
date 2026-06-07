@@ -13,15 +13,18 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
  
 // PUBLIC ROUTES
-Route::post('/register', [AuthController::class, 'register']);
-Route::post('/login', [AuthController::class, 'login']);
-Route::post('/auth/google', [GoogleAuthController::class, 'googleLogin']);
-Route::post('/forgot-password', [AuthController::class, 'forgotPassword']);
-Route::post('/reset-password', [AuthController::class, 'resetPassword']);
+Route::middleware('throttle:10,1')->group(function () {
+    Route::post('/register', [AuthController::class, 'register']);
+    Route::post('/login', [AuthController::class, 'login']);
+    Route::post('/auth/google', [GoogleAuthController::class, 'googleLogin']);
+    Route::post('/forgot-password', [AuthController::class, 'forgotPassword']);
+    Route::post('/reset-password', [AuthController::class, 'resetPassword']);
+});
+
+Route::middleware('throttle:5,1')->post('/contact', [ContactController::class, 'store']);
 Route::get('/products', [ProductController::class, 'index']);
 Route::get('/products/{product}', [ProductController::class, 'show']);
 Route::get('/settings', [SettingController::class, 'index']);
-Route::post('/contact', [ContactController::class, 'store']);
 Route::post('/orders', [OrderController::class, 'store']);
 // AUTH ROUTES
 Route::middleware('auth:sanctum')->group(function () {

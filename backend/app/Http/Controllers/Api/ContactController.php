@@ -43,7 +43,7 @@ class ContactController extends Controller
     |---------------------------------------------
     */
 
-        Mail::to('omarzguit0@gmail.com')
+        Mail::to('moyasol.sol@gmail.com')
             ->send(new ContactMessageMail($validated));
 
         return response()->json([

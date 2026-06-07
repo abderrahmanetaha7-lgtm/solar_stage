@@ -64,4 +64,8 @@ return [
 
     'google_login_success' => 'Connexion avec Google réussie',
 
+    'unauthorized' => 'Accès non autorisé',
+
+    'account_suspended' => 'Votre compte a été suspendu',
+
 ];

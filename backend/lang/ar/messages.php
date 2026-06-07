@@ -64,4 +64,8 @@ return [
 
     'google_login_success' => 'تم تسجيل الدخول بواسطة Google بنجاح',
 
+    'unauthorized' => 'غير مصرح بالوصول',
+
+    'account_suspended' => 'تم تعليق حسابك',
+
 ];

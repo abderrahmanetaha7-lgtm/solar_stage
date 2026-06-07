@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\CartItem;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Product;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -16,12 +16,17 @@ class OrderController extends Controller
     // GET ALL ORDERS
     // =========================================================================
 
-    public function index()
+    public function index(Request $request)
     {
-        return Order::with('items.product')
+        $query = Order::with('items.product')
             ->whereNull('deleted_at')
-            ->latest()
-            ->get();
+            ->latest();
+
+        if ($request->user()->role !== 'admin') {
+            $query->where('user_id', $request->user()->id);
+        }
+
+        return $query->get();
     }
 
     // =========================================================================
@@ -60,11 +65,14 @@ class OrderController extends Controller
             'items.*.quantity' => 'required|integer|min:1',
         ]);
 
+        $productIds = collect($request->items)->pluck('id')->unique();
+        $products = Product::whereIn('id', $productIds)->get()->keyBy('id');
+
         $total = 0;
 
         foreach ($request->items as $item) {
 
-            $product = Product::findOrFail($item['id']);
+            $product = $products->get($item['id']);
 
             if ($product->stock_quantity < $item['quantity']) {
 
@@ -116,15 +124,17 @@ class OrderController extends Controller
 
         return DB::transaction(function () use ($request) {
 
-            $total = 0;
+            $productIds = collect($request->items)->pluck('id')->unique();
+            $products = Product::whereIn('id', $productIds)
+                ->lockForUpdate()
+                ->get()
+                ->keyBy('id');
 
-            // =============================================================
-            // CHECK STOCK + CALCULATE TOTAL
-            // =============================================================
+            $total = 0;
 
             foreach ($request->items as $item) {
 
-                $product = Product::findOrFail($item['id']);
+                $product = $products->get($item['id']);
 
                 if ($product->stock_quantity < $item['quantity']) {
 
@@ -138,10 +148,6 @@ class OrderController extends Controller
 
                 $total += $product->price * $item['quantity'];
             }
-
-            // =============================================================
-            // CREATE ORDER
-            // =============================================================
 
             $order = Order::create([
 
@@ -168,14 +174,9 @@ class OrderController extends Controller
                 'status' => 'Pending',
             ]);
 
-            // =============================================================
-            // CREATE ORDER ITEMS
-            // =============================================================
-
             foreach ($request->items as $item) {
 
-                $product = Product::lockForUpdate()
-                    ->findOrFail($item['id']);
+                $product = $products->get($item['id']);
 
                 OrderItem::create([
 
@@ -200,7 +201,6 @@ class OrderController extends Controller
                 );
             }
 
-            // CartItem::where('user_id', auth()->id())->delete();
             return response()->json([
 
                 'message' => __('messages.order_created'),
@@ -215,8 +215,12 @@ class OrderController extends Controller
     // SHOW ORDER
     // =========================================================================
 
-    public function show(Order $order)
+    public function show(Request $request, Order $order)
     {
+        if ($response = $this->authorizeOrderAccess($request, $order)) {
+            return $response;
+        }
+
         return $order->load('items.product');
     }
 
@@ -226,6 +230,10 @@ class OrderController extends Controller
 
     public function update(Request $request, Order $order)
     {
+        if ($response = $this->authorizeOrderAccess($request, $order)) {
+            return $response;
+        }
+
         $order->update($request->only([
 
             'first_name',
@@ -266,12 +274,6 @@ class OrderController extends Controller
         $newStatus = $request->status;
         $oldStatus = $order->status;
 
-        /*
-    |--------------------------------------------------------------------------
-    | VALID TRANSITIONS
-    |--------------------------------------------------------------------------
-    */
-
         $allowedTransitions = [
 
             'Pending' => [
@@ -308,18 +310,14 @@ class OrderController extends Controller
             $oldStatus,
             $newStatus
         ) {
-
-            /*
-        |--------------------------------------------------------------------------
-        | DELIVERED
-        |--------------------------------------------------------------------------
-        */
+            $order->load('items');
+            $products = $this->loadProductsForItems($order);
 
             if ($newStatus === 'Delivered') {
 
                 foreach ($order->items as $item) {
 
-                    $product = Product::find($item->product_id);
+                    $product = $products->get($item->product_id);
 
                     if ($product) {
 
@@ -331,36 +329,18 @@ class OrderController extends Controller
                 }
             }
 
-            /*
-        |--------------------------------------------------------------------------
-        | RETURNED
-        |--------------------------------------------------------------------------
-        */
-
             if ($newStatus === 'Returned') {
 
                 foreach ($order->items as $item) {
 
-                    $product = Product::find($item->product_id);
+                    $product = $products->get($item->product_id);
 
                     if ($product) {
-
-                        /*
-                    |--------------------------------------------------------------------------
-                    | RETURN STOCK
-                    |--------------------------------------------------------------------------
-                    */
 
                         $product->increment(
                             'stock_quantity',
                             $item->quantity
                         );
-
-                        /*
-                    |--------------------------------------------------------------------------
-                    | REMOVE SOLD COUNT
-                    |--------------------------------------------------------------------------
-                    */
 
                         $product->decrement(
                             'sold_count',
@@ -370,25 +350,13 @@ class OrderController extends Controller
                 }
             }
 
-            /*
-        |--------------------------------------------------------------------------
-        | CANCELLED
-        |--------------------------------------------------------------------------
-        */
-
             if ($newStatus === 'Cancelled') {
 
                 foreach ($order->items as $item) {
 
-                    $product = Product::find($item->product_id);
+                    $product = $products->get($item->product_id);
 
                     if ($product) {
-
-                        /*
-                    |--------------------------------------------------------------------------
-                    | RESTORE STOCK
-                    |--------------------------------------------------------------------------
-                    */
 
                         $product->increment(
                             'stock_quantity',
@@ -397,12 +365,6 @@ class OrderController extends Controller
                     }
                 }
             }
-
-            /*
-        |--------------------------------------------------------------------------
-        | UPDATE STATUS
-        |--------------------------------------------------------------------------
-        */
 
             $order->update([
                 'status' => $newStatus,
@@ -416,22 +378,16 @@ class OrderController extends Controller
             'order' => $order->fresh(),
         ]);
     }
+
     // =========================================================================
     // USER CANCEL ORDER
     // =========================================================================
 
-    public function cancel(Order $order)
+    public function cancel(Request $request, Order $order)
     {
-        /*
-        |--------------------------------------------------------------------------
-        | USER CAN CANCEL ANY STATUS
-        |--------------------------------------------------------------------------
-        |
-        | Pending
-        | Confirmed
-        | Delivered
-        |
-        */
+        if ($response = $this->authorizeOrderAccess($request, $order)) {
+            return $response;
+        }
 
         if (
             in_array($order->status, [
@@ -446,24 +402,19 @@ class OrderController extends Controller
 
         DB::transaction(function () use ($order) {
 
+            $order->load('items');
+            $products = $this->loadProductsForItems($order);
+
             foreach ($order->items as $item) {
 
-                $product = Product::find($item->product_id);
+                $product = $products->get($item->product_id);
 
                 if ($product) {
-
-                    // =====================================================
-                    // RETURN STOCK
-                    // =====================================================
 
                     $product->increment(
                         'stock_quantity',
                         $item->quantity
                     );
-
-                    // =====================================================
-                    // REMOVE SOLD COUNT IF DELIVERED
-                    // =====================================================
 
                     if ($order->status === 'Delivered') {
 
@@ -499,5 +450,29 @@ class OrderController extends Controller
         return response()->json([
             'message' => __('messages.order_archived'),
         ]);
+    }
+
+    private function authorizeOrderAccess(Request $request, Order $order): ?JsonResponse
+    {
+        $user = $request->user();
+
+        if ($user->role === 'admin') {
+            return null;
+        }
+
+        if ($order->user_id !== $user->id) {
+            return response()->json([
+                'message' => __('messages.unauthorized'),
+            ], 403);
+        }
+
+        return null;
+    }
+
+    private function loadProductsForItems(Order $order)
+    {
+        $productIds = $order->items->pluck('product_id')->unique();
+
+        return Product::whereIn('id', $productIds)->get()->keyBy('id');
     }
 }

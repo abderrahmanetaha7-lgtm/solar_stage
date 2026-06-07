@@ -115,7 +115,7 @@ export default function SignUp() {
 
       const userRes = await API.get("/user");
 
-      dispatch(setUser(userRes.data));
+      dispatch(setUser(userRes.data.user));
 
       navigate("/");
     } catch (error) {

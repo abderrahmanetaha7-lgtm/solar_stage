@@ -2,6 +2,7 @@ import Footer from "./Footer";
 import { Outlet, useLocation } from "react-router-dom";
 import { Box } from "@mui/material";
 import ScrollTopButton from "../ScrollTopButton";
+import PageTransition from "../motion/PageTransition";
 import { lazy } from "react";
 const Navbar = lazy(() => import("./Navbar/Navbar"));
 
@@ -21,7 +22,9 @@ export default function MainLayout() {
       <Navbar />
 
       <Box component="main" sx={{ flex: 1 }}>
-        <Outlet />
+        <PageTransition>
+          <Outlet />
+        </PageTransition>
       </Box>
 
       {!hideFooter && <Footer />}

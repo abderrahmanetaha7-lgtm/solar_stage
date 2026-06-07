@@ -83,9 +83,17 @@ class AuthController extends Controller
             ], 401);
         }
 
-        $request->session()->regenerate();
-
         $user = Auth::user();
+
+        if ($user->status === 'suspended') {
+            Auth::logout();
+
+            return response()->json([
+                'message' => __('messages.account_suspended'),
+            ], 403);
+        }
+
+        $request->session()->regenerate();
 
         return response()->json([
 

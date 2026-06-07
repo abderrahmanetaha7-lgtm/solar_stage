@@ -1,5 +1,3 @@
-// Profile.jsx
-
 import {
   Avatar,
   Box,
@@ -17,8 +15,12 @@ import { logout } from "../../features/auth/authSlice";
 import { useTranslation } from "react-i18next";
 
 import { useState } from "react";
+import { motion } from "framer-motion";
 
 import EditProfileDialog from "./EditProfileDialog";
+import ProfileSkeleton from "../skeleton/ProfileSkeleton";
+
+const MotionPaper = motion.create(Paper);
 
 export default function Profile() {
   const dispatch = useDispatch();
@@ -26,25 +28,21 @@ export default function Profile() {
   const { t } = useTranslation();
 
   const user = useSelector((state) => state.auth.user);
+  const checkingAuth = useSelector((state) => state.auth.checkingAuth);
 
   const [showEditProfile, setShowEditProfile] = useState(false);
 
-  /* ================= OPEN EDIT ================= */
-
-  const handleShowEditProfile = () => {
-    setShowEditProfile(true);
-  };
-
-  /* ================= CLOSE EDIT ================= */
-
-  const handleCloseEditProfile = () => {
-    setShowEditProfile(false);
-  };
+  if (checkingAuth || !user) {
+    return <ProfileSkeleton />;
+  }
 
   return (
     <>
-      <Paper
+      <MotionPaper
         elevation={0}
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
         sx={{
           p: { xs: 2, sm: 3 },
           borderRadius: 4,
@@ -52,8 +50,6 @@ export default function Profile() {
           border: "1px solid #2a2a2a",
         }}
       >
-        {/* MAIN CONTAINER */}
-
         <Stack
           direction={{ xs: "column", md: "row" }}
           spacing={{ xs: 3, md: 0 }}
@@ -62,8 +58,6 @@ export default function Profile() {
             justifyContent: "space-between",
           }}
         >
-          {/* LEFT SIDE */}
-
           <Stack
             direction={{ xs: "column", sm: "row" }}
             spacing={2.5}
@@ -73,10 +67,9 @@ export default function Profile() {
               textAlign: { xs: "center", sm: "left", md: "left" },
             }}
           >
-            {/* AVATAR */}
-
             <Avatar
-              src={user?.avatar_url}
+              src={user.avatar_url}
+              alt={user.name}
               sx={{
                 bgcolor: "orange",
                 width: { xs: 90, sm: 100 },
@@ -92,11 +85,9 @@ export default function Profile() {
                   mt: 0.9,
                 }}
               >
-                {!user?.avatar_url && user?.name?.charAt(0)?.toUpperCase()}
+                {!user.avatar_url && user.name?.charAt(0)?.toUpperCase()}
               </Typography>
             </Avatar>
-
-            {/* USER INFO */}
 
             <Box>
               <Typography
@@ -109,15 +100,12 @@ export default function Profile() {
                   },
                 }}
               >
-                {user?.name || "Unknown User"}
+                {user.name}
               </Typography>
 
-              <Typography sx={{ opacity: 0.6 }}>{user?.email}</Typography>
- 
+              <Typography sx={{ opacity: 0.6 }}>{user.email}</Typography>
             </Box>
           </Stack>
-
-          {/* ACTION BUTTONS */}
 
           <Stack
             direction={{ xs: "column", sm: "row" }}
@@ -130,10 +118,8 @@ export default function Profile() {
               justifyContent: "center",
             }}
           >
-            {/* EDIT PROFILE */}
-
             <Button
-              onClick={handleShowEditProfile}
+              onClick={() => setShowEditProfile(true)}
               fullWidth
               variant="contained"
               sx={{
@@ -146,8 +132,6 @@ export default function Profile() {
             >
               {t("account.editProfile")}
             </Button>
-
-            {/* LOGOUT */}
 
             <Button
               onClick={() => dispatch(logout())}
@@ -172,13 +156,11 @@ export default function Profile() {
             borderColor: "#2a2a2a",
           }}
         />
-      </Paper>
-
-      {/* EDIT PROFILE DIALOG */}
+      </MotionPaper>
 
       <EditProfileDialog
         open={showEditProfile}
-        onClose={handleCloseEditProfile}
+        onClose={() => setShowEditProfile(false)}
       />
     </>
   );

@@ -17,6 +17,9 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import { useMemo } from "react";
 import { useProducts } from "../../hooks/useProducts";
+import StaggerContainer from "../motion/StaggerContainer";
+import StaggerItem from "../motion/StaggerItem";
+import FadeIn from "../motion/FadeIn";
 
 const FeaturedProducts = () => {
   const { t, i18n } = useTranslation();
@@ -44,6 +47,7 @@ const FeaturedProducts = () => {
   return (
     <Container maxWidth="xl" sx={{ py: { xs: 4, md: 8 } }}>
       {/* Header Section */}
+      <FadeIn>
       <Box sx={{ textAlign: "center", mb: 6 }}>
         <Typography
           variant="overline"
@@ -73,15 +77,16 @@ const FeaturedProducts = () => {
           {t("home.products.subtitle")}
         </Typography>
       </Box>
+      </FadeIn>
 
       {/* Products Grid */}
-      <Box
+      <StaggerContainer
         sx={{
           display: "grid",
           gridTemplateColumns: `repeat(${getGridColumns()}, 1fr)`,
           gap: { xs: 2, sm: 3, md: 4 },
         }}
-      > 
+      >
         {loading
           ? [1,2,3,4].map((_, index) => (
               <Box
@@ -113,9 +118,11 @@ const FeaturedProducts = () => {
               </Box>
             ))
           : latestProducts.map((product) => (
-              <ProductCard key={product.id} product={product} />
+              <StaggerItem key={product.id}>
+                <ProductCard product={product} />
+              </StaggerItem>
             ))}
-      </Box>
+      </StaggerContainer>
 
       {/* View All Button */}
       {latestProducts.length > 0 && (

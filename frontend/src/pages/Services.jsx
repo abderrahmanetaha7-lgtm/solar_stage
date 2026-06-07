@@ -1,5 +1,7 @@
 import React from "react";
 import { Box, Container, Typography, useTheme } from "@mui/material";
+import FadeIn from "../components/motion/FadeIn";
+import { motion } from "framer-motion";
 
 // 🔥 Replace images with your own paths
 import Installation from "../assets/images/Installation.jpg";
@@ -98,6 +100,7 @@ export default function Services() {
       >
         <Container maxWidth="lg">
           {/* Header Section */}
+          <FadeIn>
           <Box
             sx={{
               display: "flex",
@@ -128,12 +131,13 @@ export default function Services() {
               {t("services.subtitle")}
             </Typography>
           </Box>
+          </FadeIn>
 
           {/* Services List */}
           <Box sx={{ display: "flex", flexDirection: "column", gap: 6 }}>
             {services.map((service, index) => (
+              <FadeIn key={index} delay={index * 0.08}>
               <Box
-                key={index}
                 sx={{
                   display: "flex",
                   flexDirection: {
@@ -146,7 +150,11 @@ export default function Services() {
               >
                 {/* Service Image */}
                 <Box
-                  component="img"
+                  component={motion.img}
+                  initial={{ opacity: 0, scale: 0.98 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5 }}
                   src={service.image}
                   alt={service.title}
                   loading="lazy"
@@ -199,6 +207,7 @@ export default function Services() {
                   </Box>
                 </Box>
               </Box>
+              </FadeIn>
             ))}
           </Box>
         </Container>

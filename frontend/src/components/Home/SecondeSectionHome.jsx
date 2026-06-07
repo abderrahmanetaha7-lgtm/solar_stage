@@ -15,6 +15,10 @@ import SavingsIcon from "@mui/icons-material/Savings";
 import SupportAgentIcon from "@mui/icons-material/SupportAgent";
 import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 import { useTranslation } from "react-i18next";
+import StaggerContainer from "../motion/StaggerContainer";
+import StaggerItem from "../motion/StaggerItem";
+import FadeIn from "../motion/FadeIn";
+import { motion } from "framer-motion";
 
 const features = [
   {
@@ -54,6 +58,7 @@ export default function WhyChooseUs() {
   return (
     <Box sx={{ py: 6 }}>
       <Container>
+        <FadeIn>
         <Typography variant="h4" align="center" fontWeight="bold" gutterBottom>
           {t("home.features.title")}
         </Typography>
@@ -66,26 +71,21 @@ export default function WhyChooseUs() {
         >
           {t("home.features.subtitle")}
         </Typography>
+        </FadeIn>
 
+        <StaggerContainer>
         <Grid container spacing={2} sx={{ justifyContent: "center" }}>
           {features.map((item, index) => (
             <Grid size={{ xs: 12, sm: 6, md: 4 }} key={index}>
+              <StaggerItem>
               <Card
+                component={motion.div}
+                whileHover={{ y: -6, transition: { duration: 0.25 } }}
                 sx={{
                   border: "1px solid transparent",
                   borderRadius: "15px",
                   height: "100%",
                   boxShadow: 2,
-                  transition: "all 0.3s ease",
-
-                  "&:hover": {
-                    transform: "translateY(-6px)",
-
-                    boxShadow: `
-                        6px 6px 18px rgba(0, 188, 212, 0.25),
-                        10px 10px 30px rgba(0, 188, 212, 0.15)
-                      `,
-                  },
                 }}
               >
                 <CardContent>
@@ -98,9 +98,11 @@ export default function WhyChooseUs() {
                   </Typography>
                 </CardContent>
               </Card>
+              </StaggerItem>
             </Grid>
           ))}
         </Grid>
+        </StaggerContainer>
       </Container>
     </Box>
   );

@@ -5,10 +5,16 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Models\ProductImage;
+use App\Services\ImageOptimizer;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
-class ProductController extends Controller 
+class ProductController extends Controller
 {
+    public function __construct(
+        private readonly ImageOptimizer $imageOptimizer
+    ) {}
+
     /* ================= GET ALL ================= */
 
     public function index()
@@ -30,17 +36,17 @@ class ProductController extends Controller
 
             'description_ar' => 'required|string|min:20',
             'description_fr' => 'required|string|min:20',
- 
+
             'price' => 'required|numeric|min:1',
 
             'stock_quantity' => 'required|integer|min:0',
 
-            'category_id' => 'required|exists:categories,id', 
- 
+            'category_id' => 'required|exists:categories,id',
+
             'images' => 'required|array|min:3',
 
             'images.*' => 'image|mimes:jpg,jpeg,png,webp|max:2048',
-        ]); 
+        ]);
 
         $product = Product::create([
 
@@ -54,12 +60,15 @@ class ProductController extends Controller
 
             'stock_quantity' => $validated['stock_quantity'],
 
-            'category_id' => $validated['category_id'], 
-        ]); 
+            'category_id' => $validated['category_id'],
+        ]);
 
         foreach ($request->file('images') as $image) {
 
-            $path = $image->store('products', 'public');
+            $path = $this->imageOptimizer->optimizeAndStore(
+                $image,
+                'products'
+            );
 
             ProductImage::create([
                 'product_id' => $product->id,
@@ -68,7 +77,7 @@ class ProductController extends Controller
         }
 
         return response()->json([
-            'message' =>__('messages.product_created'),
+            'message' => __('messages.product_created'),
             'product' => $product->load([
                 'images',
                 'category'
@@ -102,12 +111,12 @@ class ProductController extends Controller
 
             'stock_quantity' => 'required|integer|min:0',
 
-            'category_id' => 'required|exists:categories,id', 
+            'category_id' => 'required|exists:categories,id',
 
             'images' => 'nullable|array',
 
             'images.*' => 'image|mimes:jpg,jpeg,png,webp|max:2048',
-        ]); 
+        ]);
 
         $product->update([
 
@@ -122,14 +131,17 @@ class ProductController extends Controller
             'stock_quantity' => $validated['stock_quantity'],
 
             'category_id' => $validated['category_id'],
- 
-        ]); 
+
+        ]);
 
         if ($request->hasFile('images')) {
 
             foreach ($request->file('images') as $image) {
 
-                $path = $image->store('products', 'public');
+                $path = $this->imageOptimizer->optimizeAndStore(
+                    $image,
+                    'products'
+                );
 
                 ProductImage::create([
                     'product_id' => $product->id,
@@ -151,6 +163,10 @@ class ProductController extends Controller
 
     public function destroy(Product $product)
     {
+        foreach ($product->images as $image) {
+            Storage::disk('public')->delete($image->image);
+        }
+
         $product->images()->delete();
 
         $product->delete();
@@ -159,4 +175,4 @@ class ProductController extends Controller
             'message' => __('messages.product_deleted')
         ]);
     }
-} 
+}
